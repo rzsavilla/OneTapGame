@@ -4,10 +4,14 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+
+import com.rzsavilla.onetapgame.model.CircleShape;
+import com.rzsavilla.onetapgame.model.RectangleShape;
 
 public class GameSurfaceView extends SurfaceView implements Runnable {
     private final static int    MAX_FPS = 50;                   // desired fps
@@ -25,6 +29,11 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
     private Paint paint = new Paint();
     private Bitmap launcherSprite;
 
+
+    //////////////OBJECTS/////////////////////
+    CircleShape ball;
+    RectangleShape box;
+
     //Constructor
     public GameSurfaceView(Context context) {
         super(context);
@@ -39,6 +48,8 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
     }
 
     public void init() {
+        ball = new CircleShape(100.0f,100.0f,100.0f, Color.RED);
+        box = new RectangleShape(100.0f,300.0f,200.0f,200.0f,Color.GREEN);
     }
 
     //Update
@@ -48,6 +59,8 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
 
     public void drawCanvas(Canvas canvas) {
         canvas.drawARGB(255, 255, 255, 255);
+        ball.draw(paint,canvas);
+        box.draw(paint,canvas);
     }
 
     public  void run() {

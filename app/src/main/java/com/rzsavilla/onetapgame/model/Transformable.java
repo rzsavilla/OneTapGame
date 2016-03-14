@@ -1,0 +1,65 @@
+package com.rzsavilla.onetapgame.model;
+
+import android.renderscript.Matrix3f;
+
+/**
+ * Created by rzsavilla on 14/03/2016.
+ */
+public class Transformable {
+    private Vector2D m_vPosition = new Vector2D();
+    private Vector2D m_vOrigin = new Vector2D();
+    private Vector2D m_vScale = new Vector2D();
+    private float m_fRotation = 0.0f;
+    private boolean bUpdate = false;
+
+    /////////////////SET///////////////////////////
+    public void setPosition(Vector2D newPosition) {
+        m_vPosition = newPosition;
+    }
+
+    public void setPosition(float x, float y) {
+        m_vPosition.x = x;
+        m_vPosition.y = y;
+    }
+
+    public void setOrigin(Vector2D newOrigin) {
+        m_vOrigin = newOrigin;
+    }
+
+    public void setOrigin(float x, float y) {
+        m_vOrigin.x = x;
+        m_vOrigin.y = y;
+    }
+
+    public void setScale(Vector2D newScale) {
+        m_vScale = newScale;
+    }
+
+    public void setScale(float x, float y) {
+        m_vScale.x = x;
+        m_vScale.y = y;
+    }
+
+    public void setRotatation(float newRotation) {
+        m_fRotation = newRotation;
+    }
+
+    ////////////////GET/////////////////////
+    public Vector2D getPosition() {
+        return  m_vPosition;
+    }
+
+    public Vector2D getOrigin() {
+        return m_vOrigin;
+    }
+
+    public Vector2D getScale() {
+        return m_vScale;
+    }
+
+    public float getRotation() {
+        return m_fRotation;
+    }
+
+    ////////////////TRANSFORMATION//////////////////
+}

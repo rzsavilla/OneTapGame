@@ -1,12 +1,11 @@
 package com.rzsavilla.onetapgame.model;
 
 public class Vector2D {
-    public float x;
-    public float y;
+    public float x = 0.0f;
+    public float y = 0.0f;
 
     Vector2D() {                //Default Contructor
-        this.x = 0.0f;
-        this.y = 0.0f;
+
     }
 
     Vector2D(float x, float y) {
