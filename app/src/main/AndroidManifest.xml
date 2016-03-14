@@ -8,13 +8,30 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name" >
+            android:name=".model.MainActivity"
+            android:label="@string/app_name"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".model.SplashActivity"
+            android:label="@string/title_activity_splash"
+            android:noHistory="true"> <!--Prevents back button from return to this activity -->
+        </activity>
+        <activity
+            android:name=".model.GameActivity"
+            android:label="@string/title_activity_game" >
+        </activity>
+        <activity
+            android:name=".model.SettingsActivity"
+            android:label="@string/title_activity_settings" >
+        </activity>
+        <activity
+            android:name=".model.StartActivity"
+            android:label="@string/title_activity_start" >
         </activity>
     </application>
 
