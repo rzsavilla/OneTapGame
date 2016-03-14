@@ -1,4 +1,4 @@
-package com.rzsavilla.onetapgame.model;
+package com.rzsavilla.onetapgame.controller;
 
 import android.app.Activity;
 import android.content.Intent;
