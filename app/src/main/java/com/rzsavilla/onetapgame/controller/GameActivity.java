@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -44,7 +45,6 @@ public class GameActivity extends Activity{
 
     public boolean onTouchEvent(MotionEvent event) {
         int eventaction = event.getAction();
-
         switch (eventaction) {
             case MotionEvent.ACTION_DOWN:
                 // finger touches the screen
@@ -60,7 +60,7 @@ public class GameActivity extends Activity{
                 // finger leaves the screen
                 break;
         }
-        gsv.pressUpdate(xPos,yPos);
+        gsv.tapUpdate(event);
         return true;
     }
 }

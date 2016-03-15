@@ -49,7 +49,7 @@ public class Projectile extends CircleShape{
                 //Log.d("Distance: ", Float.toString(fDistance));
                 this.setVelocity(fSpeed * (m_vTargetPos.x - this.getPosition().x) / fDistance,
                         fSpeed * (m_vTargetPos.y - this.getPosition().y) / fDistance);
-                if (fDistance > -10.0f && fDistance < 10.0f) {
+                if (fDistance < 10.0f) {
                     m_bReachedTarget = true;
                     m_bHasTarget = false;
                     this.setVelocity(0.0f,0.0f);
