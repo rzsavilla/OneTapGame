@@ -6,12 +6,13 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 
 import com.rzsavilla.onetapgame.R;
 import com.rzsavilla.onetapgame.view.GameSurfaceView;
 
-public class GameActivity extends Activity {
+public class GameActivity extends Activity{
     private GameSurfaceView gsv;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,5 +37,30 @@ public class GameActivity extends Activity {
     protected void onResume() {
         super.onResume();
         gsv.resume();
+    }
+
+    private float xPos = 0.0f;
+    private float yPos = 0.0f;
+
+    public boolean onTouchEvent(MotionEvent event) {
+        int eventaction = event.getAction();
+
+        switch (eventaction) {
+            case MotionEvent.ACTION_DOWN:
+                // finger touches the screen
+                xPos = event.getX();
+                yPos = event.getY();
+                break;
+            case MotionEvent.ACTION_MOVE:
+                // finger moves on the screen
+                xPos = event.getX();
+                yPos = event.getY();
+                break;
+            case MotionEvent.ACTION_UP:
+                // finger leaves the screen
+                break;
+        }
+        gsv.pressUpdate(xPos,yPos);
+        return true;
     }
 }
