@@ -14,6 +14,7 @@ import android.view.SurfaceView;
 
 import com.rzsavilla.onetapgame.model.CircleShape;
 import com.rzsavilla.onetapgame.model.Projectile;
+import com.rzsavilla.onetapgame.model.ProjectileHandler;
 import com.rzsavilla.onetapgame.model.RectangleShape;
 import com.rzsavilla.onetapgame.model.Vector2D;
 
@@ -21,7 +22,7 @@ import java.util.Timer;
 
 public class GameSurfaceView extends SurfaceView implements Runnable {
     private final static int    MAX_FPS = 60;                   // desired fps
-    private final static int    MAX_FRAME_SKIPS = 1;            // maximum number of frames to be skipped
+    private final static int    MAX_FRAME_SKIPS = 3;            // maximum number of frames to be skipped
     private final static int    FRAME_PERIOD = 1000 / MAX_FPS;  // the frame period
 
     private long beginTime;                                     // the time when the cycle began
@@ -29,6 +30,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
     private int sleepTime;                                      // ms to sleep
     private int framesSkipped;                                  // number of frames being skipped
     private long timer = 0;
+    private static float kTimeStep = 1.0f / (float) MAX_FPS;
 
     private Timer clock;
 
@@ -44,6 +46,8 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
     CircleShape ball;
     RectangleShape box;
     Projectile proj = new Projectile();
+
+    ProjectileHandler gun = new ProjectileHandler();
 
     //Constructor
     public GameSurfaceView(Context context) {
@@ -65,25 +69,34 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
         timer = System.currentTimeMillis();
 
         proj.setTarget(300.0f,500.0f);
+
+        gun.setPosition(screenSize.x / 2, screenSize.y - (gun.getSize().y * 2));
     }
 
     int iCounter = 0;
     double h = 0.001;
-    float fSpeed = 20.0f;
+    float fSpeed = 2000.f;
     //Update
     private void updateCanvas() {
+        //float timeStep = (float) timeDiff / 1000;             //Variable timestep jumpy!!!
+        System.out.println(kTimeStep);
         if (ball.getPosition().y > screenSize.y) {
             ball.setPosition(ball.getPosition().x, -50.0f);
         }
-        ball.setPosition(ball.getPosition().x, (float) (ball.getPosition().y + (fSpeed)));
-        proj.update();
+        ball.setPosition(ball.getPosition().x, (float) (ball.getPosition().y + (fSpeed * kTimeStep)));
+        proj.update(kTimeStep);
+
+        gun.update(kTimeStep);
     }
 
     public void drawCanvas(Canvas canvas) {
         canvas.drawARGB(255, 255, 255, 255);
         ball.draw(paint, canvas);
         box.draw(paint, canvas);
-        proj.draw(paint,canvas);
+        proj.draw(paint, canvas);
+
+        gun.draw(paint, canvas);
+        gun.drawProj(paint, canvas);
     }
     public  void run() {
 
@@ -140,7 +153,8 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
     }
 
     public void pressUpdate(float x, float y) {
-        proj.setTarget(x,y);
+        gun.shoot(x,y);
+        //proj.setTarget(x,y);
         System.out.println(x);
     }
 }

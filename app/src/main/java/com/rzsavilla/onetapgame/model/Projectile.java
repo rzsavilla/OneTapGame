@@ -15,7 +15,13 @@ public class Projectile extends CircleShape{
 
     public Projectile() {
         super(0.0f,0.0f,20.0f, Color.RED);
-        fSpeed = 20.0f;
+        fSpeed = 200.0f;
+    }
+
+    public Projectile(float xPos, float yPos, float targetX, float targetY) {
+        super(xPos ,yPos,20.0f, Color.RED);
+        fSpeed = 200.0f;
+        setTarget(targetX,targetY);
     }
 
     public  void setTarget(Vector2D targetPos) {
@@ -31,7 +37,8 @@ public class Projectile extends CircleShape{
         m_bReachedTarget = false;
     }
 
-    public void update() {
+    public void update(float timeStep) {
+
         if (m_bHasTarget) {
             //Will move towards target
             if (!m_bReachedTarget) {
@@ -39,7 +46,7 @@ public class Projectile extends CircleShape{
                 vDiff = m_vTargetPos.subtract(this.getPosition());
                 float fDistance;
                 fDistance = vDiff.magnitude();
-                Log.d("Distance: ", Float.toString(fDistance));
+                //Log.d("Distance: ", Float.toString(fDistance));
                 this.setVelocity(fSpeed * (m_vTargetPos.x - this.getPosition().x) / fDistance,
                         fSpeed * (m_vTargetPos.y - this.getPosition().y) / fDistance);
                 if (fDistance > -10.0f && fDistance < 10.0f) {
@@ -49,7 +56,7 @@ public class Projectile extends CircleShape{
                 }
                 System.out.println();
                 //Move
-                setPosition(this.getPosition().add(this.getVelocity()));
+                setPosition(this.getPosition().add(this.getVelocity().multiply(timeStep)));
             }
         }
     }
