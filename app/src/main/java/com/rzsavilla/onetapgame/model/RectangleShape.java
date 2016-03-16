@@ -19,6 +19,13 @@ public class RectangleShape extends Moveable{
         setPosition(posX,posY);
         setSize(width, height);
         setColour(newColour);
+        setOrigin(width / 2, height / 2);
+    }
+
+    public RectangleShape(Vector2D newPosition, Vector2D newSize, int newColour) {
+        this.setPosition(newPosition);
+        this.setSize(newSize);
+        this.setColour(newColour);
     }
 
     public void setSize(Vector2D newSize) {
@@ -44,7 +51,10 @@ public class RectangleShape extends Moveable{
 
     public void draw(Paint p, Canvas c) {
         p.setColor(m_iColour);
-        c.drawRect(getPosition().x, getPosition().y,
-                getPosition().x + m_vSize.x,getPosition().y + m_vSize.y,p);
+        c.rotate(this.getRotation());
+        c.drawRect(getPosition().x - getOrigin().x, getPosition().y - getOrigin().y,
+                getPosition().x + m_vSize.x - getOrigin().x, getPosition().y + m_vSize.y - getOrigin().y, p);
+
+        c.rotate(-this.getRotation());
     }
 }

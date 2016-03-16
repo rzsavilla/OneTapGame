@@ -24,6 +24,10 @@ public class Projectile extends CircleShape{
         setTarget(targetX,targetY);
     }
 
+    public Projectile(Vector2D position, Vector2D targetPos) {
+
+    }
+
     public  void setTarget(Vector2D targetPos) {
         m_vTargetPos = targetPos;
         m_bHasTarget = true;

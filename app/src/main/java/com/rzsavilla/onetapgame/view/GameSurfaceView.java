@@ -14,8 +14,10 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 
+import com.rzsavilla.onetapgame.R;
 import com.rzsavilla.onetapgame.model.CircleShape;
 import com.rzsavilla.onetapgame.model.InputHandler;
+import com.rzsavilla.onetapgame.model.Launcher;
 import com.rzsavilla.onetapgame.model.Projectile;
 import com.rzsavilla.onetapgame.model.ProjectileHandler;
 import com.rzsavilla.onetapgame.model.RectangleShape;
@@ -49,10 +51,12 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
     InputHandler input = new InputHandler();
 
     //////////////OBJECTS/////////////////////
-    CircleShape ball;
-    RectangleShape box;
-    Projectile proj = new Projectile();
-    ProjectileHandler gun = new ProjectileHandler();
+    Launcher gun;
+
+
+    ////////////BMP///////////////////
+    private Bitmap bmp;
+
 
     //Constructor
     public GameSurfaceView(Context context) {
@@ -69,13 +73,10 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
     }
 
     public void init() {
-        ball = new CircleShape(200.0f,100.0f,100.0f, Color.RED);
-        box = new RectangleShape(screenSize.x / 2,screenSize.y / 2,200.0f,200.0f,Color.GREEN);
-        timer = System.currentTimeMillis();
-
-        proj.setTarget(300.0f,500.0f);
-
-        gun.setPosition(screenSize.x / 2, screenSize.y - (gun.getSize().y * 2));
+        bmp = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.spritesheet);
+        gun = new Launcher();
+        gun.setPosition((float) screenSize.x / 2, (float) screenSize.y / 2);
+        gun.cannon.setSpriteSheet(bmp);
     }
 
     int iCounter = 0;
@@ -84,27 +85,17 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
     //Update
     private void updateCanvas() {
         //float timeStep = (float) timeDiff / 1000;             //Variable timestep jumpy!!!
-        if (ball.getPosition().y > screenSize.y) {
-            ball.setPosition(ball.getPosition().x, -50.0f);
-        }
 
-        ball.setPosition(ball.getPosition().x, (ball.getPosition().y + (fSpeed * kTimeStep)));
-        proj.update(kTimeStep);
+        //ball.setPosition(ball.getPosition().x, (ball.getPosition().y + (fSpeed * kTimeStep)));
 
         if (input.isDown()) {
-            gun.shoot(input.getTapPos());
+
         }
-        gun.update(kTimeStep);
     }
 
     public void drawCanvas(Canvas canvas) {
-        canvas.drawARGB(255, 255, 255, 255);
-        ball.draw(paint, canvas);
-        box.draw(paint, canvas);
-        proj.draw(paint, canvas);
-
+        canvas.drawARGB(255, 255, 255, 255);        //Clear Screen
         gun.draw(paint, canvas);
-        gun.drawProj(paint, canvas);
     }
     public  void run() {
         android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
