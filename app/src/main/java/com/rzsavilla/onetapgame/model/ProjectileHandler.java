@@ -84,6 +84,9 @@ public class ProjectileHandler extends Transformable{
             while(itr.hasNext()) {                      //Iterate through bullets
                 Projectile element = itr.next();        //Get element
                 element.update(timeStep);               //Update projectile
+                if (element.isDestroyed()) {
+                    itr.remove();
+                }
             }
         }
     }

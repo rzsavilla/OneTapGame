@@ -21,6 +21,7 @@ import com.rzsavilla.onetapgame.model.Launcher;
 import com.rzsavilla.onetapgame.model.Projectile;
 import com.rzsavilla.onetapgame.model.ProjectileHandler;
 import com.rzsavilla.onetapgame.model.RectangleShape;
+import com.rzsavilla.onetapgame.model.Sprite;
 import com.rzsavilla.onetapgame.model.Vector2D;
 
 import java.util.Timer;
@@ -35,7 +36,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
     private int sleepTime;                                      // ms to sleep
     private int framesSkipped;                                  // number of frames being skipped
     private long timer = 0;
-    private static float kTimeStep = 1.0f / (float) MAX_FPS;
+    private static float m_kfTimeStep = 1.0f / (float) MAX_FPS;
 
     private Timer clock;
 
@@ -52,7 +53,6 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
 
     //////////////OBJECTS/////////////////////
     Launcher gun;
-
 
     ////////////BMP///////////////////
     private Bitmap bmp;
@@ -73,10 +73,11 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
     }
 
     public void init() {
-        bmp = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.spritesheet);
+        bmp = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.cannon);
         gun = new Launcher();
-        gun.setPosition((float) screenSize.x / 2, (float) screenSize.y / 2);
-        gun.cannon.setSpriteSheet(bmp);
+        gun.sprite.setTexture(bmp);
+        gun.setOrigin(bmp.getWidth() / 2, bmp.getHeight() / 2);
+        gun.setPosition((float) screenSize.x / 2, (float) screenSize.y - bmp.getHeight());
     }
 
     int iCounter = 0;
@@ -89,13 +90,15 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
         //ball.setPosition(ball.getPosition().x, (ball.getPosition().y + (fSpeed * kTimeStep)));
 
         if (input.isDown()) {
-
+            gun.rotateTowards(input.getTapPos());
+            gun.m_Bullets.shoot(input.getTapPos());
         }
+        gun.update(m_kfTimeStep);
     }
 
     public void drawCanvas(Canvas canvas) {
         canvas.drawARGB(255, 255, 255, 255);        //Clear Screen
-        gun.draw(paint, canvas);
+        gun.draw(paint,canvas);
     }
     public  void run() {
         android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);

@@ -5,12 +5,16 @@ import android.renderscript.Matrix3f;
 /**
  * Created by rzsavilla on 14/03/2016.
  */
-public class Transformable {
+public class Transformable extends Destroyable{
     private Vector2D m_vPosition = new Vector2D();
     private Vector2D m_vOrigin = new Vector2D();
     private Vector2D m_vScale = new Vector2D();
     private float m_fRotation = 0.0f;
     private boolean bUpdate = false;
+
+    protected boolean bPositionChanged = true;
+    protected boolean bOriginChanged = true;
+    protected boolean bRotationChanged = true;
 
     /////////////////SET///////////////////////////
     public void setPosition(Vector2D newPosition) {
@@ -20,6 +24,7 @@ public class Transformable {
     public void setPosition(float x, float y) {
         m_vPosition.x = x;
         m_vPosition.y = y;
+        bPositionChanged = true;
     }
 
     public void setOrigin(Vector2D newOrigin) {
@@ -42,6 +47,7 @@ public class Transformable {
 
     public void setRotatation(float newRotation) {
         m_fRotation = newRotation;
+        bRotationChanged = true;
     }
 
     ////////////////GET/////////////////////

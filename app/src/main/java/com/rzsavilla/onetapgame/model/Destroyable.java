@@ -3,7 +3,7 @@ package com.rzsavilla.onetapgame.model;
 /**
  * Created by rzsavilla on 14/03/2016.
  */
-public class Destroyable {
+public abstract class Destroyable {
     private boolean m_bDestroy = false;           //Destroy Object
 
     public void destroy() {

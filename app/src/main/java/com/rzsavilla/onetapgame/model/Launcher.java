@@ -16,13 +16,12 @@ public class Launcher extends Transformable{
     private boolean m_bRotateLeft = false;
     private boolean m_bRotateRight = false;
 
-    private ProjectileHandler m_ProjHandler;
-    public Sprite cannon;
-
-
+    public ProjectileHandler m_Bullets = new ProjectileHandler();
+    public Sprite sprite;
 
     public Launcher() {
-        cannon = new Sprite();
+        sprite = new Sprite();
+        m_Bullets.setRateOfFire(0.1f);
     }
 
     public Launcher(Vector2D position, Vector2D size, int colour) {
@@ -30,16 +29,40 @@ public class Launcher extends Transformable{
     }
 
     public void draw(Paint p, Canvas c) {
-        //m_ProjHandler.drawProj(p,c);
-        cannon.drawSprite(p,c);
+        m_Bullets.drawProj(p,c);
+        sprite.drawSprite(p,c);
     }
 
-    public void update() {
-        cannon.setPosition(this.getPosition());
+    public void rotateTowards(Vector2D target) {
+        //Calculate Gradient
+        float x = this.getPosition().x - target.x;
+        float y = this.getPosition().y - target.y;
+        float g = (float)Math.atan2((double)y,(double)x);
+        this.setRotatation(g * (180 / (float) Math.PI) - 90);
+        System.out.println(getRotation());
+    }
+
+    public void update(float timeStep) {
+        if (bPositionChanged) {
+            sprite.setPosition(this.getPosition());
+            m_Bullets.setPosition(this.getPosition());
+            bPositionChanged = false;
+        }
+        if (bOriginChanged) {
+            sprite.setOrigin(this.getOrigin());
+            bOriginChanged = false;
+        }
+        if (bRotationChanged) {
+            sprite.setRotatation(this.getRotation());
+            bRotationChanged = false;
+        }
+
         if (m_bRotateLeft) {
 
         } else if (m_bRotateRight) {
 
         }
+        sprite.update();
+        m_Bullets.update(timeStep);
     }
 }

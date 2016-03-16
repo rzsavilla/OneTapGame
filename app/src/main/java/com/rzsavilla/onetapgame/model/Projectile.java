@@ -11,16 +11,14 @@ public class Projectile extends CircleShape{
     private boolean m_bHasTarget = false;
     private boolean m_bReachedTarget = false;
     private double m_dRateOfFire = 0.1d;
-    private float fSpeed;
+    private float fSpeed = 500.0f;
 
     public Projectile() {
         super(0.0f,0.0f,20.0f, Color.RED);
-        fSpeed = 200.0f;
     }
 
     public Projectile(float xPos, float yPos, float targetX, float targetY) {
         super(xPos ,yPos,20.0f, Color.RED);
-        fSpeed = 200.0f;
         setTarget(targetX,targetY);
     }
 
@@ -62,6 +60,9 @@ public class Projectile extends CircleShape{
                 //Move
                 setPosition(this.getPosition().add(this.getVelocity().multiply(timeStep)));
             }
+        }
+        if (m_bReachedTarget) {
+            destroy();
         }
     }
 }
