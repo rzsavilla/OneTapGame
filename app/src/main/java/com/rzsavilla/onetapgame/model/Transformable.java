@@ -8,13 +8,14 @@ import android.renderscript.Matrix3f;
 public class Transformable extends Destroyable{
     private Vector2D m_vPosition = new Vector2D();
     private Vector2D m_vOrigin = new Vector2D();
-    private Vector2D m_vScale = new Vector2D();
+    private Vector2D m_vScale = new Vector2D(1.0f,1.0f);
     private float m_fRotation = 0.0f;
     private boolean bUpdate = false;
 
     protected boolean bPositionChanged = true;
     protected boolean bOriginChanged = true;
     protected boolean bRotationChanged = true;
+    protected boolean bScaleChanged = true;
 
     /////////////////SET///////////////////////////
     public void setPosition(Vector2D newPosition) {
