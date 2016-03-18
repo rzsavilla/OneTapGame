@@ -18,7 +18,7 @@ public class ProjectileHandler extends Transformable{
     private Projectile m_Projectile = new Projectile();                 //Projectile to be fired
     private ArrayList<Projectile> m_aProjectiles = new ArrayList();     //Stores projectiles fired
 
-    public float m_fRateOfFire = 1.0f;                                 //Limit Number of bullets fired in seconds
+    public float m_fRateOfFire = 0.35f;                                 //Limit Number of bullets fired in seconds
     private Elapsed timer = new Elapsed();                              //Timer for rate of fire, Checks for elapsed time before projectile can be fired again
     private boolean m_bCanShoot = false;                                //Flag to determine if bullets can be fired
     private boolean m_bShoot = false;
@@ -69,6 +69,14 @@ public class ProjectileHandler extends Transformable{
 
     //Update all projectiles in array
     protected void update(float timeStep) {
+        //Update rate of fire
+        if (!m_bCanShoot) {
+            if (timer.getElapsed() > m_fRateOfFire) {       //Check when projectiles can be shot
+                timer.restart();
+                m_bCanShoot = true;
+            }
+        }
+
         if (m_bShoot) {
             if (m_bCanShoot) {
                 m_aProjectiles.add(new Projectile(this.getPosition().x, this.getPosition().y, m_vTarget.x, m_vTarget.y));
@@ -77,13 +85,6 @@ public class ProjectileHandler extends Transformable{
             m_bShoot = false;
         }
 
-        //Update rate of fire
-        if (!m_bCanShoot) {
-            if (timer.getElapsed() > m_fRateOfFire) {       //Check when projectiles can be shot
-                m_bCanShoot = true;
-                timer.restart();
-            }
-        }
         //Update all projectiles
         if (!m_aProjectiles.isEmpty()) {
             ListIterator<Projectile> itr = m_aProjectiles.listIterator();

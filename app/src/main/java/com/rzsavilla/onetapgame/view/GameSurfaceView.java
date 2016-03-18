@@ -3,10 +3,12 @@ package com.rzsavilla.onetapgame.view;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.Shader;
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -64,6 +66,8 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
     private Bitmap monsterBMP;
     private Bitmap monBMP;
     private Bitmap bmp2;
+    private Bitmap backgroundBMP;
+    private Bitmap backgroundLava;
 
     //Constructor
     public GameSurfaceView(Context context) {
@@ -84,6 +88,9 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
         bmp2 = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.spritesheet);
         monsterBMP = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.warrior2);
         monBMP = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.war);
+        backgroundBMP = BitmapFactory.decodeResource(getContext().getResources(),R.drawable.grass);
+        backgroundLava = BitmapFactory.decodeResource(getContext().getResources(),R.drawable.lava);
+
         monster.setPosition(screenSize.x / 2, screenSize.y / 2);
         //monster.setTexture(bmp2);
         monster.setSpriteSheet(monsterBMP,new Vector2Di(200,200),new Vector2Di(4,1));
@@ -105,7 +112,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
         monster.setPosition(monster.getPosition().x, monster.getPosition().y + (500.0f * m_kfTimeStep));
         if (monster.getPosition().y >= screenSize.y - 200.0f) {
             Random rand = new Random();
-            float x = rand.nextInt(screenSize.x - monster.getSize().x) + monster.getSize().x;
+            float x = rand.nextInt(screenSize.x - (screenSize.x / 4)) + (screenSize.x / 4);
             monster.setPosition(x, 0);
         }
         if (input.isDown()) {
@@ -116,11 +123,21 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
         monster.update();
     }
 
+    boolean bShaderSet = false;
+    Paint p = new Paint();
+    Paint p2 = new Paint();
     public void drawCanvas(Canvas canvas) {
-        canvas.drawARGB(255, 255, 255, 255);        //Clear Screen
+        if (!bShaderSet) {
+            p.setShader(new BitmapShader(backgroundBMP, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT));
+            p2.setShader(new BitmapShader(backgroundLava, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT));
+            bShaderSet = true;
+        }
+        //canvas.drawARGB(0, 0, 0, 0);        //Clear Screen
+        canvas.drawRect(0, 0, screenSize.x / 2,screenSize.y, p);                      //Grass
+        canvas.drawRect(screenSize.x / 2, 0, screenSize.x, screenSize.y,p2);          //Lava
         monster.drawSprite(paint, canvas);
         gun.draw(paint, canvas);
-        mon.drawSprite(paint,canvas);
+        mon.drawSprite(paint, canvas);
     }
     public  void run() {
         android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);

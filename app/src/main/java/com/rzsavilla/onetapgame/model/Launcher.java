@@ -21,7 +21,6 @@ public class Launcher extends Transformable{
 
     public Launcher() {
         sprite = new Sprite();
-        m_Bullets.setRateOfFire(1.0f);
     }
 
     public Launcher(Vector2D position, Vector2D size, int colour) {
