@@ -14,7 +14,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         //Go to Splash Screen
-        Intent intent = new Intent(this, GameActivity.class);
+        Intent intent = new Intent(this, SplashActivity.class);
         startActivity(intent);
     }
 }

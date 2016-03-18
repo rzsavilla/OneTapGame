@@ -90,6 +90,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
         monBMP = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.war);
         backgroundBMP = BitmapFactory.decodeResource(getContext().getResources(),R.drawable.grass);
         backgroundLava = BitmapFactory.decodeResource(getContext().getResources(),R.drawable.lava);
+        backgroundBMP = Bitmap.createScaledBitmap(backgroundBMP,100,100,false);
 
         monster.setPosition(screenSize.x / 2, screenSize.y / 2);
         //monster.setTexture(bmp2);
