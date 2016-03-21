@@ -25,6 +25,7 @@ import com.rzsavilla.onetapgame.model.Projectile;
 import com.rzsavilla.onetapgame.model.ProjectileHandler;
 import com.rzsavilla.onetapgame.model.RectangleShape;
 import com.rzsavilla.onetapgame.model.Sprite;
+import com.rzsavilla.onetapgame.model.TextureHandler;
 import com.rzsavilla.onetapgame.model.Vector2D;
 import com.rzsavilla.onetapgame.model.Vector2Di;
 
@@ -32,8 +33,8 @@ import java.util.Random;
 import java.util.Timer;
 
 public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTouchListener{
-    private final static int    MAX_FPS = 30;                   // desired fps
-    private final static int    MAX_FRAME_SKIPS = 3;            // maximum number of frames to be skipped
+    private final static int    MAX_FPS = 60;                   // desired fps
+    private final static int    MAX_FRAME_SKIPS = 10;            // maximum number of frames to be skipped
     private final static int    FRAME_PERIOD = 1000 / MAX_FPS;  // the frame period
 
     private long beginTime;                                     // the time when the cycle began
@@ -42,8 +43,6 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
     private int framesSkipped;                                  // number of frames being skipped
     private long timer = 0;
     private static float m_kfTimeStep = 1.0f / MAX_FPS;
-
-    private Timer clock;
 
     private SurfaceHolder holder;
     private Thread t = null;
@@ -57,17 +56,10 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
     InputHandler input = new InputHandler();
 
     //////////////OBJECTS/////////////////////
-    Launcher gun;
-    AnimatedSprite monster = new AnimatedSprite();
-    Sprite mon = new Sprite();
 
     ////////////BMP///////////////////
-    private Bitmap bmp;
-    private Bitmap monsterBMP;
-    private Bitmap monBMP;
-    private Bitmap bmp2;
-    private Bitmap backgroundBMP;
-    private Bitmap backgroundLava;
+
+    private TextureHandler textures;
 
     //Constructor
     public GameSurfaceView(Context context) {
@@ -84,61 +76,31 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
     }
 
     public void init() {
-        bmp = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.cannon);
-        bmp2 = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.spritesheet);
-        monsterBMP = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.warrior2);
-        monBMP = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.war);
-        backgroundBMP = BitmapFactory.decodeResource(getContext().getResources(),R.drawable.grass);
-        backgroundLava = BitmapFactory.decodeResource(getContext().getResources(),R.drawable.lava);
-        backgroundBMP = Bitmap.createScaledBitmap(backgroundBMP,100,100,false);
+        textures = new TextureHandler();
+        textures.setContext(getContext());
+        textures.setScreenSize(screenSize);
 
-        monster.setPosition(screenSize.x / 2, screenSize.y / 2);
-        //monster.setTexture(bmp2);
-        monster.setSpriteSheet(monsterBMP,new Vector2Di(200,200),new Vector2Di(4,1));
-        gun = new Launcher();
-        gun.sprite.setTexture(bmp);
-        gun.setOrigin(bmp.getWidth() / 2, bmp.getHeight() / 2);
-        gun.setPosition((float) screenSize.x / 2, (float) screenSize.y - bmp.getHeight());
-        gun.setOrigin(gun.sprite.getSize().x / 2, gun.sprite.getSize().y / 2);
+        textures.loadBitmap(R.drawable.cannon);
+        textures.loadBitmap(R.drawable.soldier_spritesheet);
+        textures.loadBitmap(R.drawable.grass);
     }
 
-    int iCounter = 0;
-    double h = 0.001;
-    float fSpeed = 2000.f;
     //Update
     private void updateCanvas() {
-        //float timeStep = (float) timeDiff / 1000;             //Variable timestep jumpy!!!
 
-        //ball.setPosition(ball.getPosition().x, (ball.getPosition().y + (fSpeed * kTimeStep)));
-        monster.setPosition(monster.getPosition().x, monster.getPosition().y + (500.0f * m_kfTimeStep));
-        if (monster.getPosition().y >= screenSize.y - 200.0f) {
-            Random rand = new Random();
-            float x = rand.nextInt(screenSize.x - (screenSize.x / 4)) + (screenSize.x / 4);
-            monster.setPosition(x, 0);
-        }
-        if (input.isDown()) {
-            gun.rotateTowards(input.getTapPos());
-            gun.m_Bullets.shoot(input.getTapPos());
-        }
-        gun.update(m_kfTimeStep);
-        monster.update();
     }
 
     boolean bShaderSet = false;
     Paint p = new Paint();
-    Paint p2 = new Paint();
     public void drawCanvas(Canvas canvas) {
         if (!bShaderSet) {
-            p.setShader(new BitmapShader(backgroundBMP, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT));
-            p2.setShader(new BitmapShader(backgroundLava, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT));
+            p.setShader(new BitmapShader(textures.getTexture(2),Shader.TileMode.REPEAT, Shader.TileMode.REPEAT));
             bShaderSet = true;
         }
-        //canvas.drawARGB(0, 0, 0, 0);        //Clear Screen
-        canvas.drawRect(0, 0, screenSize.x / 2,screenSize.y, p);                      //Grass
-        canvas.drawRect(screenSize.x / 2, 0, screenSize.x, screenSize.y,p2);          //Lava
-        monster.drawSprite(paint, canvas);
-        gun.draw(paint, canvas);
-        mon.drawSprite(paint, canvas);
+        //Background
+        canvas.drawRect(0,0,screenSize.x,screenSize.y,p);
+
+
     }
     public  void run() {
         android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
@@ -199,7 +161,6 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
     }
 
     public boolean onTouch(View view,MotionEvent event) {
-        Log.d("Touch","Yes");
         return true;
     }
 }

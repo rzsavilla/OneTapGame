@@ -11,7 +11,7 @@ public class Projectile extends CircleShape{
     private boolean m_bHasTarget = false;
     private boolean m_bReachedTarget = false;
     private double m_dRateOfFire = 0.1d;
-    private float fSpeed = 500.0f;
+    private float fSpeed = 1000.0f;
 
     public Projectile() {
         super(0.0f,0.0f,20.0f, Color.RED);
@@ -51,7 +51,7 @@ public class Projectile extends CircleShape{
                 //Log.d("Distance: ", Float.toString(fDistance));
                 this.setVelocity(fSpeed * (m_vTargetPos.x - this.getPosition().x) / fDistance,
                         fSpeed * (m_vTargetPos.y - this.getPosition().y) / fDistance);
-                if (fDistance < 10.0f) {
+                if (fDistance < fSpeed * timeStep) {
                     m_bReachedTarget = true;
                     m_bHasTarget = false;
                     this.setVelocity(0.0f,0.0f);

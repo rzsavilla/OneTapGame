@@ -38,7 +38,6 @@ public class Launcher extends Transformable{
         float y = this.getPosition().y - target.y;
         float g = (float)Math.atan2((double)y,(double)x);
         this.setRotatation(g * (180 / (float) Math.PI) - 90);
-        System.out.println(getRotation());
     }
 
     public void update(float timeStep) {

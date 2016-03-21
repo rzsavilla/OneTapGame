@@ -9,7 +9,8 @@ public class Vector2Di {
 
     //Default Constructor
     public Vector2Di() {
-
+        x = 0;
+        y = 0;
     }
 
     public Vector2Di(int x, int y) {
