@@ -28,8 +28,10 @@ public class Launcher extends Transformable{
     }
 
     public void draw(Paint p, Canvas c) {
-        m_Bullets.drawProj(p,c);
+        m_Bullets.drawProj(p, c);
+        sprite.setPosition(getPosition().x, getPosition().y);
         sprite.drawSprite(p,c);
+
     }
 
     public void rotateTowards(Vector2D target) {

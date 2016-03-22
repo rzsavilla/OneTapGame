@@ -4,7 +4,10 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
+import android.text.BoringLayout;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.SurfaceHolder;
 
 import com.rzsavilla.onetapgame.R;
 
@@ -20,6 +23,8 @@ public class TextureHandler {
     private boolean m_bHasContext;
     private boolean m_bScreenSet;
     private Context m_context;
+    private float m_fScreenDensity;
+    private Vector2D m_vScale = new Vector2D();
 
     public void TextureHandler(Context contextIn) {
         m_context = contextIn;
@@ -40,6 +45,11 @@ public class TextureHandler {
         m_vScreenSize = newScreenSize;
     }
 
+    public void setScale(Vector2D newScale) {
+        m_bScreenSet = true;
+        m_vScale = newScale;
+    }
+
     public void setScreenSize(Point newScreenSize) {
         m_vScreenSize.x = newScreenSize.x;
         m_vScreenSize.y = newScreenSize.y;
@@ -49,15 +59,16 @@ public class TextureHandler {
 
     public void setContext(Context contextIn) {
         m_context = contextIn;
+        m_fScreenDensity = m_context.getResources().getDisplayMetrics().density;
         m_bHasContext = true;
     }
     public boolean loadBitmap(int id) {
         if (m_bHasContext && m_bScreenSet) {
-            float x = (float)(1 + (float)m_pScreenSize.x * 0.0001);
-            float y = (float)(1 + (float)m_pScreenSize.y * 0.0001);
             Bitmap texture;
             texture = BitmapFactory.decodeResource(m_context.getResources(), id);
-            texture = Bitmap.createScaledBitmap(texture, (int)((float)texture.getWidth() * x), (int)((float)texture.getHeight() * y),false);
+            float fScaleX = texture.getWidth() * (1);
+            float fScaleY = texture.getHeight() * (1);
+            texture = Bitmap.createScaledBitmap(texture, (int)fScaleX, (int)fScaleY, false);
             m_aTextures.add(texture);
             return true;
         } else {

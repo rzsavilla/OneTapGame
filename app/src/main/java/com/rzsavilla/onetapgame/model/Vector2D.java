@@ -4,16 +4,17 @@ public class Vector2D {
     public float x = 0.0f;
     public float y = 0.0f;
 
-    Vector2D() {                //Default Contructor
-
+    public Vector2D() {                //Default Contructor
+        x = 0.0f;
+        y = 0.0f;
     }
 
-    Vector2D(float x, float y) {
+    public Vector2D(float x, float y) {
         this.x = x;
         this.y = y;
     }
 
-    Vector2D(Vector2D other) {
+    public Vector2D(Vector2D other) {
         this.x = other.x;
         this.y = other.y;
     }

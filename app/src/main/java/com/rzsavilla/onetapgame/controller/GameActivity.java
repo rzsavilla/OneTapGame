@@ -3,6 +3,7 @@ package com.rzsavilla.onetapgame.controller;
 import android.app.Activity;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.text.BoringLayout;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
@@ -11,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.rzsavilla.onetapgame.R;
+import com.rzsavilla.onetapgame.model.Vector2D;
 import com.rzsavilla.onetapgame.view.GameSurfaceView;
 
 public class GameActivity extends Activity{
@@ -22,8 +24,8 @@ public class GameActivity extends Activity{
         //Get Screen Size
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        Point screenSize = new Point( metrics.widthPixels,metrics.heightPixels);
-
+        Point screenSize = new Point(metrics.widthPixels,metrics.heightPixels);
+        Vector2D scale = new Vector2D(metrics.scaledDensity,metrics.scaledDensity);
         gsv = new GameSurfaceView(this,screenSize);
         setContentView(gsv);
     }
