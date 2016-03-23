@@ -1,14 +1,18 @@
 package com.rzsavilla.onetapgame.model;
 
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.renderscript.Matrix3f;
 
 /**
  * Created by rzsavilla on 14/03/2016.
  */
 public class Transformable extends Destroyable{
+    protected Vector2D vGlobalPos = new Vector2D();
     private Vector2D m_vPosition = new Vector2D();
     private Vector2D m_vOrigin = new Vector2D();
     private Vector2D m_vScale = new Vector2D(1.0f,1.0f);
+    private RectF m_vGlobalBounds = new RectF();
     private float m_fRotation = 0.0f;
     private boolean bUpdate = false;
 
@@ -20,6 +24,7 @@ public class Transformable extends Destroyable{
     /////////////////SET///////////////////////////
     public void setPosition(Vector2D newPosition) {
         m_vPosition = newPosition;
+        bPositionChanged = true;
     }
 
     public void setPosition(float x, float y) {

@@ -15,14 +15,17 @@ import java.util.Vector;
 /**
  * Created by rzsavilla on 15/03/2016.
  */
-public class Sprite extends Transformable {
+public class Sprite extends Moveable implements Drawable, Collidable{
     protected Bitmap m_SpritesheetBMP;
     public Vector2Di m_viSize = new Vector2Di(100,100);
     protected boolean m_bHasTexture = false;
+    private float e = 1;
 
     protected Rect src = new Rect();
     protected RectF dst = new RectF();
     protected boolean bSizeChanged = true;
+
+    private AABB bb = new AABB();       //Bounding Box
 
     public Sprite() {
 
@@ -55,21 +58,51 @@ public class Sprite extends Transformable {
         return m_viSize;
     }
 
-    public void drawSprite (Paint p,Canvas c) {
+    public boolean collision(AABB other) {
+        return bb.collision(other);
+    }
+
+    public boolean collision(CircleShape other) {
+        return bb.collision(other);
+    }
+
+    public AABB getBB() {
+        return bb;
+    }
+
+    public boolean impulseCollision(Sprite other, boolean immovable) {
+        Vector2D vNormal = (this.getPosition().subtract(other.getPosition())).unitVector();
+        this.setVelocity(this.getVelocity().add((vNormal.multiply(vNormal)).dot(this.getVelocity().multiply(-(1.f + e)))));
+        if (immovable) {
+
+        } else {
+            Vector2D vVelDiff = this.getVelocity().subtract(other.getVelocity());
+        }
+        return false;
+    }
+
+    public void draw (Paint p,Canvas c) {
         if (m_bHasTexture) {
             if (bPositionChanged || bOriginChanged || bScaleChanged || bSizeChanged) {
                 dst = new RectF(this.getPosition().x - this.getOrigin().x,this.getPosition().y - this.getOrigin().y,
-                        (this.getPosition().x + m_viSize.x * this.getScale().x) - (this.getOrigin().x * this.getScale().y),
-                        (this.getPosition ().y + m_viSize.y * this.getScale().x) - (this.getOrigin().y * this.getScale().y));
-                //dst = new RectF(this.getPosition().x, this.getPosition().y, this.getPosition().x + m_viSize.x, this.getPosition().y + m_viSize.y);
+                        (this.getPosition().x + m_viSize.x * this.getScale().x) - this.getOrigin().x,
+                        (this.getPosition ().y + m_viSize.y * this.getScale().x) - this.getOrigin().y);
+
+                bb.setOrigin(this.getOrigin());
+                bb.setPosition(this.getPosition());
+                bb.setSize(src.width() *(int)this.getScale().x,src.height() * (int)this.getScale().y);
+
                 this.bPositionChanged = false;
                 this.bRotationChanged = false;
                 this.bScaleChanged = false;
                 this.bSizeChanged = false;
             }
+            bb.setPosition(this.getPosition());
+            bb.draw(p,c);
             c.rotate(getRotation(), this.getPosition().x, this.getPosition().y);
-            c.drawBitmap(m_SpritesheetBMP, src, dst,p);
+            c.drawBitmap(m_SpritesheetBMP, src, dst, p);
             c.rotate(-getRotation(), this.getPosition().x, this.getPosition().y);
+
         }
     }
 }

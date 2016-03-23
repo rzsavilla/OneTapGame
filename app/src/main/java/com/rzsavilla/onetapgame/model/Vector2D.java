@@ -36,6 +36,10 @@ public class Vector2D {
     }
 
     //Scalar
+    public Vector2D add(float scalar) {
+        return new Vector2D(this.x * scalar, this.y * scalar);
+    }
+
     public Vector2D multiply(float scalar) {
         return new Vector2D(this.x * scalar , this.y * scalar);
     }
@@ -55,5 +59,9 @@ public class Vector2D {
 
     public Vector2D unitVector() {
         return new Vector2D(this.x / this.magnitude(), this.y / this.magnitude());
+    }
+
+    public float dot(Vector2D other) {
+        return (this.x * other.x) + (this.y * other.y);
     }
 }

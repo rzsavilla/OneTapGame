@@ -17,9 +17,11 @@ import android.view.View;
 
 import com.rzsavilla.onetapgame.R;
 import com.rzsavilla.onetapgame.model.AABB;
+import com.rzsavilla.onetapgame.model.AnimatedSprite;
 import com.rzsavilla.onetapgame.model.Elapsed;
 import com.rzsavilla.onetapgame.model.InputHandler;
 import com.rzsavilla.onetapgame.model.Launcher;
+import com.rzsavilla.onetapgame.model.Sprite;
 import com.rzsavilla.onetapgame.model.TextureHandler;
 import com.rzsavilla.onetapgame.model.Vector2D;
 import com.rzsavilla.onetapgame.model.Vector2Di;
@@ -57,6 +59,9 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
     Launcher cannon = new Launcher();
     AABB leftBox = new AABB();
     AABB rightBox = new AABB();
+
+    AnimatedSprite mon1 = new AnimatedSprite();
+    Sprite mon2 = new Sprite();
     ////////////BMP///////////////////
 
     private TextureHandler textures;
@@ -82,7 +87,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
     private  boolean bRight = true;
     Elapsed elapsed = new Elapsed();
     public void init() {
-        leftBox.setPosition(screenSize.x / 4,screenSize.y / 2);
+        leftBox.setPosition(screenSize.x / 4, screenSize.y / 2);
         rightBox.setPosition(screenSize.x / 2, screenSize.y / 2);
 
         System.out.println("Init");
@@ -94,6 +99,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
         textures.loadBitmap(R.drawable.cannon);
         textures.loadBitmap(R.drawable.soldier_spritesheet);
         textures.loadBitmap(R.drawable.grass);
+        textures.loadBitmap(R.drawable.warrior);
 
         cannon.sprite.setTexture(textures.getTexture(0));
         cannon.setPosition(screenSize.x / 2, screenSize.y);
@@ -103,8 +109,14 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
         left.x = -screenSize.x;
         right.x = screenSize.x;
 
-        c.translate(0,0);
+        mon1.setPosition(screenSize.x / 2, screenSize.y / 4);
+        mon1.setSpriteSheet(textures.getTexture(1), new Vector2Di(250, 250), new Vector2Di(4, 1));
+        mon2.setPosition(screenSize.x / 2, screenSize.y / 2);
+        mon2.setTexture(textures.getTexture(3));
+        mon2.setScale(4, 4);
         System.out.println("Finish");
+        //mon2.setVelocity(0, 100);
+        //mon1.setVelocity(0,-100);
     }
 
     //Update
@@ -131,12 +143,24 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
                 m_bLaneChanging = false;
                 screenPos.x = screenTargetX;
             }
-
             leftBox.setPosition(screenPos.x + screenSize.x / 4,leftBox.getPosition().y);
             rightBox.setPosition(screenPos.x + screenSize.x / 2,leftBox.getPosition().y);
-
         }
         //Log.d("Right?",Boolean.toString(bRight));
+        mon1.update();
+        mon1.moveUpdate(m_kfTimeStep);
+        mon2.moveUpdate(m_kfTimeStep);
+        if (mon1.getPosition().y < 50) {
+            mon1.setPosition(mon1.getPosition().x, screenSize.y / 2);
+        }
+        if (mon2.getPosition().y > screenSize.y / 2) {
+            mon2.setPosition(mon2.getPosition().x , 0);
+        }
+
+        if (mon1.collision(mon2.getBB())) {
+            //mon1.setPosition(mon1.getPosition().x,screenSize.y - 300);
+            //mon2.setPosition(mon2.getPosition().x,0);
+        }
     }
 
     boolean bShaderSet = false;
@@ -154,10 +178,14 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
         ////!!!!!!!!!!canvas.translate();
         //Objects
 
-        leftBox.draw(p,c);
-        rightBox.draw(p,c);
+        if (!m_bLaneChanging) {
+            leftBox.draw(p, c);
+            rightBox.draw(p, c);
+        }
 
         cannon.draw(p, c);
+        mon1.draw(p,c);
+        mon2.draw(p,c);
     }
 
     public  void run() {
@@ -218,8 +246,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
         input.setEvent(event);
         input.setTapPosition(screenPos);                        //Tap position relative to canvas position;
         Log.d("Touch x",Float.toString(input.getTapPos().x));
-        if (!m_bLaneChanging) {
-
+        if (false) {
             if (leftBox.intersect(input.getTapPos())) {
                 System.out.println("Left");
                 moveLeft();
@@ -229,6 +256,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
                 moveRight();
             }
         }
+        mon1.setPosition(input.getTapPos());
     }
 
     public boolean onTouch(View view,MotionEvent event) {

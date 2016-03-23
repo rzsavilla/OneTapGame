@@ -1,7 +1,8 @@
 package com.rzsavilla.onetapgame.model;
 
-/**
- * Created by rzsavilla on 22/03/2016.
- */
+import android.graphics.Canvas;
+import android.graphics.Paint;
+
 public interface Drawable {
+    void draw(Paint p, Canvas c);
 }

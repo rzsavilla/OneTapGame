@@ -3,7 +3,7 @@ package com.rzsavilla.onetapgame.model;
 /**
  * Created by rzsavilla on 14/03/2016.
  */
-public class Moveable extends Transformable {
+public abstract class Moveable extends Transformable {
     private Vector2D m_vVelocity = new Vector2D();
     private float m_fForce = 0.0f;
     private float m_fMass = 0.0f;
@@ -39,5 +39,9 @@ public class Moveable extends Transformable {
 
     public float getAcceleration() {
         return m_fForce / m_fMass;
+    }
+
+    public void moveUpdate(float timeStep) {
+        setPosition(this.getPosition().add(m_vVelocity.multiply(timeStep)));
     }
 }

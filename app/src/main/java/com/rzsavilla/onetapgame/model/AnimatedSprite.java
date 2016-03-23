@@ -20,7 +20,7 @@ public class AnimatedSprite extends Sprite {
     private boolean m_bPlayAnimation = false;
     private boolean m_bLoopAnimation = false;
     private float m_fAnimatationSpeed = 0.2f;
-    private Vector2Di  vFrameSize = new Vector2Di(32,32);
+    private Vector2Di  vFrameSize = new Vector2Di(100,100);
 
     private int m_iCurrFrame = 0;
     private int m_iFrameX = 0;

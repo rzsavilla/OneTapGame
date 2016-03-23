@@ -13,6 +13,7 @@ public class Projectile extends CircleShape{
     private double m_dRateOfFire = 0.1d;
     private float fSpeed = 1000.0f;
 
+
     public Projectile() {
         super(0.0f,0.0f,20.0f, Color.RED);
     }
