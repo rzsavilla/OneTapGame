@@ -16,6 +16,7 @@ import android.view.SurfaceView;
 import android.view.View;
 
 import com.rzsavilla.onetapgame.R;
+import com.rzsavilla.onetapgame.model.AABB;
 import com.rzsavilla.onetapgame.model.Elapsed;
 import com.rzsavilla.onetapgame.model.InputHandler;
 import com.rzsavilla.onetapgame.model.Launcher;
@@ -54,7 +55,8 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
 
     //////////////OBJECTS/////////////////////
     Launcher cannon = new Launcher();
-
+    AABB leftBox = new AABB();
+    AABB rightBox = new AABB();
     ////////////BMP///////////////////
 
     private TextureHandler textures;
@@ -80,6 +82,9 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
     private  boolean bRight = true;
     Elapsed elapsed = new Elapsed();
     public void init() {
+        leftBox.setPosition(screenSize.x / 4,screenSize.y / 2);
+        rightBox.setPosition(screenSize.x / 2, screenSize.y / 2);
+
         System.out.println("Init");
         textures = new TextureHandler();
         textures.setContext(getContext());
@@ -96,7 +101,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
         elapsed.restart();
 
         left.x = -screenSize.x;
-        right.x = screenSize.x * 2;
+        right.x = screenSize.x;
 
         c.translate(0,0);
         System.out.println("Finish");
@@ -109,21 +114,29 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
         cannon.update(m_kfTimeStep);
 
         if (m_bLaneChanging) {
-            float fSpeed = 200.f;
+            float fSpeed = 500.f;
             //Move
+            float fDistance;
             if (bRight) {
                 screenPos.x += fSpeed * m_kfTimeStep;
+                fDistance = screenTargetX - screenPos.x;
             } else {
                 screenPos.x -= fSpeed * m_kfTimeStep;
+                fDistance =  screenPos.x -(screenTargetX);
             }
-            float fDistance =  screenPos.x -(screenTargetX);
-            System.out.println(fDistance);
+
+            Log.d("Distance",Float.toString(fDistance));
 
             if (fDistance <= 0) {
                 m_bLaneChanging = false;
-                //screenPos.x = screenTargetX;
+                screenPos.x = screenTargetX;
             }
+
+            leftBox.setPosition(screenPos.x + screenSize.x / 4,leftBox.getPosition().y);
+            rightBox.setPosition(screenPos.x + screenSize.x / 2,leftBox.getPosition().y);
+
         }
+        //Log.d("Right?",Boolean.toString(bRight));
     }
 
     boolean bShaderSet = false;
@@ -136,13 +149,17 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
             bShaderSet = true;
         }
         //Background
-        c.translate(-screenPos.x,-screenPos.y);
+        c.translate(-screenPos.x, -screenPos.y);
         c.drawRect(-screenSize.x, 0, screenSize.x * 2, screenSize.y, pShader);
         ////!!!!!!!!!!canvas.translate();
         //Objects
 
+        leftBox.draw(p,c);
+        rightBox.draw(p,c);
+
         cannon.draw(p, c);
     }
+
     public  void run() {
         android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
         while (ok) {
@@ -199,13 +216,18 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
 
     public void tapUpdate(MotionEvent event) {
         input.setEvent(event);
+        input.setTapPosition(screenPos);                        //Tap position relative to canvas position;
+        Log.d("Touch x",Float.toString(input.getTapPos().x));
         if (!m_bLaneChanging) {
-            moveLeft();
-        }
-        if (bRight) {
 
-        } else {
-            //moveRight();
+            if (leftBox.intersect(input.getTapPos())) {
+                System.out.println("Left");
+                moveLeft();
+
+            } else if (rightBox.intersect(input.getTapPos())) {
+                System.out.println("Right");
+                moveRight();
+            }
         }
     }
 
@@ -218,10 +240,8 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
             Log.d("X:",Float.toString(screenPos.x));
             if (screenPos.x  <= center.x) {                //Check if on center lane
                 screenTargetX = left.x;         //Can move to the left lane
-            } else if (screenPos.x < right.x && screenPos.x > center.x){                                //On Right Lane
+            } else{                                //On Right Lane
                 screenTargetX = center.x;       //Can move to center lane
-            } else {
-                return false;
             }
             bRight = false;
             Log.d("target Left:",Float.toString(screenTargetX));
@@ -232,15 +252,16 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
     }
 
     private boolean moveRight() {
-        if (screenPos.x <= right.x) {
-            if (screenPos.x >= center.x) {
+        if (screenPos.x < right.x) {                                          //Check if on right lane, therefore cannot move right
+            if (screenPos.x >= center.x) {                                    //Check if on center lane, therefore can move to right lane
                 screenTargetX = right.x;
-            } else {
-                screenTargetX = 200.f;
+            } else {                                                            //On Left Lane can move to center lane
+                screenTargetX = center.x;
             }
+            Log.d("target Right:",Float.toString(screenTargetX));
             bRight = true;
-            System.out.println(screenTargetX);
             m_bLaneChanging = true;
+            return true;
         }
         return false;
     }

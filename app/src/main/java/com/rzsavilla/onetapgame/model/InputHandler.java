@@ -29,6 +29,11 @@ public class InputHandler {
         m_bUpdateEvent = true;
     }
 
+    public void setTapPosition(Vector2D addPosition) {
+        m_vTapPos.x = m_vTapPos.x + addPosition.x;
+        m_vTapPos.y = m_vTapPos.y + addPosition.y;
+    }
+
     public Vector2D getTapPos() {
         return m_vTapPos;
     }
