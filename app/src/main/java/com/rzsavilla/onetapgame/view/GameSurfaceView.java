@@ -243,8 +243,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
     }
 
     public void tapUpdate(MotionEvent event) {
-        input.setEvent(event);
-        input.setTapPosition(screenPos);                        //Tap position relative to canvas position;
+        input.setEvent(event,screenPos);         //Tap position relative to canvas position;
         Log.d("Touch x",Float.toString(input.getTapPos().x));
         if (false) {
             if (leftBox.intersect(input.getTapPos())) {
