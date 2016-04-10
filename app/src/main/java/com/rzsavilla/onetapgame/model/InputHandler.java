@@ -1,11 +1,9 @@
 package com.rzsavilla.onetapgame.model;
 
-import android.content.Context;
-import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.view.View;
 
-import java.util.jar.Attributes;
+import com.rzsavilla.onetapgame.model.Collision.AABB;
+import com.rzsavilla.onetapgame.model.Utilites.Vector2D;
 
 /**
  * Created by rzsavilla on 15/03/2016.
@@ -15,10 +13,15 @@ public class InputHandler {
     private Vector2D m_vTapPos = new Vector2D();          //Position of player screen tap
     private MotionEvent m_MotionEvent;
     private boolean m_bUpdateEvent = false;
+    private Vector2D m_vRelativePosition = new Vector2D();                 //Position of canvas
+
+    public AABB m_MouseBB = new AABB();
 
     public void InputHandler() {
 
     }
+
+    public boolean bTap = false;
 
     public void setUpdate(boolean update) {
         m_bUpdateEvent = update;
@@ -31,19 +34,24 @@ public class InputHandler {
 
     public void setEvent(MotionEvent event, Vector2D relative) {
         m_MotionEvent = event;
-        m_vTapPos.x = event.getX() + relative.x;
-        m_vTapPos.y = event.getY() + relative.y;
+        m_vRelativePosition = relative;
+        m_MouseBB.setPosition(m_vTapPos);
+        m_MouseBB.setSize(50.0f,50.0f);
+        m_MouseBB.updateGlobalBounds();
+        m_bUpdateEvent = true;
     }
 
     public Vector2D getTapPos() {
         return m_vTapPos;
     }
 
+    public AABB getMouseBB() { return m_MouseBB; }
+
     public boolean isDown() {
         return m_bClick;
     }
 
-    public boolean update() {
+    public boolean update(Vector2D canvasPos) {
         if (m_bUpdateEvent) {
             int iAction = m_MotionEvent.getAction();
             switch (iAction) {
@@ -52,6 +60,7 @@ public class InputHandler {
                     m_vTapPos.x = m_MotionEvent.getX();
                     m_vTapPos.y = m_MotionEvent.getY();
                     m_bClick = true;
+                    bTap = true;
                     break;
                 case MotionEvent.ACTION_MOVE:
                     // finger moves on the screen
@@ -61,8 +70,11 @@ public class InputHandler {
                 case MotionEvent.ACTION_UP:
                     // finger leaves the screen
                     m_bClick = false;
+                    bTap = false;
                     break;
             }
+            m_vTapPos.x += canvasPos.x;
+            m_vTapPos.y += canvasPos.y;
             m_bUpdateEvent = false;         //Event has been updated
         }
         return true;

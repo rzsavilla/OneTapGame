@@ -1,5 +1,7 @@
 package com.rzsavilla.onetapgame.model;
 
+import com.rzsavilla.onetapgame.model.Utilites.Vector2D;
+
 /**
  * Enemy Spawner
  */

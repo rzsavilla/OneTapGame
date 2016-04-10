@@ -1,4 +1,4 @@
-package com.rzsavilla.onetapgame.model;
+package com.rzsavilla.onetapgame.model.Utilites;
 
 public class Vector2D {
     public float x = 0.0f;

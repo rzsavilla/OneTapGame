@@ -1,4 +1,7 @@
-package com.rzsavilla.onetapgame.model;
+package com.rzsavilla.onetapgame.model.Abstract;
+
+import com.rzsavilla.onetapgame.model.Utilites.Transformable;
+import com.rzsavilla.onetapgame.model.Utilites.Vector2D;
 
 /**
  * Created by rzsavilla on 14/03/2016.

@@ -1,12 +1,14 @@
 package com.rzsavilla.onetapgame.model;
 
 import android.graphics.Color;
-import android.util.Log;
+
+import com.rzsavilla.onetapgame.model.Shapes.CircleShape;
+import com.rzsavilla.onetapgame.model.Utilites.Vector2D;
 
 /**
  * Created by rzsavilla on 14/03/2016.
  */
-public class Projectile extends CircleShape{
+public class Projectile extends CircleShape {
     private Vector2D m_vTargetPos = new Vector2D();
     private boolean m_bHasTarget = false;
     private boolean m_bReachedTarget = false;

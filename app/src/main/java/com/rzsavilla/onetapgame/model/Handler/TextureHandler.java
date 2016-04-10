@@ -1,15 +1,12 @@
-package com.rzsavilla.onetapgame.model;
+package com.rzsavilla.onetapgame.model.Handler;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
-import android.text.BoringLayout;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.SurfaceHolder;
 
-import com.rzsavilla.onetapgame.R;
+import com.rzsavilla.onetapgame.model.Utilites.Vector2D;
+import com.rzsavilla.onetapgame.model.Utilites.Vector2Di;
 
 import java.util.ArrayList;
 

@@ -1,12 +1,14 @@
-package com.rzsavilla.onetapgame.model;
+package com.rzsavilla.onetapgame.model.Shapes;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
+import com.rzsavilla.onetapgame.model.Abstract.Moveable;
+
 /**
  * Created by rzsavilla on 14/03/2016.
  */
-public class CircleShape extends Moveable{
+public class CircleShape extends Moveable {
     private float m_fRadius = 0.0f;
     private int m_iColour = 0;
 

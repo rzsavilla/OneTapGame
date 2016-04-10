@@ -1,7 +1,10 @@
-package com.rzsavilla.onetapgame.model;
+package com.rzsavilla.onetapgame.model.HUD;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+
+import com.rzsavilla.onetapgame.model.Utilites.Vector2D;
+import com.rzsavilla.onetapgame.model.Utilites.Vector2Di;
 
 /**
  * Head up display draws in game user interface and shows information

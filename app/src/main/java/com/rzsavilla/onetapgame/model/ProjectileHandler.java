@@ -1,20 +1,18 @@
 package com.rzsavilla.onetapgame.model;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.os.CountDownTimer;
+
+import com.rzsavilla.onetapgame.model.Utilites.Transformable;
+import com.rzsavilla.onetapgame.model.Utilites.Vector2D;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.ListIterator;
-import java.util.Timer;
-import java.util.Vector;
 
 /**
  * Bullet Spawner
  */
-public class ProjectileHandler extends Transformable{
+public class ProjectileHandler extends Transformable {
     private Projectile m_Projectile = new Projectile();                 //Projectile to be fired
     private ArrayList<Projectile> m_aProjectiles = new ArrayList();     //Stores projectiles fired
 

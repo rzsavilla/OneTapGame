@@ -1,6 +1,6 @@
-package com.rzsavilla.onetapgame.model;
+package com.rzsavilla.onetapgame.model.Animation;
 
-import android.graphics.Point;
+import com.rzsavilla.onetapgame.model.Utilites.Vector2Di;
 
 /**
  * Created by rzsavilla on 16/03/2016.

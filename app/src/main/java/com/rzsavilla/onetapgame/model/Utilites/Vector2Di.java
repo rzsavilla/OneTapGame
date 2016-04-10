@@ -1,4 +1,4 @@
-package com.rzsavilla.onetapgame.model;
+package com.rzsavilla.onetapgame.model.Utilites;
 
 /**
  * Created by rzsavilla on 16/03/2016.

@@ -1,14 +1,20 @@
-package com.rzsavilla.onetapgame.model;
+package com.rzsavilla.onetapgame.model.Shapes;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.RectF;
+
+import com.rzsavilla.onetapgame.model.Abstract.Moveable;
+import com.rzsavilla.onetapgame.model.Drawable;
+import com.rzsavilla.onetapgame.model.Utilites.Transformable;
+import com.rzsavilla.onetapgame.model.Utilites.Vector2D;
 
 /**
  * Created by rzsavilla on 14/03/2016.
  */
-public class RectangleShape extends Moveable{
-    private Vector2D m_vSize = new Vector2D();
-    private int m_iColour = 0;
+public class RectangleShape extends Transformable{
+    private int m_iColour = Color.WHITE;
 
     //Default Constructor
     public RectangleShape() {
@@ -28,21 +34,8 @@ public class RectangleShape extends Moveable{
         this.setColour(newColour);
     }
 
-    public void setSize(Vector2D newSize) {
-        m_vSize = newSize;
-    }
-
-    public void setSize(float width, float height) {
-        m_vSize.x = width;
-        m_vSize.y = height;
-    }
-
     public void setColour(int newColour) {
         m_iColour = newColour;
-    }
-
-    public Vector2D getSize() {
-        return m_vSize;
     }
 
     public int getColour() {
@@ -50,11 +43,12 @@ public class RectangleShape extends Moveable{
     }
 
     public void draw(Paint p, Canvas c) {
+        if (bPositionChanged || bOriginChanged || bScaleChanged) {
+            updateGlobalBounds();
+        }
         p.setColor(m_iColour);
         c.rotate(this.getRotation());
-        c.drawRect(getPosition().x - getOrigin().x, getPosition().y - getOrigin().y,
-                getPosition().x + m_vSize.x - getOrigin().x, getPosition().y + m_vSize.y - getOrigin().y, p);
-
+        c.drawRect(getBounds(),p);
         c.rotate(-this.getRotation());
     }
 }

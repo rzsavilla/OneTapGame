@@ -1,14 +1,14 @@
 package com.rzsavilla.onetapgame.view;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Shader;
-import android.util.DisplayMetrics;
+import android.os.*;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -16,15 +16,15 @@ import android.view.SurfaceView;
 import android.view.View;
 
 import com.rzsavilla.onetapgame.R;
-import com.rzsavilla.onetapgame.model.AABB;
-import com.rzsavilla.onetapgame.model.AnimatedSprite;
+import com.rzsavilla.onetapgame.model.Collision.AABB;
+import com.rzsavilla.onetapgame.model.Animation.AnimatedSprite;
 import com.rzsavilla.onetapgame.model.Elapsed;
+import com.rzsavilla.onetapgame.model.Inherited.Entity;
 import com.rzsavilla.onetapgame.model.InputHandler;
 import com.rzsavilla.onetapgame.model.Launcher;
-import com.rzsavilla.onetapgame.model.Sprite;
-import com.rzsavilla.onetapgame.model.TextureHandler;
-import com.rzsavilla.onetapgame.model.Vector2D;
-import com.rzsavilla.onetapgame.model.Vector2Di;
+import com.rzsavilla.onetapgame.model.Handler.TextureHandler;
+import com.rzsavilla.onetapgame.model.Utilites.Vector2D;
+import com.rzsavilla.onetapgame.model.Utilites.Vector2Di;
 
 public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTouchListener{
     private final static int    MAX_FPS = 60;                   // desired fps
@@ -45,7 +45,6 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
     private Canvas c = new Canvas();
     private Bitmap launcherSprite;
 
-
     /////////////Screen//////////////////
     private Point screenSize;
     private boolean m_bLaneChanging = false;                   //Screen is moving to different lane
@@ -60,8 +59,8 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
     AABB leftBox = new AABB();
     AABB rightBox = new AABB();
 
-    AnimatedSprite mon1 = new AnimatedSprite();
-    Sprite mon2 = new Sprite();
+    Entity mon1 = new Entity();
+    Entity mon2 = new Entity();
     ////////////BMP///////////////////
 
     private TextureHandler textures;
@@ -87,8 +86,14 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
     private  boolean bRight = true;
     Elapsed elapsed = new Elapsed();
     public void init() {
-        leftBox.setPosition(screenSize.x / 4, screenSize.y / 2);
-        rightBox.setPosition(screenSize.x / 2, screenSize.y / 2);
+
+        //leftBox.setOrigin(leftBox.getSize().x / 2, leftBox.getSize().y / 2);
+        rightBox.setPosition(screenSize.x - (screenSize.x / 4), screenSize.y / 1.2f);
+        leftBox.setPosition((screenSize.x / 4), screenSize.y / 1.2f);
+        leftBox.setSize(200.0f, 200.0f);
+        rightBox.setSize(200.0f, 200.0f);
+        leftBox.setOrigin(leftBox.getSize().divide(2));
+        rightBox.setOrigin(rightBox.getSize().divide(2));
 
         System.out.println("Init");
         textures = new TextureHandler();
@@ -100,6 +105,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
         textures.loadBitmap(R.drawable.soldier_spritesheet);
         textures.loadBitmap(R.drawable.grass);
         textures.loadBitmap(R.drawable.warrior);
+        textures.loadBitmap(R.drawable.lava);
 
         cannon.sprite.setTexture(textures.getTexture(0));
         cannon.setPosition(screenSize.x / 2, screenSize.y);
@@ -109,24 +115,47 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
         left.x = -screenSize.x;
         right.x = screenSize.x;
 
-        mon1.setPosition(screenSize.x / 2, screenSize.y / 4);
+        mon1.setPosition(screenSize.x / 4, screenSize.y / 4);
         mon1.setSpriteSheet(textures.getTexture(1), new Vector2Di(250, 250), new Vector2Di(4, 1));
         mon2.setPosition(screenSize.x / 2, screenSize.y / 2);
-        mon2.setTexture(textures.getTexture(3));
-        mon2.setScale(4, 4);
+        mon2.setSpriteSheet(textures.getTexture(1), new Vector2Di(250, 250), new Vector2Di(4, 1));
         System.out.println("Finish");
-        //mon2.setVelocity(0, 100);
-        //mon1.setVelocity(0,-100);
+        mon2.setVelocity(0, 100);
+        mon1.setVelocity(0, 100);
     }
 
     //Update
     Vector2D screenPos = new Vector2D(0.0f,0.0f);
     float screenTargetX = 0;
     private void updateCanvas() {
+        mon1.bb.collision(mon2.bb);
+        mon2.bb.collision(input.getMouseBB());
+
+        if (input.bTap) {
+            //mon1.setPosition(input.getTapPos());
+            Log.d("Tap: ", Float.toString(input.getTapPos().x));
+            if (!m_bLaneChanging) {
+                if (input.m_MouseBB.getPosition().y < screenSize.y / 1.3) {
+                    cannon.rotateTowards(input.getTapPos());
+                    cannon.m_Bullets.shoot(input.getTapPos());
+                } else {
+                    if (input.m_MouseBB.collision(leftBox)) {
+                        moveLeft();
+                    } else if (input.m_MouseBB.collision(rightBox)) {
+                        moveRight();
+                    }
+                }
+            }
+            m_bTap = false;
+        }
+
+        leftBox.updateGlobalBounds();
+        rightBox.updateGlobalBounds();
+
         cannon.update(m_kfTimeStep);
 
         if (m_bLaneChanging) {
-            float fSpeed = 500.f;
+            float fSpeed = 2000.f;
             //Move
             float fDistance;
             if (bRight) {
@@ -136,30 +165,24 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
                 screenPos.x -= fSpeed * m_kfTimeStep;
                 fDistance =  screenPos.x -(screenTargetX);
             }
-
-            Log.d("Distance",Float.toString(fDistance));
-
+            //Log.d("Distance", Float.toString(fDistance));
             if (fDistance <= 0) {
                 m_bLaneChanging = false;
                 screenPos.x = screenTargetX;
             }
-            leftBox.setPosition(screenPos.x + screenSize.x / 4,leftBox.getPosition().y);
-            rightBox.setPosition(screenPos.x + screenSize.x / 2,leftBox.getPosition().y);
+            rightBox.setPosition(screenSize.x - (screenSize.x / 4) + screenPos.x, screenSize.y / 1.1f);
+            leftBox.setPosition((screenSize.x / 4) + screenPos.x, screenSize.y / 1.1f);
         }
         //Log.d("Right?",Boolean.toString(bRight));
         mon1.update();
+        mon2.update();
         mon1.moveUpdate(m_kfTimeStep);
         mon2.moveUpdate(m_kfTimeStep);
-        if (mon1.getPosition().y < 50) {
-            mon1.setPosition(mon1.getPosition().x, screenSize.y / 2);
-        }
-        if (mon2.getPosition().y > screenSize.y / 2) {
+       if (mon1.getPosition().y > screenSize.y - 300) {
+           mon1.setPosition(mon1.getPosition().x , 0);
+       }
+        if (mon2.getPosition().y > screenSize.y - 300) {
             mon2.setPosition(mon2.getPosition().x , 0);
-        }
-
-        if (mon1.collision(mon2.getBB())) {
-            //mon1.setPosition(mon1.getPosition().x,screenSize.y - 300);
-            //mon2.setPosition(mon2.getPosition().x,0);
         }
     }
 
@@ -169,7 +192,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
     public void drawCanvas() {
         c.drawARGB(255, 0, 0, 0);
         if (!bShaderSet) {
-            pShader.setShader(new BitmapShader(textures.getTexture(2), Shader.TileMode.REPEAT, Shader.TileMode.REPEAT));
+            pShader.setShader(new BitmapShader(textures.getTexture(4), Shader.TileMode.REPEAT, Shader.TileMode.REPEAT));
             bShaderSet = true;
         }
         //Background
@@ -179,13 +202,18 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
         //Objects
 
         if (!m_bLaneChanging) {
-            leftBox.draw(p, c);
-            rightBox.draw(p, c);
+            if (screenPos.x > left.x) {
+                leftBox.draw(p, c);
+            }
+            if (screenPos.x < right.x) {
+                rightBox.draw(p, c);
+            }
         }
 
         cannon.draw(p, c);
         mon1.draw(p,c);
         mon2.draw(p,c);
+        input.getMouseBB().draw(p, c);
     }
 
     public  void run() {
@@ -199,7 +227,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
                 beginTime = System.currentTimeMillis();
                 framesSkipped = 0;
 
-                input.update();
+                input.update(screenPos);
                 this.updateCanvas();
                 drawCanvas();
 
@@ -243,19 +271,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
     }
 
     public void tapUpdate(MotionEvent event) {
-        input.setEvent(event,screenPos);         //Tap position relative to canvas position;
-        Log.d("Touch x",Float.toString(input.getTapPos().x));
-        if (false) {
-            if (leftBox.intersect(input.getTapPos())) {
-                System.out.println("Left");
-                moveLeft();
-
-            } else if (rightBox.intersect(input.getTapPos())) {
-                System.out.println("Right");
-                moveRight();
-            }
-        }
-        mon1.setPosition(input.getTapPos());
+        input.setEvent(event, screenPos);         //Tap position relative to canvas position;
     }
 
     public boolean onTouch(View view,MotionEvent event) {
@@ -263,32 +279,37 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
     }
 
     private boolean moveLeft() {
-        if (screenPos.x > left.x) {             //Check if on left lane
-            Log.d("X:",Float.toString(screenPos.x));
-            if (screenPos.x  <= center.x) {                //Check if on center lane
-                screenTargetX = left.x;         //Can move to the left lane
-            } else{                                //On Right Lane
-                screenTargetX = center.x;       //Can move to center lane
+        if (!m_bLaneChanging) {
+            if (screenPos.x > left.x) {             //Check if on left lane
+                Log.d("X:", Float.toString(screenPos.x));
+                if (screenPos.x <= center.x) {                //Check if on center lane
+                    screenTargetX = left.x;         //Can move to the left lane
+                } else {                                //On Right Lane
+                    screenTargetX = center.x;       //Can move to center lane
+                }
+                bRight = false;
+                Log.d("target Left:", Float.toString(screenTargetX));
+                m_bLaneChanging = true;
+                return true;
             }
-            bRight = false;
-            Log.d("target Left:",Float.toString(screenTargetX));
-            m_bLaneChanging = true;
-            return true;
         }
         return false;
     }
 
     private boolean moveRight() {
-        if (screenPos.x < right.x) {                                          //Check if on right lane, therefore cannot move right
-            if (screenPos.x >= center.x) {                                    //Check if on center lane, therefore can move to right lane
-                screenTargetX = right.x;
-            } else {                                                            //On Left Lane can move to center lane
-                screenTargetX = center.x;
+        if (!m_bLaneChanging) {
+            if (screenPos.x < right.x) {                                          //Check if on right lane, therefore cannot move right
+                if (screenPos.x >= center.x) {                                    //Check if on center lane, therefore can move to right lane
+                    screenTargetX = right.x;
+                } else {                                                            //On Left Lane can move to center lane
+                    screenTargetX = center.x;
+                }
+                Log.d("target Right:", Float.toString(screenTargetX));
+                bRight = true;
+                m_bLaneChanging = true;
+                return true;
             }
-            Log.d("target Right:",Float.toString(screenTargetX));
-            bRight = true;
-            m_bLaneChanging = true;
-            return true;
+
         }
         return false;
     }
