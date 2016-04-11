@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Shader;
 import android.os.*;
+import android.os.Process;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -28,15 +29,17 @@ import com.rzsavilla.onetapgame.model.Utilites.Vector2D;
 import com.rzsavilla.onetapgame.model.Utilites.Vector2Di;
 
 public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTouchListener{
-    private final static int    MAX_FPS = 60;                   // desired fps
+    private final static int    MAX_FPS = 30;                   // desired fps
     private final static int    MAX_FRAME_SKIPS = 3;            // maximum number of frames to be skipped
     private final static int    FRAME_PERIOD = 1000 / MAX_FPS;  // the frame period
 
     private long beginTime;                                     // the time when the cycle began
     private long timeDiff;                                      // the time it took for the cycle to execute
-    private int sleepTime;                                      // ms to sleep
+    private long sleepTime;                                      // ms to sleep
     private int framesSkipped;                                  // number of frames being skipped
+    private int iFrameCount;
     private long timer = 0;
+    private float m_FPS;
     private static float m_kfTimeStep = 1.0f / MAX_FPS;
 
     private SurfaceHolder holder;
@@ -203,70 +206,82 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
     Paint pShader = new Paint();
 
     public void drawCanvas() {
-        c.drawARGB(255, 0, 0, 0);
-        if (!bShaderSet) {
-            pShader.setShader(new BitmapShader(textures.getTexture(4), Shader.TileMode.REPEAT, Shader.TileMode.REPEAT));
-            bShaderSet = true;
-        }
-        //Background
-        c.translate(-screenPos.x, -screenPos.y);
-        c.drawRect(-screenSize.x, 0, screenSize.x * 2, screenSize.y, pShader);
-        ////!!!!!!!!!!canvas.translate();
-        //Objects
-        if (!m_bLaneChanging) {
-            if (screenPos.x > left.x) {
-                leftBox.draw(p, c);
-            }
-            if (screenPos.x < right.x) {
-                rightBox.draw(p, c);
-            }
-        }
+        if (holder.getSurface().isValid()) {
+            c = holder.lockCanvas();        //Canvas ready to draw
 
-        cannon.draw(p, c);
-        mon1.draw(p,c);
-        mon2.draw(p, c);
-        input.getMouseBB().draw(p, c);
+            c.drawARGB(255, 0, 0, 0);
+            if (!bShaderSet) {
+                pShader.setShader(new BitmapShader(textures.getTexture(4), Shader.TileMode.REPEAT, Shader.TileMode.REPEAT));
+                bShaderSet = true;
+            }
+            //Background
+            c.translate(-screenPos.x, -screenPos.y);
+            c.drawRect(-screenSize.x, 0, screenSize.x * 2, screenSize.y, pShader);
+            ////!!!!!!!!!!canvas.translate();
+            //Objects
+            if (!m_bLaneChanging) {
+                if (screenPos.x > left.x) {
+                    leftBox.draw(p, c);
+                }
+                if (screenPos.x < right.x) {
+                    rightBox.draw(p, c);
+                }
+            }
 
-        ball.draw(p, c);
-        circle.draw(p,c);
+            cannon.draw(p, c);
+            mon1.draw(p, c);
+            mon2.draw(p, c);
+            input.getMouseBB().draw(p, c);
+
+            ball.draw(p, c);
+            circle.draw(p, c);
+
+            holder.unlockCanvasAndPost(c);      //Unlock canvas
+        }
     }
 
     public  void run() {
-        android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
-        while (ok) {
-            if (!getHolder().getSurface().isValid()) {
-                continue;
-            }
-            c = getHolder().lockCanvas();
-            synchronized (holder) {
-                beginTime = System.currentTimeMillis();
-                framesSkipped = 0;
+        android.os.Process.setThreadPriority(Process.THREAD_PRIORITY_DEFAULT);
+        while(ok) {
+            beginTime = System.currentTimeMillis();
 
-                input.update(screenPos);
+            //Game Loop
+            input.update(screenPos);            //Update inputs
+            updateCanvas();                     //Update logic
+            drawCanvas();                       //Render game
+
+            timeDiff = System.currentTimeMillis() - beginTime;      //Time elapsed
+
+
+            //FPS Counts frames
+            iFrameCount++;                          //Count FPS
+            if (elapsed.getElapsed() > 1.f) {
+                m_FPS = iFrameCount;
+                //System.out.println(m_FPS);
+                iFrameCount = 0;                    //Reset Frame Count
+                elapsed.restart();
+            }
+
+            //FPS Limit sleep when frame limit is being passed
+            sleepTime = (FRAME_PERIOD - timeDiff);
+            if (sleepTime > 0) {
+                //System.out.println(sleepTime);
+                try {
+                    Thread.sleep(sleepTime);
+                } catch (InterruptedException e) {
+                    System.err.println("Exception: " + e.getMessage());
+                }
+            }
+            while (sleepTime < 0 && framesSkipped < MAX_FRAME_SKIPS) {
                 this.updateCanvas();
-                drawCanvas();
-
-                timeDiff = System.currentTimeMillis() - beginTime;
-                //Log.d("TimeDiff",Long.toString(System.currentTimeMillis()));
-               sleepTime = (int) (FRAME_PERIOD - timeDiff);
-               if (sleepTime > 0) {
-                   try {
-                       Thread.sleep(sleepTime);
-                   } catch (InterruptedException e) {
-                       System.err.println("Exception: " + e.getMessage());
-                   }
-               }
-               while (sleepTime < 0 && framesSkipped < MAX_FRAME_SKIPS) {
-                   this.updateCanvas();
-                   sleepTime += FRAME_PERIOD;
-                   framesSkipped++;
-               }
+                sleepTime += FRAME_PERIOD;
+                framesSkipped++;
             }
-            holder.unlockCanvasAndPost(c);
         }
     }
 
     public void pause() {
+        /*
         ok = false;
         while (true) {
             try {
@@ -277,6 +292,13 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
             break;
         }
         t = null;
+        */
+        ok = false;
+        try {
+            t.join();
+        } catch (InterruptedException e) {
+            Log.e("Error:","Joining thread");
+        }
     }
 
     public void resume() {
@@ -290,6 +312,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
     }
 
     public boolean onTouch(View view,MotionEvent event) {
+
         return true;
     }
 

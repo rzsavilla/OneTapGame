@@ -20,8 +20,10 @@ public class GameActivity extends Activity{
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         Point screenSize = new Point(metrics.widthPixels,metrics.heightPixels);
         Vector2D scale = new Vector2D(metrics.scaledDensity,metrics.scaledDensity);
+
         gsv = new GameSurfaceView(this,screenSize);
-        setContentView(gsv);
+        setContentView(gsv);        //Set screen
+        gsv.run();                  //Start Game Loop immediately
     }
 
     @Override

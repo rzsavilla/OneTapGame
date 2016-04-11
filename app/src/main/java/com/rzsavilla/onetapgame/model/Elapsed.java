@@ -22,9 +22,7 @@ public class Elapsed {
         return m_StopTime;
     }
 
-
-
     public float getElapsed() {
-        return (float) (System.currentTimeMillis() - m_StartTime) / 1000;
+        return (float) (System.currentTimeMillis() - m_StartTime) / 1000;       //Returns Seconds
     }
 }
