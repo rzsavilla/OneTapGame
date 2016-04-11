@@ -18,6 +18,7 @@ import android.view.View;
 import com.rzsavilla.onetapgame.R;
 import com.rzsavilla.onetapgame.model.Collision.AABB;
 import com.rzsavilla.onetapgame.model.Animation.AnimatedSprite;
+import com.rzsavilla.onetapgame.model.Collision.Circle;
 import com.rzsavilla.onetapgame.model.Elapsed;
 import com.rzsavilla.onetapgame.model.Inherited.Entity;
 import com.rzsavilla.onetapgame.model.InputHandler;
@@ -59,8 +60,12 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
     AABB leftBox = new AABB();
     AABB rightBox = new AABB();
 
+    Circle circle = new Circle();
+    Circle ball = new Circle();
+
     Entity mon1 = new Entity();
     Entity mon2 = new Entity();
+
     ////////////BMP///////////////////
 
     private TextureHandler textures;
@@ -95,6 +100,12 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
         leftBox.setOrigin(leftBox.getSize().divide(2));
         rightBox.setOrigin(rightBox.getSize().divide(2));
 
+        circle.setPosition(100.0f, 100.0f);
+        circle.setRadius(100.0f);
+        ball.setPosition(screenSize.x / 2.0f, screenSize.y / 2.0f);
+        ball.setRadius(120.0f);
+        ball.setColour(Color.WHITE);
+
         System.out.println("Init");
         textures = new TextureHandler();
         textures.setContext(getContext());
@@ -121,19 +132,21 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
         mon2.setSpriteSheet(textures.getTexture(1), new Vector2Di(250, 250), new Vector2Di(4, 1));
         System.out.println("Finish");
         mon2.setVelocity(0, 100);
-        mon1.setVelocity(0, 100);
+        //mon1.setVelocity(0, 100);
     }
 
     //Update
     Vector2D screenPos = new Vector2D(0.0f,0.0f);
     float screenTargetX = 0;
     private void updateCanvas() {
-        mon1.bb.collision(mon2.bb);
-        mon2.bb.collision(input.getMouseBB());
+        //mon1.bb.collision(mon2.bb);
+        //mon2.bb.collision(input.getMouseBB());
 
+        //circle.collision(ball);
+        circle.collision(mon1.bb);
         if (input.bTap) {
-            //mon1.setPosition(input.getTapPos());
-            Log.d("Tap: ", Float.toString(input.getTapPos().x));
+            circle.setPosition(input.getTapPos());
+            //Log.d("Tap: ", Float.toString(input.getTapPos().x));
             if (!m_bLaneChanging) {
                 if (input.m_MouseBB.getPosition().y < screenSize.y / 1.3) {
                     cannon.rotateTowards(input.getTapPos());
@@ -200,7 +213,6 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
         c.drawRect(-screenSize.x, 0, screenSize.x * 2, screenSize.y, pShader);
         ////!!!!!!!!!!canvas.translate();
         //Objects
-
         if (!m_bLaneChanging) {
             if (screenPos.x > left.x) {
                 leftBox.draw(p, c);
@@ -212,8 +224,11 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
 
         cannon.draw(p, c);
         mon1.draw(p,c);
-        mon2.draw(p,c);
+        mon2.draw(p, c);
         input.getMouseBB().draw(p, c);
+
+        ball.draw(p, c);
+        circle.draw(p,c);
     }
 
     public  void run() {

@@ -32,6 +32,26 @@ public class AABB extends RectangleShape implements Collidable{
     }
 
     public boolean collision(CircleShape other) {
-        return false;
+        //Distance between AABB and Circle centres
+        Vector2D vDist = new Vector2D(this.getPosition().subtract(other.getPosition()));
+
+        //Set Clamp
+        Vector2D vClamp = new Vector2D();
+        if (vDist.x < 0) { vClamp.x = Math.max(vDist.x,-other.getWidth() / 2); }
+        else if (vDist.x >= 0) { vClamp.x = Math.min(vDist.x, other.getWidth() / 2); }
+        if (vDist.y < 0 ) { vClamp.y = Math.max(vDist.y,-other.getHeight() / 2); }
+        else if (vDist.y >= 0) { vClamp.y = Math.min(vDist.y, other.getHeight() / 2); }
+
+        Vector2D vDiff = vDist.subtract(vClamp);
+
+        float fDistance = vDiff.magnitude() - other.getRadius();         //Edge to edge distance
+        //System.out.println(fDistance);
+        if (fDistance <= 0) {
+            this.setColour(Color.RED);
+            return true;
+        } else {
+            this.setColour(Color.WHITE);
+            return false;
+        }
     }
 }
