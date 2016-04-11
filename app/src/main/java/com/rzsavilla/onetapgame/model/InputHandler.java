@@ -42,7 +42,7 @@ public class InputHandler {
     }
 
     public Vector2D getTapPos() {
-        return m_vTapPos;
+        return m_vTapPos.add(m_vRelativePosition);
     }
 
     public AABB getMouseBB() { return m_MouseBB; }
@@ -52,6 +52,7 @@ public class InputHandler {
     }
 
     public boolean update(Vector2D canvasPos) {
+        m_vRelativePosition = canvasPos;
         if (m_bUpdateEvent) {
             int iAction = m_MotionEvent.getAction();
             switch (iAction) {
@@ -59,6 +60,7 @@ public class InputHandler {
                     // finger touches the screen
                     m_vTapPos.x = m_MotionEvent.getX();
                     m_vTapPos.y = m_MotionEvent.getY();
+                    m_MouseBB.setPosition(getTapPos());
                     m_bClick = true;
                     bTap = true;
                     break;
@@ -66,6 +68,7 @@ public class InputHandler {
                     // finger moves on the screen
                     m_vTapPos.x = m_MotionEvent.getX();
                     m_vTapPos.y = m_MotionEvent.getY();
+                    m_MouseBB.setPosition(getTapPos());
                     break;
                 case MotionEvent.ACTION_UP:
                     // finger leaves the screen
@@ -73,8 +76,6 @@ public class InputHandler {
                     bTap = false;
                     break;
             }
-            m_vTapPos.x += canvasPos.x;
-            m_vTapPos.y += canvasPos.y;
             m_bUpdateEvent = false;         //Event has been updated
         }
         return true;

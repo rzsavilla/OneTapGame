@@ -149,7 +149,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
         circle.collision(mon1.bb);
         if (input.bTap) {
             circle.setPosition(input.getTapPos());
-            //Log.d("Tap: ", Float.toString(input.getTapPos().x));
+
             if (!m_bLaneChanging) {
                 if (input.m_MouseBB.getPosition().y < screenSize.y / 1.3) {
                     cannon.rotateTowards(input.getTapPos());
@@ -164,6 +164,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
             }
             m_bTap = false;
         }
+        Log.d("Tap: ", Float.toString(circle.getPosition().x));
 
         leftBox.updateGlobalBounds();
         rightBox.updateGlobalBounds();
@@ -194,9 +195,9 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
         mon2.update();
         mon1.moveUpdate(m_kfTimeStep);
         mon2.moveUpdate(m_kfTimeStep);
-       if (mon1.getPosition().y > screenSize.y - 300) {
-           mon1.setPosition(mon1.getPosition().x , 0);
-       }
+        if (mon1.getPosition().y > screenSize.y - 300) {
+            mon1.setPosition(mon1.getPosition().x , 0);
+        }
         if (mon2.getPosition().y > screenSize.y - 300) {
             mon2.setPosition(mon2.getPosition().x , 0);
         }
@@ -207,6 +208,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
 
     public void drawCanvas() {
         if (holder.getSurface().isValid()) {
+
             c = holder.lockCanvas();        //Canvas ready to draw
 
             c.drawARGB(255, 0, 0, 0);
@@ -252,12 +254,11 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
 
             timeDiff = System.currentTimeMillis() - beginTime;      //Time elapsed
 
-
             //FPS Counts frames
             iFrameCount++;                          //Count FPS
             if (elapsed.getElapsed() > 1.f) {
                 m_FPS = iFrameCount;
-                //System.out.println(m_FPS);
+                System.out.println(m_FPS);
                 iFrameCount = 0;                    //Reset Frame Count
                 elapsed.restart();
             }
@@ -281,18 +282,6 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
     }
 
     public void pause() {
-        /*
-        ok = false;
-        while (true) {
-            try {
-                t.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            break;
-        }
-        t = null;
-        */
         ok = false;
         try {
             t.join();
