@@ -109,6 +109,12 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
         ball.setRadius(120.0f);
         ball.setColour(Color.WHITE);
 
+        circle.setPosition(screenSize.x / 2.0f, 100.0f);
+        circle.setVelocity(0.0f, 100.0f);
+
+        circle.setMass(10.0f);
+        ball.setMass(10.0f);
+
         System.out.println("Init");
         textures = new TextureHandler();
         textures.setContext(getContext());
@@ -136,6 +142,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
         System.out.println("Finish");
         mon2.setVelocity(0, 100);
         //mon1.setVelocity(0, 100);
+        mon1.setMass(10.0f);
     }
 
     //Update
@@ -148,11 +155,14 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
         //circle.collision(ball);
         //mon1.setSize(300.0f,500.0f);
         //mon1.setOrigin(150.0f, 250.0f);
+        circle.impulse(mon1);
+
         circle.collision(mon1.bb);
+        circle.impulse(ball);
         //mon1.bb.intersect(mon2.bb);
         //mon2.bb.collision(mon1.bb);
-        if (input.bTap) {
-            mon2.setPosition(input.getTapPos());
+        if (input.isDown()) {
+            circle.setPosition(input.getTapPos());
             if (!m_bLaneChanging) {
                 if (input.m_MouseBB.getPosition().y < screenSize.y / 1.3) {
                     cannon.rotateTowards(input.getTapPos());
@@ -167,7 +177,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
             }
             m_bTap = false;
         }
-        Log.d("Tap: ", Float.toString(circle.getPosition().x));
+        //Log.d("Tap: ", Float.toString(circle.getPosition().x));
 
         leftBox.updateGlobalBounds();
         rightBox.updateGlobalBounds();
@@ -196,14 +206,18 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
         //Log.d("Right?",Boolean.toString(bRight));
         mon1.update();
         mon2.update();
-        mon1.moveUpdate(m_kfTimeStep);
-        mon2.moveUpdate(m_kfTimeStep);
+
         if (mon1.getPosition().y > screenSize.y - 300) {
             mon1.setPosition(mon1.getPosition().x , 0);
         }
         if (mon2.getPosition().y > screenSize.y - 300) {
             mon2.setPosition(mon2.getPosition().x , 0);
         }
+
+        mon1.moveUpdate(m_kfTimeStep);
+        mon2.moveUpdate(m_kfTimeStep);
+        circle.moveUpdate(m_kfTimeStep);
+        ball.moveUpdate(m_kfTimeStep);
     }
 
     boolean bShaderSet = false;
@@ -216,7 +230,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
 
             c.drawARGB(255, 0, 0, 0);
             if (!bShaderSet) {
-                pShader.setShader(new BitmapShader(textures.getTexture(4), Shader.TileMode.REPEAT, Shader.TileMode.REPEAT));
+                pShader.setShader(new BitmapShader(textures.getTexture(2), Shader.TileMode.REPEAT, Shader.TileMode.REPEAT));
                 bShaderSet = true;
             }
             //Background
@@ -261,7 +275,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
             iFrameCount++;                          //Count FPS
             if (elapsed.getElapsed() > 1.f) {
                 m_FPS = iFrameCount;
-                System.out.println(m_FPS);
+                //System.out.println(m_FPS);
                 iFrameCount = 0;                    //Reset Frame Count
                 elapsed.restart();
             }
@@ -304,7 +318,6 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
     }
 
     public boolean onTouch(View view,MotionEvent event) {
-
         return true;
     }
 
