@@ -44,11 +44,11 @@ public class Circle extends CircleShape implements Collidable {
         float fDistance = vDist.magnitude() - (this.getRadius() + other.getRadius());
         //System.out.println(fDistance);
         if (fDistance <= 0) {
-            setColour(Color.RED);
+            this.setColour(Color.RED);
             return true;
         }
         else {
-            setColour(Color.WHITE);
+            this.setColour(Color.WHITE);
             return false;
         }
     }

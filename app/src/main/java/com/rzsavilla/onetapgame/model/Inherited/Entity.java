@@ -5,6 +5,7 @@ import android.graphics.Paint;
 
 import com.rzsavilla.onetapgame.model.Animation.AnimatedSprite;
 import com.rzsavilla.onetapgame.model.Collision.AABB;
+import com.rzsavilla.onetapgame.model.Collision.Circle;
 import com.rzsavilla.onetapgame.model.Utilites.Vector2Di;
 
 /**
@@ -14,7 +15,7 @@ public class Entity extends AnimatedSprite {
     private int m_iHealth;                  //Entity Health
     private boolean m_bDeath = false;       //Flag for death animation
 
-    public AABB bb = new AABB();             //Bounding box for collision detection
+    public Circle bb = new Circle();             //Bounding box for collision detection
 
     public void setHeath(int newHealth) {
         m_iHealth = newHealth;
@@ -26,7 +27,9 @@ public class Entity extends AnimatedSprite {
 
     public void draw(Paint p , Canvas c) {
         if (this.bPositionChanged) { bb.setPosition(this.getPosition());}
-        if (this.bSizeChanged) {bb.setSize(this.getSize());}
+        if (this.bSizeChanged) {bb.setSize(this.getSize());
+            bb.setRadius(this.getSize().x / 2);
+        }
         if (this.bOriginChanged) {bb.setOrigin(this.getOrigin());}
         if (this.bScaleChanged) {bb.setScale(this.getScale());}
 

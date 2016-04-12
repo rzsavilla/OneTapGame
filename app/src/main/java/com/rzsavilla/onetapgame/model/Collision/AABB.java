@@ -54,4 +54,18 @@ public class AABB extends RectangleShape implements Collidable{
             return false;
         }
     }
+
+    public boolean intersect(AABB other) {
+        if (this.getBounds().left <= other.getBounds().right &&
+                other.getBounds().left <= this.getBounds().right &&
+                this.getBounds().top <= other.getBounds().bottom &&
+                other.getBounds().top <= this.getBounds().bottom) {
+            this.setColour(Color.RED);
+            return true;
+        }
+        else {
+            this.setColour(Color.WHITE);
+            return false;
+        }
+    }
 }

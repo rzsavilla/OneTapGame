@@ -146,10 +146,13 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
         //mon2.bb.collision(input.getMouseBB());
 
         //circle.collision(ball);
+        //mon1.setSize(300.0f,500.0f);
+        //mon1.setOrigin(150.0f, 250.0f);
         circle.collision(mon1.bb);
+        //mon1.bb.intersect(mon2.bb);
+        //mon2.bb.collision(mon1.bb);
         if (input.bTap) {
-            circle.setPosition(input.getTapPos());
-
+            mon2.setPosition(input.getTapPos());
             if (!m_bLaneChanging) {
                 if (input.m_MouseBB.getPosition().y < screenSize.y / 1.3) {
                     cannon.rotateTowards(input.getTapPos());
@@ -336,7 +339,6 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
                 m_bLaneChanging = true;
                 return true;
             }
-
         }
         return false;
     }
