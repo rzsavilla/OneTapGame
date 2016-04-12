@@ -74,6 +74,7 @@ public class InputHandler {
                     // finger leaves the screen
                     m_bClick = false;
                     bTap = false;
+                    m_MouseBB.setPosition(0.0f,0.0f);       //Reset Mouse position
                     break;
             }
             m_bUpdateEvent = false;         //Event has been updated

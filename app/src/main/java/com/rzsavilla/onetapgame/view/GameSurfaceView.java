@@ -161,7 +161,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
         circle.impulse(ball);
         //mon1.bb.intersect(mon2.bb);
         //mon2.bb.collision(mon1.bb);
-        if (input.isDown()) {
+        if (input.bTap) {
             circle.setPosition(input.getTapPos());
             if (!m_bLaneChanging) {
                 if (input.m_MouseBB.getPosition().y < screenSize.y / 1.3) {
