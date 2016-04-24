@@ -19,30 +19,28 @@ import java.util.ListIterator;
  * Will shoot projectiles
  */
 public class Launcher extends Transformable {
-    /**
-     * Speed of Launcher Rotation
-     */
+    /** Speed of Launcher Rotation */
     private float m_fRotationSpeed = 50.0f;
     private boolean m_bRotateLeft = false;
     private boolean m_bRotateRight = false;
     private boolean m_bHasTarget = false;
-    /**
-     * Cannon will iterate through the array of positions rotate and shoot towards those positions
-     */
+    /** Cannon will iterate through the array of positions rotate and shoot towards those positions */
     private ArrayList<Vector2D> m_vTargetPos = new ArrayList<>();
-    private Vector2D m_vCurretTarget = new Vector2D();
-    private CircleShape m_TargetMarker = new CircleShape(0.0f,0.0f,10.0f, Color.BLUE);
-    private ArrayList<CircleShape> m_aMarkers = new ArrayList<>();
 
+    /** Launchers current target position to rotate towards and shoot */
+    private Vector2D m_vCurretTarget = new Vector2D();
+    /** Array of markers that show cannons target */
+    private ArrayList<CircleShape> m_aMarkers = new ArrayList<>();
+    /** Projectile Spawner */
     public ProjectileHandler m_Bullets = new ProjectileHandler();
-    public Sprite sprite;   //The cannon
+    /** The Launcher Sprite */
+    public Sprite sprite;
 
     /**
      * Default constructor
      */
     public Launcher() {
         sprite = new Sprite();
-        setRotatation(1.0f);
     }
 
     /**
@@ -53,20 +51,6 @@ public class Launcher extends Transformable {
     public Launcher(Vector2D position, Vector2D size) {
         setPosition(position);
         setSize(size);
-    }
-
-    /**
-     * Draw the Launcher and projectiles
-     * @param p Paint
-     * @param c Canvas to draw on.
-     */
-    public void draw(Paint p, Canvas c) {
-        for (CircleShape marker : m_aMarkers) {
-            marker.draw(p,c);
-        }
-        m_Bullets.drawProj(p, c);
-        sprite.setPosition(this.getPosition().x, this.getPosition().y);
-        sprite.draw(p, c);
     }
 
     /**
@@ -92,11 +76,27 @@ public class Launcher extends Transformable {
         return false;
     }
 
+    /**
+     * Add a target position for the Launcher to shoot at
+     * @param target Position to be added to array of target positions
+     */
     public void markTarget(Vector2D target) {
         m_vTargetPos.add(target);
         m_aMarkers.add(new CircleShape(target.x ,target.y, 50.0f, Color.BLUE));
-        //System.out.println(m_vTargetPos.size());
-        //System.out.println("Target Added");
+    }
+
+    /**
+     * Draw the Launcher ,projectiles and target markers
+     * @param p Paint
+     * @param c Canvas to draw on.
+     */
+    public void draw(Paint p, Canvas c) {
+        for (CircleShape marker : m_aMarkers) {
+            marker.draw(p,c);
+        }
+        m_Bullets.drawProj(p, c);
+        sprite.setPosition(this.getPosition().x, this.getPosition().y);
+        sprite.draw(p, c);
     }
 
     /**
@@ -153,7 +153,6 @@ public class Launcher extends Transformable {
                 m_bRotateLeft = false;
             }
         }
-
         //System.out.println(m_bHasTarget);
         m_Bullets.update(timeStep);
     }
