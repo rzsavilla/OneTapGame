@@ -1,9 +1,8 @@
-package com.rzsavilla.onetapgame.model;
+package com.rzsavilla.onetapgame.Scene;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**

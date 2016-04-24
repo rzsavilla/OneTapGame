@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 /**
  * Will Load and scale Bitmaps
+ * @author rzsavilla
  */
 public class TextureHandler {
     private Vector2Di m_vScreenSize = new Vector2Di();

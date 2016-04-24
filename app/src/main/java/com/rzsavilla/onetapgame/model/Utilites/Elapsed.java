@@ -1,7 +1,8 @@
-package com.rzsavilla.onetapgame.model;
+package com.rzsavilla.onetapgame.model.Utilites;
 
 /**
- * Created by rzsavilla on 15/03/2016.
+ * Timer counts seconds that have passed
+ * @author rzsavilla
  */
 public class Elapsed {
     private long m_StartTime = 0l;      //Start time in milliseconds

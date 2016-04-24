@@ -1,6 +1,6 @@
-package com.rzsavilla.onetapgame.model;
+package com.rzsavilla.onetapgame.Scene;
 
-import com.rzsavilla.onetapgame.model.Inherited.Entity;
+import com.rzsavilla.onetapgame.Sprite.Enemy.Entity;
 import com.rzsavilla.onetapgame.model.Utilites.Vector2D;
 
 import java.util.ArrayList;

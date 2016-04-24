@@ -1,4 +1,4 @@
-package com.rzsavilla.onetapgame.model.Animation;
+package com.rzsavilla.onetapgame.Sprite;
 
 import com.rzsavilla.onetapgame.model.Utilites.Vector2Di;
 

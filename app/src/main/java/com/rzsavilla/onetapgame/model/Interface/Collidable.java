@@ -1,6 +1,7 @@
-package com.rzsavilla.onetapgame.model.Collision;
+package com.rzsavilla.onetapgame.model.Interface;
 
 import com.rzsavilla.onetapgame.model.Shapes.CircleShape;
+import com.rzsavilla.onetapgame.model.Shapes.Collision.AABB;
 
 /**
  * Created by rzsavilla on 23/03/2016.

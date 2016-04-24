@@ -1,4 +1,4 @@
-package com.rzsavilla.onetapgame.model.Inherited;
+package com.rzsavilla.onetapgame.Sprite;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -7,9 +7,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 
 import com.rzsavilla.onetapgame.model.Abstract.Moveable;
-import com.rzsavilla.onetapgame.model.Drawable;
-import com.rzsavilla.onetapgame.model.Utilites.Vector2D;
-import com.rzsavilla.onetapgame.model.Utilites.Vector2Di;
+import com.rzsavilla.onetapgame.model.Interface.Drawable;
 
 /**
  * Created by rzsavilla on 15/03/2016.

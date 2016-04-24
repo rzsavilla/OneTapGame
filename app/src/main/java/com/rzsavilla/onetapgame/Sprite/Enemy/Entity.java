@@ -1,12 +1,10 @@
-package com.rzsavilla.onetapgame.model.Inherited;
+package com.rzsavilla.onetapgame.Sprite.Enemy;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
-import com.rzsavilla.onetapgame.model.Animation.AnimatedSprite;
-import com.rzsavilla.onetapgame.model.Collision.AABB;
-import com.rzsavilla.onetapgame.model.Collision.Circle;
-import com.rzsavilla.onetapgame.model.Utilites.Vector2Di;
+import com.rzsavilla.onetapgame.Sprite.AnimatedSprite;
+import com.rzsavilla.onetapgame.model.Shapes.Collision.AABB;
 
 /**
  * Created by rzsavilla on 10/04/2016.

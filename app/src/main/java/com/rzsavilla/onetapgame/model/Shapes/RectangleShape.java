@@ -3,10 +3,7 @@ package com.rzsavilla.onetapgame.model.Shapes;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.RectF;
 
-import com.rzsavilla.onetapgame.model.Abstract.Moveable;
-import com.rzsavilla.onetapgame.model.Drawable;
 import com.rzsavilla.onetapgame.model.Utilites.Transformable;
 import com.rzsavilla.onetapgame.model.Utilites.Vector2D;
 

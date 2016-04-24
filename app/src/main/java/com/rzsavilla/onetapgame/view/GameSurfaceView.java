@@ -8,26 +8,26 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Shader;
-import android.os.*;
 import android.os.Process;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
-import android.widget.Button;
 
 import com.rzsavilla.onetapgame.R;
-import com.rzsavilla.onetapgame.model.Collision.AABB;
-import com.rzsavilla.onetapgame.model.Animation.AnimatedSprite;
-import com.rzsavilla.onetapgame.model.Collision.Circle;
-import com.rzsavilla.onetapgame.model.Elapsed;
-import com.rzsavilla.onetapgame.model.Inherited.Entity;
-import com.rzsavilla.onetapgame.model.InputHandler;
-import com.rzsavilla.onetapgame.model.Launcher;
+import com.rzsavilla.onetapgame.model.Shapes.Collision.AABB;
+import com.rzsavilla.onetapgame.model.Shapes.Collision.Circle;
+import com.rzsavilla.onetapgame.model.Utilites.Elapsed;
+import com.rzsavilla.onetapgame.Sprite.Enemy.Entity;
+import com.rzsavilla.onetapgame.model.Handler.InputHandler;
+import com.rzsavilla.onetapgame.Scene.Launcher;
 import com.rzsavilla.onetapgame.model.Handler.TextureHandler;
 import com.rzsavilla.onetapgame.model.Utilites.Vector2D;
 import com.rzsavilla.onetapgame.model.Utilites.Vector2Di;
+
+/**
+ * Holds and runs the game loop
+ * @author rzsavilla
+ */
 
 public class GameSurfaceView extends SurfaceView implements Runnable{
     private final static int    MAX_FPS = 30;                   // desired fps
@@ -317,7 +317,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable{
         t.start();
     }
 
-    public void tap(Vector2D position, boolean isDown) { input.updateTap(position,isDown,screenPos); }
+    public void tap(Vector2D position, boolean isDown) { input.updateTap(position, isDown, screenPos); }
 
     private boolean moveLeft() {
         if (!m_bLaneChanging) {

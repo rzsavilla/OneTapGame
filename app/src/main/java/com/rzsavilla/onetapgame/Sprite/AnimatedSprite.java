@@ -1,11 +1,9 @@
-package com.rzsavilla.onetapgame.model.Animation;
+package com.rzsavilla.onetapgame.Sprite;
 
 import android.graphics.Bitmap;
 import android.graphics.Rect;
-import android.graphics.RectF;
 
-import com.rzsavilla.onetapgame.model.Elapsed;
-import com.rzsavilla.onetapgame.model.Inherited.Sprite;
+import com.rzsavilla.onetapgame.model.Utilites.Elapsed;
 import com.rzsavilla.onetapgame.model.Utilites.Vector2Di;
 
 /**

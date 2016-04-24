@@ -1,27 +1,24 @@
-package com.rzsavilla.onetapgame.model;
+package com.rzsavilla.onetapgame.Scene;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.text.AndroidCharacter;
 
-import com.rzsavilla.onetapgame.model.Collision.Circle;
-import com.rzsavilla.onetapgame.model.Inherited.Sprite;
-import com.rzsavilla.onetapgame.model.Projectiles.Projectile;
+import com.rzsavilla.onetapgame.Sprite.Sprite;
+import com.rzsavilla.onetapgame.model.Utilites.Elapsed;
+import com.rzsavilla.onetapgame.model.Handler.ProjectileHandler;
 import com.rzsavilla.onetapgame.model.Shapes.CircleShape;
 import com.rzsavilla.onetapgame.model.Utilites.Transformable;
 import com.rzsavilla.onetapgame.model.Utilites.Vector2D;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.ListIterator;
 import java.util.Queue;
 
 /**
  * A Cannon/Gun/Crossbow/Catapult/etc
  * Will shoot projectiles
+ * @author rzsavilla
  */
 public class Launcher extends Transformable {
     /** Speed of Launcher Rotation */

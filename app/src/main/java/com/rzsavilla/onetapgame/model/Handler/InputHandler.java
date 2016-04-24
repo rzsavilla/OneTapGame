@@ -1,12 +1,11 @@
-package com.rzsavilla.onetapgame.model;
+package com.rzsavilla.onetapgame.model.Handler;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.view.MotionEvent;
 
-import com.rzsavilla.onetapgame.model.Collision.AABB;
-import com.rzsavilla.onetapgame.model.Collision.Circle;
+import com.rzsavilla.onetapgame.model.Shapes.Collision.AABB;
+import com.rzsavilla.onetapgame.model.Shapes.Collision.Circle;
 import com.rzsavilla.onetapgame.model.Shapes.CircleShape;
 import com.rzsavilla.onetapgame.model.Utilites.Vector2D;
 
