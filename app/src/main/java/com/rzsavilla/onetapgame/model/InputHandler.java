@@ -77,8 +77,13 @@ public class InputHandler {
                     m_MouseBB.setPosition(0.0f,0.0f);       //Reset Mouse position
                     break;
             }
+
             m_bUpdateEvent = false;         //Event has been updated
         }
         return true;
+    }
+
+    public void reset() {
+        m_bClick = false;
     }
 }

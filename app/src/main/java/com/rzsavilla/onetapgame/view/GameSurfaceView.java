@@ -15,6 +15,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.Button;
 
 import com.rzsavilla.onetapgame.R;
 import com.rzsavilla.onetapgame.model.Collision.AABB;
@@ -73,6 +74,10 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
 
     private TextureHandler textures;
 
+    /////////INPUT//////////////
+    private boolean bTap = false;
+    private AABB tapPos = new AABB();
+
     //Constructor
     public GameSurfaceView(Context context) {
         super(context);
@@ -94,6 +99,11 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
     private  boolean bRight = true;
     Elapsed elapsed = new Elapsed();
     public void init() {
+        tapPos.setSize(10.0f,10.0f);
+        tapPos.setPosition(0.0f, 0.0f);
+        tapPos.setColour(Color.GREEN);
+        bTap = false;
+
 
         //leftBox.setOrigin(leftBox.getSize().x / 2, leftBox.getSize().y / 2);
         rightBox.setPosition(screenSize.x - (screenSize.x / 4), screenSize.y / 1.2f);
@@ -164,22 +174,22 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
         circle.impulse(ball);
         //mon1.bb.intersect(mon2.bb);
         //mon2.bb.collision(mon1.bb);
-        if (input.bTap) {
+        if (bTap) {
             //circle.setPosition(input.getTapPos());
+            cannon.markTarget(tapPos.getPosition());
             if (!m_bLaneChanging) {
-                if (input.m_MouseBB.getPosition().y < screenSize.y / 1.3) {
+                if (tapPos.getPosition().y < screenSize.y / 1.3) {
                     //cannon.rotateTowards(input.getTapPos());
                     //cannon.m_Bullets.shoot(input.getTapPos());
-                    cannon.markTarget(input.m_MouseBB.getPosition());
+                    cannon.markTarget(tapPos.getPosition());
                 } else {
-                    if (input.m_MouseBB.collision(leftBox)) {
+                    if (tapPos.collision(leftBox)) {
                         moveLeft();
-                    } else if (input.m_MouseBB.collision(rightBox)) {
+                    } else if (tapPos.collision(rightBox)) {
                         moveRight();
                     }
                 }
             }
-            m_bTap = false;
         }
         //Log.d("Tap: ", Float.toString(circle.getPosition().x));
 
@@ -261,20 +271,25 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
             ball.draw(p, c);
             circle.draw(p, c);
 
+            tapPos.draw(p,c);
             holder.unlockCanvasAndPost(c);      //Unlock canvas
         }
     }
 
+    private boolean m_bInputUpdated = false;
     public  void run() {
         android.os.Process.setThreadPriority(Process.THREAD_PRIORITY_DEFAULT);
         while(ok) {
             beginTime = System.currentTimeMillis();
 
             //Game Loop
-            input.update(screenPos);            //Update inputs
+            if (m_bInputUpdated) {
+                //input.update(screenPos);            //Update inputs
+                m_bInputUpdated = false;
+            }
             updateCanvas();                     //Update logic
             drawCanvas();                       //Render game
-
+            input.reset();
             timeDiff = System.currentTimeMillis() - beginTime;      //Time elapsed
 
             //FPS Counts frames
@@ -319,11 +334,22 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
         t.start();
     }
 
+
+
+    public void tap(Vector2D position, boolean isDown) {
+        tapPos.setPosition(position);
+        bTap = isDown;
+    }
+
     public void tapUpdate(MotionEvent event) {
-        input.setEvent(event, screenPos);         //Tap position relative to canvas position;
+        //input.setEvent(event, screenPos);         //Tap position relative to canvas position;
     }
 
     public boolean onTouch(View view,MotionEvent event) {
+        input.setEvent(event, screenPos);
+        input.update(screenPos);
+
+        m_bInputUpdated = true;
         return true;
     }
 

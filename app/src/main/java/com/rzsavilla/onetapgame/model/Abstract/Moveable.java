@@ -9,13 +9,20 @@ import com.rzsavilla.onetapgame.model.Utilites.Vector2D;
 public abstract class Moveable extends Transformable {
     private Vector2D m_vVelocity = new Vector2D();          //Heading
     private Vector2D m_vCurrentVel = new Vector2D();        //Heading * Acceleration
-    private float m_fForce = 10.0f;
+    private float m_fForce = 100.0f;
     private float m_fMass = 1.0f;
 
-    public void setVelocity(Vector2D newVelocity) {
-        m_vVelocity = newVelocity;
-    }
+    /**
+     * Set the objects heading
+     * @param newVelocity
+     */
+    public void setVelocity(Vector2D newVelocity) { setVelocity(newVelocity.x,newVelocity.y); }
 
+    /**
+     * Set the objects heading
+     * @param x
+     * @param y
+     */
     public  void setVelocity(float x, float y) {
         m_vVelocity.x = x;
         m_vVelocity.y = y;
@@ -38,23 +45,44 @@ public abstract class Moveable extends Transformable {
         m_fMass = newMass;
     }
 
+    /**
+     * Return objects current velocity
+     * @return Vector velocity x,y
+     */
     public Vector2D getVelocity() {
         return m_vCurrentVel;
     }
 
+    /**
+     * Returns force being applied to object
+     * @return Float force applied to object
+     */
     public float getForce() {
         return m_fForce;
     }
+
+    /**
+     * Returns Objects mass
+     * @return Float objects mass
+     */
     public float getMass() {
         return m_fMass;
     }
 
+    /**
+     * Returns objects Acceleration Acceleration = Force / Mass
+     * @return Float acceleration of the object
+     */
     public float getAcceleration() {
         return m_fForce / m_fMass;
     }
 
+    /**
+     * Move the object
+     * @param timeStep
+     */
     public void moveUpdate(float timeStep) {
-        m_vCurrentVel = m_vVelocity.multiply(getAcceleration() * timeStep);
+        m_vCurrentVel = m_vVelocity.multiply(getAcceleration());
         setPosition(this.getPosition().add(m_vCurrentVel.multiply(timeStep)));
     }
 }

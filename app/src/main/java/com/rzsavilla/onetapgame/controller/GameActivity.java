@@ -48,17 +48,20 @@ public class GameActivity extends Activity{
                 // finger touches the screen
                 xPos = event.getX();
                 yPos = event.getY();
+                gsv.tap(new Vector2D(xPos,yPos), true);
                 break;
             case MotionEvent.ACTION_MOVE:
                 // finger moves on the screen
                 xPos = event.getX();
                 yPos = event.getY();
+                gsv.tap(new Vector2D(xPos,yPos), true);
                 break;
             case MotionEvent.ACTION_UP:
                 // finger leaves the screen
+                gsv.tap(new Vector2D(xPos,yPos), false);
                 break;
         }
-        gsv.tapUpdate(event);
+        //gsv.onTouch(gsv,event);
         return true;
     }
 }
