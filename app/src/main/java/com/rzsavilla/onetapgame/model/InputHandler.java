@@ -1,89 +1,106 @@
 package com.rzsavilla.onetapgame.model;
 
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.view.MotionEvent;
 
 import com.rzsavilla.onetapgame.model.Collision.AABB;
+import com.rzsavilla.onetapgame.model.Collision.Circle;
+import com.rzsavilla.onetapgame.model.Shapes.CircleShape;
 import com.rzsavilla.onetapgame.model.Utilites.Vector2D;
 
 /**
  * Created by rzsavilla on 15/03/2016.
  */
 public class InputHandler {
-    private boolean m_bClick = false;                     //Player has tapped the screen
-    private Vector2D m_vTapPos = new Vector2D();          //Position of player screen tap
-    private MotionEvent m_MotionEvent;
-    private boolean m_bUpdateEvent = false;
-    private Vector2D m_vRelativePosition = new Vector2D();                 //Position of canvas
 
-    public AABB m_MouseBB = new AABB();
+    /**
+     *  Player is Pressing the screen if true
+     */
+    private boolean m_bTap;
 
-    public void InputHandler() {
+    /**
+     * Press position
+     */
+    private Circle m_TapPosition = new Circle();
 
+    /**
+     * Default Constructor initialize variables
+     */
+    public InputHandler() {
+        m_TapPosition.setPosition(0.0f,0.0f);
+        m_TapPosition.setRadius(25.0f);
+        m_TapPosition.setColour(Color.GREEN);
+        m_bTap = false;
     }
 
-    public boolean bTap = false;
+    /**
+     * Checks if player is pressing down on the screen
+     * @return True if player is pressing down on the screen
+     */
+    public boolean isDown() { return m_bTap; }
 
-    public void setUpdate(boolean update) {
-        m_bUpdateEvent = update;
+    /**
+     * Check if player taps on an AABB
+     * @param other
+     * @return True if player has tapped on AABB
+     */
+    public boolean tap(AABB other) {
+        if (m_TapPosition.collision(other)) { return  true; }
+        else { return false; }
     }
 
-    public void setEvent(MotionEvent event) {
-        m_MotionEvent = event;
-        m_bUpdateEvent = true;
+    /**
+     * Check if player taps on a Circle
+     * @param other
+     * @return True if player has tapped on Circle
+     */
+    public boolean tap(CircleShape other) {
+        if (m_TapPosition.collision(other)) { return true; }
+        else {return false; }
     }
 
-    public void setEvent(MotionEvent event, Vector2D relative) {
-        m_MotionEvent = event;
-        m_vRelativePosition = relative;
-        m_MouseBB.setPosition(m_vTapPos);
-        m_MouseBB.setSize(50.0f,50.0f);
-        m_MouseBB.updateGlobalBounds();
-        m_bUpdateEvent = true;
+    /**
+     * Return position of tap on the screen
+     * @return
+     */
+    public Vector2D getTapPos() { return m_TapPosition.getPosition(); }
+
+    /**
+     * Return position of tap relative to vector
+     * @param relative Tap position relative to this vector, will likely be screen position
+     * @return returns Tap position
+     */
+    public Vector2D getTapPos(Vector2D relative) { return m_TapPosition.getPosition().add(relative); }
+
+    /**
+     * Update current tap position and if player is pressing down onto the screen
+     * @param position Position of the tap
+     * @param isDown If tap is down
+     */
+    public void updateTap(Vector2D position, boolean isDown) {
+        m_TapPosition.setPosition(position);
+        m_bTap = isDown;
     }
 
-    public Vector2D getTapPos() {
-        return m_vTapPos.add(m_vRelativePosition);
+    /**
+     * Update tap relative to screen position
+     * @param position
+     * @param isDown
+     * @param relativeScreen
+     */
+    public void updateTap(Vector2D position, boolean isDown, Vector2D relativeScreen) {
+        m_TapPosition.setPosition(position.add(relativeScreen));
+        m_bTap = isDown;
     }
 
-    public AABB getMouseBB() { return m_MouseBB; }
-
-    public boolean isDown() {
-        return m_bClick;
-    }
-
-    public boolean update(Vector2D canvasPos) {
-        m_vRelativePosition = canvasPos;
-        if (m_bUpdateEvent) {
-            int iAction = m_MotionEvent.getAction();
-            switch (iAction) {
-                case MotionEvent.ACTION_DOWN:
-                    // finger touches the screen
-                    m_vTapPos.x = m_MotionEvent.getX();
-                    m_vTapPos.y = m_MotionEvent.getY();
-                    m_MouseBB.setPosition(getTapPos());
-                    m_bClick = true;
-                    bTap = true;
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    // finger moves on the screen
-                    m_vTapPos.x = m_MotionEvent.getX();
-                    m_vTapPos.y = m_MotionEvent.getY();
-                    m_MouseBB.setPosition(getTapPos());
-                    break;
-                case MotionEvent.ACTION_UP:
-                    // finger leaves the screen
-                    m_bClick = false;
-                    bTap = false;
-                    m_MouseBB.setPosition(0.0f,0.0f);       //Reset Mouse position
-                    break;
-            }
-
-            m_bUpdateEvent = false;         //Event has been updated
-        }
-        return true;
-    }
-
-    public void reset() {
-        m_bClick = false;
+    /**
+     * Draw tap AABB
+     * @param p
+     * @param c
+     */
+    public void draw(Paint p, Canvas c) {
+        m_TapPosition.draw(p,c);
     }
 }

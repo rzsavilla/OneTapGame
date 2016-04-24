@@ -51,6 +51,12 @@ public class Launcher extends Transformable {
         m_Timer.restart();
     }
 
+    /**
+     * Constructor sets Launcher position size and sprite texture
+     * @param position
+     * @param size
+     * @param texture
+     */
     public Launcher(Vector2D position, Vector2D size, Bitmap texture) {
         setPosition(position);
         setSize(size);
@@ -112,7 +118,6 @@ public class Launcher extends Transformable {
         for (CircleShape targets : m_Targets) {
             targets.draw(p,c);
         }
-
         sprite.setPosition(this.getPosition().x, this.getPosition().y);
         sprite.draw(p, c);
         m_Bullets.drawProj(p, c);

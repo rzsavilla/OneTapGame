@@ -61,7 +61,6 @@ public class GameActivity extends Activity{
                 gsv.tap(new Vector2D(xPos,yPos), false);
                 break;
         }
-        //gsv.onTouch(gsv,event);
         return true;
     }
 }

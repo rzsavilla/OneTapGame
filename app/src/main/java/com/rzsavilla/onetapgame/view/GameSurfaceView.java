@@ -29,7 +29,7 @@ import com.rzsavilla.onetapgame.model.Handler.TextureHandler;
 import com.rzsavilla.onetapgame.model.Utilites.Vector2D;
 import com.rzsavilla.onetapgame.model.Utilites.Vector2Di;
 
-public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTouchListener{
+public class GameSurfaceView extends SurfaceView implements Runnable{
     private final static int    MAX_FPS = 30;                   // desired fps
     private final static int    MAX_FRAME_SKIPS = 3;            // maximum number of frames to be skipped
     private final static int    FRAME_PERIOD = 1000 / MAX_FPS;  // the frame period
@@ -71,12 +71,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
     Entity mon2 = new Entity();
 
     ////////////BMP///////////////////
-
     private TextureHandler textures;
-
-    /////////INPUT//////////////
-    private boolean bTap = false;
-    private AABB tapPos = new AABB();
 
     //Constructor
     public GameSurfaceView(Context context) {
@@ -99,12 +94,6 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
     private  boolean bRight = true;
     Elapsed elapsed = new Elapsed();
     public void init() {
-        tapPos.setSize(10.0f,10.0f);
-        tapPos.setPosition(0.0f, 0.0f);
-        tapPos.setColour(Color.GREEN);
-        bTap = false;
-
-
         //leftBox.setOrigin(leftBox.getSize().x / 2, leftBox.getSize().y / 2);
         rightBox.setPosition(screenSize.x - (screenSize.x / 4), screenSize.y / 1.2f);
         leftBox.setPosition((screenSize.x / 4), screenSize.y / 1.2f);
@@ -174,18 +163,18 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
         circle.impulse(ball);
         //mon1.bb.intersect(mon2.bb);
         //mon2.bb.collision(mon1.bb);
-        if (bTap) {
+        if (input.isDown()) {
             //circle.setPosition(input.getTapPos());
-            cannon.markTarget(tapPos.getPosition());
+            cannon.markTarget(input.getTapPos());
             if (!m_bLaneChanging) {
-                if (tapPos.getPosition().y < screenSize.y / 1.3) {
+                if (input.getTapPos().y < screenSize.y / 1.3) {
                     //cannon.rotateTowards(input.getTapPos());
                     //cannon.m_Bullets.shoot(input.getTapPos());
-                    cannon.markTarget(tapPos.getPosition());
+                    cannon.markTarget(input.getTapPos());
                 } else {
-                    if (tapPos.collision(leftBox)) {
+                    if (input.tap(leftBox)) {
                         moveLeft();
-                    } else if (tapPos.collision(rightBox)) {
+                    } else if (input.tap(rightBox)) {
                         moveRight();
                     }
                 }
@@ -266,12 +255,12 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
             cannon.draw(p, c);
             mon1.draw(p, c);
             mon2.draw(p, c);
-            input.getMouseBB().draw(p, c);
+
 
             ball.draw(p, c);
             circle.draw(p, c);
 
-            tapPos.draw(p,c);
+            input.draw(p,c);
             holder.unlockCanvasAndPost(c);      //Unlock canvas
         }
     }
@@ -280,16 +269,10 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
     public  void run() {
         android.os.Process.setThreadPriority(Process.THREAD_PRIORITY_DEFAULT);
         while(ok) {
-            beginTime = System.currentTimeMillis();
 
-            //Game Loop
-            if (m_bInputUpdated) {
-                //input.update(screenPos);            //Update inputs
-                m_bInputUpdated = false;
-            }
+            beginTime = System.currentTimeMillis();
             updateCanvas();                     //Update logic
             drawCanvas();                       //Render game
-            input.reset();
             timeDiff = System.currentTimeMillis() - beginTime;      //Time elapsed
 
             //FPS Counts frames
@@ -334,24 +317,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
         t.start();
     }
 
-
-
-    public void tap(Vector2D position, boolean isDown) {
-        tapPos.setPosition(position);
-        bTap = isDown;
-    }
-
-    public void tapUpdate(MotionEvent event) {
-        //input.setEvent(event, screenPos);         //Tap position relative to canvas position;
-    }
-
-    public boolean onTouch(View view,MotionEvent event) {
-        input.setEvent(event, screenPos);
-        input.update(screenPos);
-
-        m_bInputUpdated = true;
-        return true;
-    }
+    public void tap(Vector2D position, boolean isDown) { input.updateTap(position,isDown,screenPos); }
 
     private boolean moveLeft() {
         if (!m_bLaneChanging) {
