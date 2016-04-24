@@ -1,4 +1,4 @@
-package com.rzsavilla.onetapgame.model;
+package com.rzsavilla.onetapgame.model.Projectiles;
 
 import android.graphics.Color;
 

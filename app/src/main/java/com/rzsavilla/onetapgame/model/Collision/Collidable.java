@@ -7,6 +7,31 @@ import com.rzsavilla.onetapgame.model.Shapes.CircleShape;
  */
 public interface Collidable{
     //Collision checks
+    /**
+     * Check for collision with CircleShape
+     * @param other Axis Aligned Bounding Box to check collision with
+     * @return returns true if a collision has occured
+     */
     boolean collision(AABB other);
+
+    /**
+     * Check for collision with CircleShape
+     * @param other circle to check collision with
+     * @return returns true if a collision has occured
+     */
     boolean collision(CircleShape other);
+
+    /**
+     * Check for collision AABB
+     * @param other Axis Aligned Bounding Box to check collision with
+     * @return intersection/overlap distance
+     */
+    float intersect(AABB other);
+
+    /**
+     * Check for collision with CircleShape
+     * @param other CircleShape to check collision with.
+     * @returns intersection/overlap distance
+     */
+    float intersect(CircleShape other);
 }

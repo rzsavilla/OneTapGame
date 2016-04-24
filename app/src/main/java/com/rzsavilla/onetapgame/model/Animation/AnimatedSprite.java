@@ -69,7 +69,7 @@ public class AnimatedSprite extends Sprite {
         return m_bLoopAnimation;
     }
 
-    private void updateAnimation() {
+    protected void updateAnimation() {
         if (timer.getElapsed() >= m_fAnimatationSpeed) {        //Check when frame changes
             if ((m_iCurrFrame + 1) < m_iFrameCount) {
                 //Next Frame
@@ -99,13 +99,6 @@ public class AnimatedSprite extends Sprite {
             src.bottom = src.top + m_vFrameSize.y;
             //src = new Rect(0,0,this.getSize().x, this.getSize().y);
             timer.restart();
-        }
-    }
-
-    public void update() {
-        //src = new Rect(0,0,vFrameSize.x, vFrameSize.y);
-        if (true) {
-            updateAnimation();
         }
     }
 }

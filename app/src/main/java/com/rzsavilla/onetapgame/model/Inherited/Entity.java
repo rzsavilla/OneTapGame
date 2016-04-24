@@ -13,7 +13,6 @@ import com.rzsavilla.onetapgame.model.Utilites.Vector2Di;
  */
 public class Entity extends AnimatedSprite {
     private int m_iHealth;                  //Entity Health
-    private boolean m_bDeath = false;       //Flag for death animation
 
     public AABB bb = new AABB();             //Bounding box for collision detection
 
@@ -21,18 +20,28 @@ public class Entity extends AnimatedSprite {
         m_iHealth = newHealth;
     }
 
-    public void updateEntity() {
-
-    }
-
+    /**
+     * Draw bounding box, sprite and update bb transformations
+     * @param p
+     * @param c
+     */
     public void draw(Paint p , Canvas c) {
+        //Update bounding box to match sprite
         if (this.bPositionChanged) { bb.setPosition(this.getPosition());}
         if (this.bSizeChanged) { bb.setSize(this.getSize()); }
         if (this.bOriginChanged) {bb.setOrigin(this.getOrigin());}
         if (this.bScaleChanged) {bb.setScale(this.getScale());}
 
-        bb.draw(p,c);
-        super.draw(p,c);        //override draw
+        bb.draw(p,c);           //Draw bounding box
+        super.draw(p,c);        //override draw sprite
+    }
 
+    /**
+     * Update Entity movement
+     * @param timeStep
+     */
+    public void update(float timeStep) {
+        this.moveUpdate(timeStep);
+        this.updateAnimation();
     }
 }

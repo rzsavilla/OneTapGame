@@ -112,8 +112,11 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
         circle.setPosition(screenSize.x / 2.0f, 100.0f);
         circle.setVelocity(0.0f, 100.0f);
 
-        circle.setMass(10.0f);
-        ball.setMass(10.0f);
+        circle.setMass(1.0f);
+        ball.setMass(1.0f);
+
+        circle.setVelocity(0, 1);
+        ball.setVelocity(0,-1);
 
         System.out.println("Init");
         textures = new TextureHandler();
@@ -162,11 +165,12 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
         //mon1.bb.intersect(mon2.bb);
         //mon2.bb.collision(mon1.bb);
         if (input.bTap) {
-            circle.setPosition(input.getTapPos());
+            //circle.setPosition(input.getTapPos());
             if (!m_bLaneChanging) {
                 if (input.m_MouseBB.getPosition().y < screenSize.y / 1.3) {
-                    cannon.rotateTowards(input.getTapPos());
-                    cannon.m_Bullets.shoot(input.getTapPos());
+                    //cannon.rotateTowards(input.getTapPos());
+                    //cannon.m_Bullets.shoot(input.getTapPos());
+                    cannon.markTarget(input.m_MouseBB.getPosition());
                 } else {
                     if (input.m_MouseBB.collision(leftBox)) {
                         moveLeft();
@@ -204,8 +208,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
             leftBox.setPosition((screenSize.x / 4) + screenPos.x, screenSize.y / 1.1f);
         }
         //Log.d("Right?",Boolean.toString(bRight));
-        mon1.update();
-        mon2.update();
+
 
         if (mon1.getPosition().y > screenSize.y - 300) {
             mon1.setPosition(mon1.getPosition().x , 0);
@@ -214,8 +217,11 @@ public class GameSurfaceView extends SurfaceView implements Runnable, View.OnTou
             mon2.setPosition(mon2.getPosition().x , 0);
         }
 
-        mon1.moveUpdate(m_kfTimeStep);
-        mon2.moveUpdate(m_kfTimeStep);
+        mon1.update(m_kfTimeStep);
+        mon2.update(m_kfTimeStep);
+
+        //mon1.moveUpdate(m_kfTimeStep);
+        //mon2.moveUpdate(m_kfTimeStep);
         circle.moveUpdate(m_kfTimeStep);
         ball.moveUpdate(m_kfTimeStep);
     }

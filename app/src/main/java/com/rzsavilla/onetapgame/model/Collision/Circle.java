@@ -8,14 +8,15 @@ import com.rzsavilla.onetapgame.model.Shapes.CircleShape;
 import com.rzsavilla.onetapgame.model.Utilites.Vector2D;
 
 /**
- * Collidable Circle
+ * Circle for collision tests
+ * @author rzsavilla
  */
 public class Circle extends CircleShape implements Collidable {
-
+    /**Default Constructor*/
     public Circle() {
 
     }
-
+    /**Collision check with AABB*/
     public boolean collision(AABB other) {
         //Distance between AABB and Circle centres
         Vector2D vDist = new Vector2D(this.getPosition().subtract(other.getPosition()));
@@ -39,6 +40,7 @@ public class Circle extends CircleShape implements Collidable {
             return false;
         }
     }
+    /**Collision check with CircleShape*/
     public boolean collision(CircleShape other) {
         Vector2D vDist = new Vector2D(this.getPosition().subtract(other.getPosition()));
 
@@ -53,7 +55,20 @@ public class Circle extends CircleShape implements Collidable {
             return false;
         }
     }
+    /**Collision check with AABB */
+    public float intersect(AABB other) {
+        return 0.0f;
+    }
+    /**Collision check CircleShape*/
+    public float intersect(CircleShape other) {
+        return 0.0f;
+    }
 
+    /**
+     * Collision resolution with Circle
+     * @param other
+     * @return
+     */
     public boolean impulse(Circle other) {
         if (collision(other)) {
             Vector2D vDiff = this.getPosition().subtract(other.getPosition()); //Centre Differenc
@@ -80,7 +95,11 @@ public class Circle extends CircleShape implements Collidable {
         }
         return false;
     }
-
+    /**
+     * Collision resolution with Entity
+     * @param other
+     * @return
+     */
     public boolean impulse(Entity other) {
         if (collision(other.bb)) {
             Vector2D vDiff = this.getPosition().subtract(other.getPosition()); //Centre Differenc

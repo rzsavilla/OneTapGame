@@ -23,6 +23,9 @@ public class Sprite extends Moveable implements Drawable {
     protected RectF dst = new RectF();
     protected boolean bSizeChanged = true;
 
+    /**
+     * Default constructor
+     */
     public Sprite() {
 
     }

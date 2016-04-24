@@ -17,6 +17,10 @@ import com.rzsavilla.onetapgame.model.Utilites.Vector2Di;
  * Axis Aligned Bounding Box used for collision checks
  */
 public class AABB extends RectangleShape implements Collidable{
+
+    /**
+     * Collision test with AABB.
+     */
     public boolean collision(AABB other) {
         if (this.getBounds().left < other.getBounds().right &&
                 this.getBounds().right > other.getBounds().left &&
@@ -30,7 +34,7 @@ public class AABB extends RectangleShape implements Collidable{
         other.setColour(Color.WHITE);
         return false;                       //No Collision
     }
-
+    /**Collision check with circle */
     public boolean collision(CircleShape other) {
         //Distance between AABB and Circle centres
         Vector2D vDist = new Vector2D(this.getPosition().subtract(other.getPosition()));
@@ -54,8 +58,20 @@ public class AABB extends RectangleShape implements Collidable{
             return false;
         }
     }
+    /**Collision check with AABB */
+    public float intersect(AABB other) {
+        return 0.0f;
+    }
+    /**Collision check with CircleShape */
+    public float intersect(CircleShape other) {
+        return 0.0f;
+    }
 
-    public boolean intersect(AABB other) {
+
+
+
+    /*
+    public float intersect(AABB other) {
         if (this.getBounds().left <= other.getBounds().right &&
                 other.getBounds().left <= this.getBounds().right &&
                 this.getBounds().top <= other.getBounds().bottom &&
@@ -68,4 +84,5 @@ public class AABB extends RectangleShape implements Collidable{
             return false;
         }
     }
+    */
 }

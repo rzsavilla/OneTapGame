@@ -3,6 +3,7 @@ package com.rzsavilla.onetapgame.model;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
+import com.rzsavilla.onetapgame.model.Projectiles.Projectile;
 import com.rzsavilla.onetapgame.model.Utilites.Transformable;
 import com.rzsavilla.onetapgame.model.Utilites.Vector2D;
 
@@ -43,6 +44,8 @@ public class ProjectileHandler extends Transformable {
     public float getRateOfFire() {
         return m_fRateOfFire;
     }
+
+    public boolean canShoot() { return m_bCanShoot; }
 
     //Shoot a bullet towards target
     public void shoot(Vector2D target) {
