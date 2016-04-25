@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
+import android.util.Log;
 
 import com.rzsavilla.onetapgame.model.Utilites.Vector2D;
 import com.rzsavilla.onetapgame.model.Utilites.Vector2Di;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 public class TextureHandler {
     private Vector2Di m_vScreenSize = new Vector2Di();
     private Point m_pScreenSize = new Point();
-    private ArrayList<Bitmap> m_aTextures = new ArrayList<Bitmap>();
+    private ArrayList<Bitmap> m_aTextures = new ArrayList<>();
     private boolean m_bHasContext;
     private boolean m_bScreenSet;
     private Context m_context;
@@ -68,8 +69,10 @@ public class TextureHandler {
             float fScaleY = texture.getHeight() * (1);
             texture = Bitmap.createScaledBitmap(texture, (int)fScaleX, (int)fScaleY, false);
             m_aTextures.add(texture);
+            Log.d("Texture Loaded: ", Integer.toString(id));
             return true;
         } else {
+            Log.e("Texture NOT Loaded: ",Integer.toString(id));
             return false;
         }
     }

@@ -84,6 +84,12 @@ public class InputHandler {
     }
 
     /**
+     * Update tap position relative to a vector
+     * @param relative
+     */
+    public void relativeTo(Vector2D relative) { m_TapPosition.setPosition(m_TapPosition.getPosition().add(relative)); }
+
+    /**
      * Update tap relative to screen position
      * @param position
      * @param isDown

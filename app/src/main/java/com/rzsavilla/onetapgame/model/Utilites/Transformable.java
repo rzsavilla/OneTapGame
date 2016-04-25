@@ -16,11 +16,11 @@ public class Transformable extends Destroyable {
     protected RectF m_GlobalBounds = new RectF(0.0f,0.0f,0.0f,0.0f);  //Transformation applied
 
     //Flags to notify derived classes that transformation has occurred, classes can then decide if it is necessary to update transformation.
-    protected boolean bPositionChanged = true;
-    protected boolean bOriginChanged = true;
-    protected boolean bRotationChanged = true;
-    protected boolean bScaleChanged = true;
-    protected boolean bSizeChanged = true;
+    protected boolean bPositionChanged = false;
+    protected boolean bOriginChanged = false;
+    protected boolean bRotationChanged = false;
+    protected boolean bScaleChanged = false;
+    protected boolean bSizeChanged = false;
 
     /////////////////SET///////////////////////////
     public void setPosition(Vector2D newPosition) {

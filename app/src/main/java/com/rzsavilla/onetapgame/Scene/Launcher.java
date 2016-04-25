@@ -20,7 +20,7 @@ import java.util.Queue;
  * Will shoot projectiles
  * @author rzsavilla
  */
-public class Launcher extends Transformable {
+public class Launcher extends Transformable implements Cloneable {
     /** Speed of Launcher Rotation */
     private float m_fRotationSpeed = 20.0f;
     private boolean m_bRotateLeft = false;
@@ -35,7 +35,7 @@ public class Launcher extends Transformable {
     private boolean m_bHasTarget = false;
 
     /** The Launcher Sprite */
-    public Sprite sprite;
+    public Sprite m_Sprite = new Sprite();
     /** Array of markers that show cannons target */
     /** Maximum number of target markers that can be placed */
     private Elapsed m_Timer = new Elapsed();     //Checks marker delay
@@ -44,8 +44,21 @@ public class Launcher extends Transformable {
      * Default constructor
      */
     public Launcher() {
-        sprite = new Sprite();
         m_Timer.restart();
+    }
+
+    /**
+     * Create new launcher by copying a launchers values
+     * @param launcher
+     */
+    public Launcher(Launcher launcher) {
+        setRotatation(launcher.getRotation());
+        setSize(launcher.getSize());
+        setBounds(launcher.getBounds());
+        setScale(launcher.getScale());
+        setOrigin(launcher.getOrigin());
+        setSprite(launcher.getSprite());
+        setPosition(launcher.getPosition());
     }
 
     /**
@@ -58,7 +71,8 @@ public class Launcher extends Transformable {
         setPosition(position);
         setSize(size);
         setOrigin(size.divide(2));
-        sprite.setTexture(texture);
+        m_Sprite = new Sprite();
+        m_Sprite.setTexture(texture);
     }
 
     /**
@@ -106,6 +120,10 @@ public class Launcher extends Transformable {
         }
     }
 
+    public void setSprite(Sprite sprite) { m_Sprite = sprite; }
+    public void setSpriteTexture(Bitmap texture) { m_Sprite.setTexture(texture); }
+    public Sprite getSprite() { return m_Sprite; }
+
     /**
      * Draw the Launcher ,projectiles and target markers
      * @param p Paint
@@ -115,8 +133,11 @@ public class Launcher extends Transformable {
         for (CircleShape targets : m_Targets) {
             targets.draw(p,c);
         }
-        sprite.setPosition(this.getPosition().x, this.getPosition().y);
-        sprite.draw(p, c);
+        m_Sprite.setPosition(this.getPosition().x, this.getPosition().y);
+        m_Sprite.setRotatation(this.getRotation());
+        m_Sprite.setOrigin(this.getOrigin());
+        m_Bullets.setPosition(this.getPosition());
+        m_Sprite.draw(p, c);
         m_Bullets.drawProj(p, c);
     }
 
@@ -125,23 +146,6 @@ public class Launcher extends Transformable {
      * @param timeStep
      */
     public void update(float timeStep) {
-        //Update Sprite and bullet spawn positions
-        if (bPositionChanged) {
-            sprite.setPosition(this.getPosition());
-            m_Bullets.setPosition(this.getPosition());
-            bPositionChanged = false;
-        }
-        //Update Sprite origin
-        if (bOriginChanged) {
-            sprite.setOrigin(this.getOrigin());
-            bOriginChanged = false;
-        }
-        //Update Sprite rotation
-        if (bRotationChanged) {
-            sprite.setRotatation(this.getRotation());
-            bRotationChanged = false;
-        }
-
         //Set Target
         if (!m_Targets.isEmpty() && !m_bHasTarget) {
                 m_vCurretTarget = m_Targets.element().getPosition();      //Get element and set current target as element

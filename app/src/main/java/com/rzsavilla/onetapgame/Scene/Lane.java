@@ -1,6 +1,12 @@
 package com.rzsavilla.onetapgame.Scene;
 
+import android.graphics.Canvas;
+import android.graphics.Paint;
+
 import com.rzsavilla.onetapgame.Sprite.Enemy.Entity;
+import com.rzsavilla.onetapgame.model.Handler.InputHandler;
+import com.rzsavilla.onetapgame.model.Handler.TextureHandler;
+import com.rzsavilla.onetapgame.model.Utilites.Transformable;
 import com.rzsavilla.onetapgame.model.Utilites.Vector2D;
 
 import java.util.ArrayList;
@@ -11,28 +17,59 @@ import java.util.ListIterator;
  * Left, Center and Right lanes.
  * Controls stores and updates enemies
  */
-public class Lane {
-    private Vector2D m_vPosition = new Vector2D();      //Lane position (top left)
-    private int m_iWidth;                               //width of the screen
+public class Lane extends Transformable{
     private boolean m_bOnLane = false;                  //Player is viewing this lane
-    private ArrayList<Entity> m_aEnemies;               //Array of enemies
+    private ArrayList<Entity> m_aEnemies = new ArrayList<>();       //Array of enemies
+    private Launcher m_Launcher;
 
-    /**Default Constructor */
-    public Lane() {}
-    /**Constructor that sets lanes position and width */
-    public Lane(Vector2D position, int width) {
-        m_vPosition = position;
-        m_iWidth = width;
-    }
-    /**Constructor that sets lanes position and width */
-    public Lane(float x,float y, int width) {
-        m_iWidth = width;
-        m_vPosition.x = x;
-        m_vPosition.y = y;
+
+    /**
+     * Constructor
+     * @param position
+     * @param width
+     * @param height
+     * @param textures
+     */
+    public Lane(Vector2D position, int width, int height,TextureHandler textures) {
+        setPosition(position);
+        setSize(width, height);
+        initialize(textures);
     }
 
-    /**Update all enemies on the lane*/
-    public void update(float timeStep) {
+    /**
+     *
+     * @param textures
+     * @return
+     */
+    public boolean initialize(TextureHandler textures) {
+        float fCentreOffset = getSize().x / 2.0f;
+        float fHeight;
+        m_Launcher = new Launcher();
+        m_Launcher.m_Sprite.setTexture(textures.getTexture(0));
+        fHeight = m_Launcher.m_Sprite.getHeight();
+        m_Launcher.setOrigin(m_Launcher.m_Sprite.getWidth() / 2.0f,m_Launcher.m_Sprite.getHeight() / 2.0f);
+        m_Launcher.setPosition(this.getPosition().add(new Vector2D(fCentreOffset,getSize().y - fHeight)));
+        return true;
+    }
+
+    /**
+     * Set whether player is viewing this lane
+     * @param onLane
+     * @return
+     */
+    public void setOnLane(boolean onLane) { m_bOnLane = onLane; }
+
+    /**
+     * Update Lane objects
+     * @param timeStep
+     * @param input
+     */
+    public void update(float timeStep, InputHandler input) {
+        if (input.isDown()) {
+            m_Launcher.markTarget(input.getTapPos());
+        }
+        m_Launcher.update(timeStep);
+
         ListIterator<Entity> itr = m_aEnemies.listIterator();
         while(itr.hasNext()) {                      //Iterate through bullets
             Entity element = itr.next();            //Get enemy in array
@@ -41,5 +78,15 @@ public class Lane {
                 itr.remove();
             }
         }
+    }
+
+    /**
+     * Draw all objects on the lane
+     * @param p
+     * @param c
+     */
+    public void draw(Paint p, Canvas c) {
+        m_Launcher.draw(p,c);
+        for (Entity enemy: m_aEnemies) { enemy.draw(p,c); }
     }
 }
