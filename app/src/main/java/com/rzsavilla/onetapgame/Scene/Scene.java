@@ -7,6 +7,7 @@ import android.graphics.Shader;
 import android.util.Log;
 
 import com.rzsavilla.onetapgame.R;
+import com.rzsavilla.onetapgame.model.HUD.HUD;
 import com.rzsavilla.onetapgame.model.Handler.InputHandler;
 import com.rzsavilla.onetapgame.model.Handler.TextureHandler;
 import com.rzsavilla.onetapgame.model.Utilites.Calculation;
@@ -30,6 +31,13 @@ public class Scene {
     private boolean m_bTextureLoaded = false;
     private TextureHandler m_Textures = new TextureHandler();
     private InputHandler m_Input = new InputHandler();
+    private HUD hud = new HUD();
+
+    private int m_iHealth = 100;
+    private int m_iGold = 0;
+
+    //Lane Changing
+    private boolean m_bChangeLane = false;
 
     /**
      * Default construtor
@@ -48,6 +56,7 @@ public class Scene {
         m_vRight = new Vector2D(m_iScreenWidth,0.0f);
         loadTextures();
         loadLanes();
+        hud.initialize(m_iScreenWidth,m_iScreenHeight, m_Textures);
     }
 
     private boolean loadTextures() {
@@ -68,14 +77,83 @@ public class Scene {
      */
     private boolean loadLanes() {
         //Add lanes into array
+        m_aLanes.add(new Lane(m_vLeft,m_iScreenWidth,m_iScreenHeight,m_Textures));
         m_aLanes.add(new Lane(m_vCenter,m_iScreenWidth,m_iScreenHeight,m_Textures));
-        m_aLanes.add(new Lane(m_vCenter,m_iScreenWidth,m_iScreenHeight,m_Textures));
-        m_aLanes.add(new Lane(m_vCenter,m_iScreenWidth,m_iScreenHeight,m_Textures));
+        m_aLanes.add(new Lane(m_vRight,m_iScreenWidth,m_iScreenHeight,m_Textures));
         return true;
     }
 
-    private void changeLane() {
+    private float m_fScreenTargetX = 0.0f;
+    private boolean m_bLaneMoveLeft = false; //true = left, false = right
 
+    /**
+     * Check whether player the lane to the left
+     */
+    private boolean moveLaneLeft() {
+        if (m_vScreenPos.x > m_vLeft.x) {               //Check if on left lane
+            //Check if on center lane
+            if (m_vScreenPos.x <= m_vCenter.x) { m_fScreenTargetX = m_vLeft.x; }    //Move to the left lane
+            //On the Right Lane
+            else { m_fScreenTargetX = m_vCenter.x; }
+            m_bLaneMoveLeft = true;                     //Set move direction
+            return true;    //Can move
+        }
+        return false; //Cannot move
+    }
+
+    /**
+     * Check whether player the lane to the right
+     */
+    private boolean moveLaneRight() {
+        if (m_vScreenPos.x < m_vRight.x) {                //Check if on right lane
+            //Check if on center lane
+            if (m_vScreenPos.x >= m_vCenter.x) { m_fScreenTargetX = m_vRight.x; }   //Move to the right lane
+            //On the left lane
+            else { m_fScreenTargetX = m_vCenter.x; }    //Move to the center lane
+            m_bLaneMoveLeft = false;                    //Set move direction
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Check if player wants to move lanes/ update lane changing
+     * @param timeStep
+     */
+    private void changeLane(float timeStep) {
+        if (!m_bChangeLane) {
+            if (hud.isLeftButtonDown()) {
+                System.out.println("LEFT");
+                if (moveLaneLeft()) { m_bChangeLane = true; }
+            }
+            else if (hud.is_bRightButtonDown()) {
+                if (moveLaneRight()) { m_bChangeLane = true; }
+            }
+        }
+
+        //Change lanes by moving screen position/canvas
+        if (m_bChangeLane) {
+            float fSpeed = 2000.0f;
+            float fDistance;
+            if (m_bLaneMoveLeft) {
+                //Move Left
+                m_vScreenPos.x -= fSpeed * timeStep;
+                fDistance = m_vScreenPos.x - m_fScreenTargetX;
+            } else {
+                //Move Right
+                m_vScreenPos.x += fSpeed * timeStep;
+                fDistance = m_fScreenTargetX - m_vScreenPos.x;
+            }
+            if (fDistance <= 0) {
+                m_bChangeLane = false;
+                m_vScreenPos.x = m_fScreenTargetX;
+                for (Lane lane: m_aLanes) {
+                    //Update which lane player is currently on
+                    if (lane.getPosition().x == m_fScreenTargetX) { lane.setOnLane(true); }
+                    else { lane.setOnLane(false);}
+                }
+            }
+        }
     }
 
     public void updateInput (InputHandler updatedInput) {
@@ -88,7 +166,13 @@ public class Scene {
      * @param timeStep
      */
     public void update(float timeStep) {
-        for (Lane lane: m_aLanes) { lane.update(timeStep,m_Input);}
+
+        changeLane(timeStep);
+        for (Lane lane: m_aLanes) { lane.update(timeStep,m_Input,m_bChangeLane);}
+
+        m_Input.relativeTo(m_vScreenPos.multiply(-1.0f));
+        hud.updateText(m_iGold,m_iHealth);
+        hud.update(m_Input);
     }
 
     private boolean bShaderSet = false;
@@ -99,10 +183,6 @@ public class Scene {
      * @param c
      */
     public void draw(Paint p, Canvas c) {
-        if (!bShaderSet) {
-
-            bShaderSet = true;
-        }
         pShader.setShader(new BitmapShader(m_Textures.getTexture(2), Shader.TileMode.REPEAT, Shader.TileMode.REPEAT));
 
         c.translate(-m_vScreenPos.x, -m_vScreenPos.y);
@@ -111,5 +191,10 @@ public class Scene {
 
         for (Lane lane: m_aLanes) { lane.draw(p,c); }
         m_Input.draw(p,c);
+        c.translate(m_vScreenPos.x, m_vScreenPos.y);
+        //m_Input.relativeTo(m_vScreenPos.multiply(-1.0f));
+
+        hud.draw(p,c);
+
     }
 }

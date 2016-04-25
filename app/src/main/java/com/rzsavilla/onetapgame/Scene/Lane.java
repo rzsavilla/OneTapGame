@@ -1,11 +1,13 @@
 package com.rzsavilla.onetapgame.Scene;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 
 import com.rzsavilla.onetapgame.Sprite.Enemy.Entity;
 import com.rzsavilla.onetapgame.model.Handler.InputHandler;
 import com.rzsavilla.onetapgame.model.Handler.TextureHandler;
+import com.rzsavilla.onetapgame.model.Shapes.RectangleShape;
 import com.rzsavilla.onetapgame.model.Utilites.Transformable;
 import com.rzsavilla.onetapgame.model.Utilites.Vector2D;
 
@@ -21,7 +23,7 @@ public class Lane extends Transformable{
     private boolean m_bOnLane = false;                  //Player is viewing this lane
     private ArrayList<Entity> m_aEnemies = new ArrayList<>();       //Array of enemies
     private Launcher m_Launcher;
-
+    private RectangleShape m_Wall = new RectangleShape();
 
     /**
      * Constructor
@@ -48,7 +50,12 @@ public class Lane extends Transformable{
         m_Launcher.m_Sprite.setTexture(textures.getTexture(0));
         fHeight = m_Launcher.m_Sprite.getHeight();
         m_Launcher.setOrigin(m_Launcher.m_Sprite.getWidth() / 2.0f,m_Launcher.m_Sprite.getHeight() / 2.0f);
-        m_Launcher.setPosition(this.getPosition().add(new Vector2D(fCentreOffset,getSize().y - fHeight)));
+        m_Launcher.setPosition(this.getPosition().add(new Vector2D(fCentreOffset, getSize().y - fHeight)));
+
+        m_Wall.setSize(this.getWidth(), m_Launcher.m_Sprite.getHeight() * 2);
+        m_Wall.setPosition(this.getPosition().x, this.getSize().y - m_Wall.getSize().y);
+
+        m_Wall.setColour(Color.GRAY);
         return true;
     }
 
@@ -64,9 +71,11 @@ public class Lane extends Transformable{
      * @param timeStep
      * @param input
      */
-    public void update(float timeStep, InputHandler input) {
-        if (input.isDown()) {
-            m_Launcher.markTarget(input.getTapPos());
+    public void update(float timeStep, InputHandler input, boolean changingLanes) {
+        if (m_bOnLane && !changingLanes) {
+            if (input.isDown() && input.getTapPos().y < 2000.0f){
+                m_Launcher.markTarget(input.getTapPos());
+            }
         }
         m_Launcher.update(timeStep);
 
@@ -86,6 +95,7 @@ public class Lane extends Transformable{
      * @param c
      */
     public void draw(Paint p, Canvas c) {
+        m_Wall.draw(p,c);
         m_Launcher.draw(p,c);
         for (Entity enemy: m_aEnemies) { enemy.draw(p,c); }
     }
