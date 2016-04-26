@@ -52,6 +52,8 @@ public class GameSurfaceView extends SurfaceView implements Runnable{
     private Paint p = new Paint();
     private Canvas c = new Canvas();
 
+    private InputHandler m_Input = new InputHandler();
+
     /////////////Screen//////////////////
     private Point screenSize;
     private boolean m_bLaneChanging = false;                   //Screen is moving to different lane

@@ -54,7 +54,7 @@ public class Scene {
         m_iScreenWidth = width;
         m_iScreenHeight = height;
         m_vCenter = new Vector2D(0.0f,0.0f);
-        m_vLeft = new Vector2D(-m_iScreenWidth,0.0f);
+        m_vLeft = new Vector2D((-m_iScreenWidth),0.0f);
         m_vRight = new Vector2D(m_iScreenWidth,0.0f);
         loadTextures();
         loadLanes();

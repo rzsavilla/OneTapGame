@@ -52,11 +52,11 @@ public class HUD {
 
     public void initialize(int width, int height,TextureHandler textures) {
         m_LeftButton.setRadius(100.0f);
-        m_LeftButton.setColour(Color.WHITE);
+        m_LeftButton.setColour(Color.RED);
         m_LeftButton.setPosition(m_LeftButton.getRadius() * 2, height - m_LeftButton.getRadius() * 2);
 
         m_RightButton.setRadius(100.0f);
-        m_RightButton.setColour(Color.WHITE);
+        m_RightButton.setColour(Color.RED);
         m_RightButton.setPosition(width - (m_RightButton.getRadius() * 2), height - m_RightButton.getRadius() * 2);
 
         m_TopBar.setPosition(0.0f, 0.0f);

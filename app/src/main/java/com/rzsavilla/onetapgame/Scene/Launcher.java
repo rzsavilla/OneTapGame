@@ -115,7 +115,7 @@ public class Launcher extends Transformable implements Cloneable {
     public void markTarget(Vector2D target) {
         if ((m_Timer.getElapsed() > 0.1f) && m_Targets.size() < 3 ) {
             m_Targets.add(new CircleShape(target.x, target.y, 50.0f, Color.BLUE));
-            System.out.println(m_Targets.size());
+            //System.out.println(m_Targets.size());
             m_Timer.restart();
         }
     }

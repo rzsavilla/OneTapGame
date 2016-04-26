@@ -42,7 +42,7 @@ public class Entity extends AnimatedSprite {
         if (this.bScaleChanged) {bb.setScale(this.getScale());}
 
         super.draw(p, c);        //override draw sprite
-        //bb.draw(p, c);           //Draw bounding box
+        bb.draw(p, c);           //Draw bounding box
     }
 
     /**
@@ -91,18 +91,20 @@ public class Entity extends AnimatedSprite {
      * @return
      */
     public boolean impulseStatic(AABB other) {
-        float fOverlap = other.intersect(this.bb);
-        if (fOverlap <= 0.0f) {
-            Vector2D vDiff = this.getPosition().subtract(other.getPosition()); //Centre Differenc
-            Vector2D vNormal = vDiff.unitVector();
-            float n = this.getVelocity().dot(vNormal);
+        if (other.collision(this.bb)) {
+            Vector2D vDiff;
+            Vector2D vNormal;
+            float n;
+            float e;
+            e = 2.0f;
+            vDiff = this.getPosition().subtract(other.getPosition()); //Centre Differenc
+            vNormal = vDiff.unitVector();
+            n = this.getVelocity().dot(vNormal);
             vNormal.multiply(n);
-            float e = 2.0f;
             vNormal.multiply(e);
             Vector2D newVel = this.getVelocity().multiply(vNormal);
-            this.moveBack();
             this.setVelocity(newVel);
-            return  true;
+            //return  true;
         }
         return false;
     }

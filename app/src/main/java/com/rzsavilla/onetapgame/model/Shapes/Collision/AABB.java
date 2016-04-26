@@ -15,6 +15,31 @@ import com.rzsavilla.onetapgame.model.Utilites.Vector2D;
 public class AABB extends RectangleShape implements Collidable {
 
     /**
+     * Default Constructor
+     */
+    public AABB() {
+
+    }
+
+    /**
+     *
+     * @param newPosition
+     * @param newSize
+     * @param newColour
+     */
+    public AABB(Vector2D newPosition, Vector2D newSize, int newColour) { super(newPosition,newSize,newColour); }
+
+    /**
+     *
+     * @param posX
+     * @param posY
+     * @param width
+     * @param height
+     * @param newColour
+     */
+    public AABB(float posX, float posY, float width, float height, int newColour) { super(posX,posY,width,height,newColour); }
+
+    /**
      * Collision test with AABB.
      */
     public boolean collision(AABB other) {
@@ -46,7 +71,7 @@ public class AABB extends RectangleShape implements Collidable {
         Vector2D vDist = vDiff.subtract(vClamp);
 
         float fDistance = vDist.magnitude() - other.getRadius();
-        Log.d("Distance:",Float.toString(fDistance));
+        //Log.d("Distance:",Float.toString(fDistance));
         if (fDistance <= 0) {
             this.setColour(Color.RED);
             other.setColour(Color.BLUE);
@@ -79,19 +104,4 @@ public class AABB extends RectangleShape implements Collidable {
         float fDistance = vDist.magnitude() - other.getRadius();
         return fDistance;
     }
-    /*
-    public float intersect(AABB other) {
-        if (this.getBounds().left <= other.getBounds().right &&
-                other.getBounds().left <= this.getBounds().right &&
-                this.getBounds().top <= other.getBounds().bottom &&
-                other.getBounds().top <= this.getBounds().bottom) {
-            this.setColour(Color.RED);
-            return true;
-        }
-        else {
-            this.setColour(Color.WHITE);
-            return false;
-        }
-    }
-    */
 }
