@@ -16,17 +16,21 @@ public class Circle extends CircleShape implements Collidable {
     public Circle() {
 
     }
+    public Circle(float posX, float posY,float newRadius, int newColour) {
+        super(posX,posY,newRadius,newColour);
+    }
     /**Collision check with AABB*/
     public boolean collision(AABB other) {
         //Distance between AABB and Circle centres
-        Vector2D vDist = new Vector2D(this.getPosition().subtract(other.getPosition()));
-
-        //Set Clamp
+        Vector2D vExtents = this.getSize().divide(2.0f);
+        Vector2D vDist = new Vector2D(this.getPosition().subtract((other.getPosition().add(vExtents))));
+        //Set Clamps
         Vector2D vClamp = new Vector2D();
-        if (vDist.x < 0) { vClamp.x = Math.max(vDist.x,-other.getWidth() / 2); }
-        else if (vDist.x >= 0) { vClamp.x = Math.min(vDist.x, other.getWidth() / 2); }
-        if (vDist.y < 0 ) { vClamp.y = Math.max(vDist.y,-other.getHeight() / 2); }
-        else if (vDist.y >= 0) { vClamp.y = Math.min(vDist.y, other.getHeight() / 2); }
+
+        if (vDist.x < 0) { vClamp.x = Math.max(vDist.x,-vExtents.x); }
+        else if (vDist.x >= 0) { vClamp.x = Math.min(vDist.x, vExtents.x); }
+        if (vDist.y < 0 ) { vClamp.y = Math.max(vDist.y,-vExtents.x); }
+        else if (vDist.y >= 0) { vClamp.y = Math.min(vDist.y, vExtents.x); }
 
         Vector2D vDiff = vDist.subtract(vClamp);
 
@@ -57,11 +61,30 @@ public class Circle extends CircleShape implements Collidable {
     }
     /**Collision check with AABB */
     public float intersect(AABB other) {
-        return 0.0f;
+        //Distance between AABB and Circle centres
+        Vector2D vExtents = this.getSize().divide(2.0f);
+        Vector2D vDist = new Vector2D(this.getPosition().subtract((other.getPosition().add(vExtents))));
+        //Set Clamps
+        Vector2D vClamp = new Vector2D();
+
+        if (vDist.x < 0) { vClamp.x = Math.max(vDist.x,-vExtents.x); }
+        else if (vDist.x >= 0) { vClamp.x = Math.min(vDist.x, vExtents.x); }
+        if (vDist.y < 0 ) { vClamp.y = Math.max(vDist.y,-vExtents.x); }
+        else if (vDist.y >= 0) { vClamp.y = Math.min(vDist.y, vExtents.x); }
+
+        Vector2D vDiff = vDist.subtract(vClamp);
+
+        float fDistance = vDiff.magnitude() - this.getRadius();         //Edge to edge distance
+        //System.out.println(fDistance);
+        return fDistance;
     }
     /**Collision check CircleShape*/
     public float intersect(CircleShape other) {
-        return 0.0f;
+        Vector2D vDist = new Vector2D(this.getPosition().subtract(other.getPosition()));
+
+        float fDistance = vDist.magnitude() - (this.getRadius() + other.getRadius());
+        //System.out.println(fDistance);
+        return fDistance;
     }
 
     /**

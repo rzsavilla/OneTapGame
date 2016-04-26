@@ -1,10 +1,12 @@
 package com.rzsavilla.onetapgame.model.Shapes.Collision;
 
 import android.graphics.Color;
+import android.util.Log;
 
 import com.rzsavilla.onetapgame.model.Interface.Collidable;
 import com.rzsavilla.onetapgame.model.Shapes.CircleShape;
 import com.rzsavilla.onetapgame.model.Shapes.RectangleShape;
+import com.rzsavilla.onetapgame.model.Utilites.Calculation;
 import com.rzsavilla.onetapgame.model.Utilites.Vector2D;
 
 /**
@@ -30,25 +32,28 @@ public class AABB extends RectangleShape implements Collidable {
     }
     /**Collision check with circle */
     public boolean collision(CircleShape other) {
-        //Distance between AABB and Circle centres
-        Vector2D vDist = new Vector2D(this.getPosition().subtract(other.getPosition()));
+        Vector2D vHalfExt = new Vector2D(this.getWidth() / 2, this.getHeight() / 2);
+        Vector2D vDiff = other.getPosition().subtract(this.getPosition().add(vHalfExt));
 
-        //Set Clamp
         Vector2D vClamp = new Vector2D();
-        if (vDist.x < 0) { vClamp.x = Math.max(vDist.x,-other.getWidth() / 2); }
-        else if (vDist.x >= 0) { vClamp.x = Math.min(vDist.x, other.getWidth() / 2); }
-        if (vDist.y < 0 ) { vClamp.y = Math.max(vDist.y,-other.getHeight() / 2); }
-        else if (vDist.y >= 0) { vClamp.y = Math.min(vDist.y, other.getHeight() / 2); }
 
-        Vector2D vDiff = vDist.subtract(vClamp);
+        if (vDiff.x < 0) { vClamp.x = Math.max(vDiff.x, -vHalfExt.x); }
+        else { vClamp.x = Math.min(vDiff.x, vHalfExt.x); }
 
-        float fDistance = vDiff.magnitude() - other.getRadius();         //Edge to edge distance
-        //System.out.println(fDistance);
+        if (vDiff.y < 0) { vClamp.y = Math.max(vDiff.y, -vHalfExt.y); }
+        else { vClamp.y = Math.min(vDiff.y, vHalfExt.y); }
+
+        Vector2D vDist = vDiff.subtract(vClamp);
+
+        float fDistance = vDist.magnitude() - other.getRadius();
+        Log.d("Distance:",Float.toString(fDistance));
         if (fDistance <= 0) {
             this.setColour(Color.RED);
+            other.setColour(Color.BLUE);
             return true;
         } else {
             this.setColour(Color.WHITE);
+            other.setColour(Color.WHITE);
             return false;
         }
     }
@@ -58,12 +63,22 @@ public class AABB extends RectangleShape implements Collidable {
     }
     /**Collision check with CircleShape */
     public float intersect(CircleShape other) {
-        return 0.0f;
+        Vector2D vHalfExt = new Vector2D(this.getWidth() / 2, this.getHeight() / 2);
+        Vector2D vDiff = other.getPosition().subtract(this.getPosition().add(vHalfExt));
+
+        Vector2D vClamp = new Vector2D();
+
+        if (vDiff.x < 0) { vClamp.x = Math.max(vDiff.x, -vHalfExt.x); }
+        else { vClamp.x = Math.min(vDiff.x, vHalfExt.x); }
+
+        if (vDiff.y < 0) { vClamp.y = Math.max(vDiff.y, -vHalfExt.y); }
+        else { vClamp.y = Math.min(vDiff.y, vHalfExt.y); }
+
+        Vector2D vDist = vDiff.subtract(vClamp);
+
+        float fDistance = vDist.magnitude() - other.getRadius();
+        return fDistance;
     }
-
-
-
-
     /*
     public float intersect(AABB other) {
         if (this.getBounds().left <= other.getBounds().right &&

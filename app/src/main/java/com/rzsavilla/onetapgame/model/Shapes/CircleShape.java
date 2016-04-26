@@ -41,7 +41,7 @@ public class CircleShape extends Moveable {
 
     public void draw(Paint p, Canvas c) {
         p.setColor(m_iColour);
-        if (bPositionChanged) {
+        if (bPositionChanged || bOriginChanged || bScaleChanged) {
             updateGlobalBounds();
         }
         c.drawCircle(getPosition().x, getPosition().y, m_fRadius,p);

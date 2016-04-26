@@ -9,11 +9,13 @@ import android.graphics.RectF;
 import com.rzsavilla.onetapgame.model.Abstract.Moveable;
 import com.rzsavilla.onetapgame.model.Interface.Drawable;
 
+import java.io.Serializable;
+
 /**
  * Created by rzsavilla on 15/03/2016.
  */
-public class Sprite extends Moveable implements Drawable {
-    protected Bitmap m_SpritesheetBMP;
+public class Sprite extends Moveable implements Cloneable {
+    protected Bitmap m_Texture;
     protected boolean m_bHasTexture = false;
     private float e = 1;
 
@@ -29,10 +31,10 @@ public class Sprite extends Moveable implements Drawable {
     }
 
     public void setTexture(Bitmap bitmapIn) {
-        m_SpritesheetBMP = m_SpritesheetBMP.createScaledBitmap(bitmapIn,bitmapIn.getWidth(),bitmapIn.getHeight(),false);
-        //m_SpritesheetBMP = bitmapIn;
-        setWidth(m_SpritesheetBMP.getWidth());
-        setHeight(m_SpritesheetBMP.getHeight());
+        m_Texture = m_Texture.createScaledBitmap(bitmapIn,bitmapIn.getWidth(),bitmapIn.getHeight(),false);
+
+        setWidth(m_Texture.getWidth());
+        setHeight(m_Texture.getHeight());
         setOrigin(getWidth() / 2, getHeight() / 2);
         src = new Rect(0,0,(int)getWidth(),(int)getHeight());
         dst = new RectF(this.getPosition().x,this.getPosition().y,
@@ -40,14 +42,22 @@ public class Sprite extends Moveable implements Drawable {
         m_bHasTexture = true;
     }
 
+    public Bitmap getTexture() { return m_Texture; }
+
     public void draw (Paint p,Canvas c) {
         if (m_bHasTexture) {
             if (bPositionChanged || bSizeChanged || bScaleChanged || bOriginChanged) {
                 updateGlobalBounds();
             }
             c.rotate(getRotation(), this.getPosition().x, this.getPosition().y);
-            c.drawBitmap(m_SpritesheetBMP, src, getBounds(), p);
+            c.drawBitmap(m_Texture, src, getBounds(), p);
             c.rotate(-getRotation(), this.getPosition().x, this.getPosition().y);
         }
+    }
+
+    public Sprite clone() throws CloneNotSupportedException {
+        Sprite newSprite = (Sprite) super.clone();
+
+        return newSprite;
     }
 }

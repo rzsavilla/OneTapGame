@@ -22,7 +22,7 @@ public class RectangleShape extends Transformable{
         setPosition(posX,posY);
         setSize(width, height);
         setColour(newColour);
-        setOrigin(width / 2, height / 2);
+        //setOrigin(width / 2, height / 2);
     }
 
     public RectangleShape(Vector2D newPosition, Vector2D newSize, int newColour) {
@@ -40,12 +40,11 @@ public class RectangleShape extends Transformable{
     }
 
     public void draw(Paint p, Canvas c) {
-        if (bPositionChanged || bOriginChanged || bScaleChanged) {
-            updateGlobalBounds();
-        }
+        updateGlobalBounds();
         p.setColor(m_iColour);
-        c.rotate(this.getRotation());
-        c.drawRect(getBounds(),p);
-        c.rotate(-this.getRotation());
+        //c.rotate(this.getRotation());
+        //c.drawRect(getBounds(),p);
+        c.drawRect(this.getPosition().x,this.getPosition().y,this.getPosition().x+ this.getSize().x,this.getPosition().y + this.getSize().y,p);
+        //c.rotate(-this.getRotation());
     }
 }

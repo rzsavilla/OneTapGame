@@ -1,16 +1,20 @@
 package com.rzsavilla.onetapgame.model.Abstract;
 
+import com.rzsavilla.onetapgame.Sprite.Sprite;
 import com.rzsavilla.onetapgame.model.Utilites.Transformable;
 import com.rzsavilla.onetapgame.model.Utilites.Vector2D;
+
+import java.io.Serializable;
 
 /**
  * Created by rzsavilla on 14/03/2016.
  */
-public abstract class Moveable extends Transformable {
+public abstract class Moveable extends Transformable{
     private Vector2D m_vVelocity = new Vector2D();          //Heading
     private Vector2D m_vCurrentVel = new Vector2D();        //Heading * Acceleration
-    private float m_fForce = 100.0f;
-    private float m_fMass = 1.0f;
+    private float m_fForce = 1000.0f;
+    private float m_fMass = 10.0f;
+    private Vector2D m_PrevPos = new Vector2D();
 
     /**
      * Set the objects heading
@@ -26,7 +30,7 @@ public abstract class Moveable extends Transformable {
     public  void setVelocity(float x, float y) {
         m_vVelocity.x = x;
         m_vVelocity.y = y;
-        m_vVelocity = m_vVelocity.unitVector();     //Normalize into heading
+        //m_vVelocity = m_vVelocity.unitVector();     //Normalize into heading
     }
 
     /**
@@ -50,7 +54,7 @@ public abstract class Moveable extends Transformable {
      * @return Vector velocity x,y
      */
     public Vector2D getVelocity() {
-        return m_vCurrentVel;
+        return m_vVelocity;
     }
 
     /**
@@ -77,12 +81,17 @@ public abstract class Moveable extends Transformable {
         return m_fForce / m_fMass;
     }
 
+    public void moveBack() {
+        setPosition(m_PrevPos);
+    }
+
     /**
      * Move the object
      * @param timeStep
      */
     public void moveUpdate(float timeStep) {
-        m_vCurrentVel = m_vVelocity.multiply(getAcceleration());
+        m_vCurrentVel = (m_vVelocity.multiply(getAcceleration()));
+        m_PrevPos = this.getPosition();
         setPosition(this.getPosition().add(m_vCurrentVel.multiply(timeStep)));
     }
 }

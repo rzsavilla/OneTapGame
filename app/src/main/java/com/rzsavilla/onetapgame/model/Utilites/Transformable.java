@@ -2,12 +2,15 @@ package com.rzsavilla.onetapgame.model.Utilites;
 
 import android.graphics.RectF;
 
+import com.rzsavilla.onetapgame.Scene.Warrior;
 import com.rzsavilla.onetapgame.model.Abstract.Destroyable;
+
+import java.io.Serializable;
 
 /**
  * Created by rzsavilla on 14/03/2016.
  */
-public class Transformable extends Destroyable {
+public class Transformable extends Destroyable{
     private Vector2D m_vPosition = new Vector2D(0.0f,0.0f);           //x and y position
     private Vector2D m_vOrigin = new Vector2D(0.0f,0.0f);             //Point of rotation scale and centre
     private Vector2D m_vScale = new Vector2D(1.0f,1.0f);              //Default/Original size is 1.f;
@@ -23,9 +26,10 @@ public class Transformable extends Destroyable {
     protected boolean bSizeChanged = false;
 
     /////////////////SET///////////////////////////
-    public void setPosition(Vector2D newPosition) {
+    public Warrior setPosition(Vector2D newPosition) {
         m_vPosition = newPosition;
         bPositionChanged = true;            //Indicate/Notify change has occured
+        return null;
     }
     public void setPosition(float x, float y) {
         m_vPosition.x = x;
@@ -84,6 +88,11 @@ public class Transformable extends Destroyable {
                 (getPosition().y - getOrigin().y) * getScale().y,
                 (getPosition().x - getOrigin().x + m_vSize.x) * getScale().x,
                 (getPosition().y - getOrigin().y + m_vSize.y) * getScale().y);
+
+        m_GlobalBounds.left = (getPosition().x - getOrigin().x) * getScale().x;
+        m_GlobalBounds.top = (getPosition().y - getOrigin().y) * getScale().y;
+        m_GlobalBounds.right =  (getPosition().x - getOrigin().x + m_vSize.x) * getScale().x;
+        m_GlobalBounds.bottom = (getPosition().y - getOrigin().y + m_vSize.y) * getScale().y;
 
         //Reset flags
         bScaleChanged = false;

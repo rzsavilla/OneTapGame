@@ -17,9 +17,9 @@ import java.util.ListIterator;
  */
 public class ProjectileHandler extends Transformable {
     private Projectile m_Projectile = new Projectile();                 //Projectile to be fired
-    private ArrayList<Projectile> m_aProjectiles = new ArrayList(0);     //Stores projectiles fired
+    public ArrayList<Projectile> m_aProjectiles = new ArrayList(0);     //Stores projectiles fired
 
-    public float m_fRateOfFire = 0.5f;                                 //Limit Number of bullets fired in seconds
+    private float m_fRateOfFire = 0.5f;                                 //Limit Number of bullets fired in seconds
     private Elapsed timer = new Elapsed();                              //Timer for rate of fire, Checks for elapsed time before projectile can be fired again
     private boolean m_bCanShoot = false;                                //Flag to determine if bullets can be fired
     private boolean m_bShoot = false;                                   //Flag tells spawner on update to shoot projectile

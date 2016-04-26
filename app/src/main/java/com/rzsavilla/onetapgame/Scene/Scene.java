@@ -4,17 +4,15 @@ import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Shader;
-import android.util.Log;
 
 import com.rzsavilla.onetapgame.R;
 import com.rzsavilla.onetapgame.model.HUD.HUD;
 import com.rzsavilla.onetapgame.model.Handler.InputHandler;
 import com.rzsavilla.onetapgame.model.Handler.TextureHandler;
-import com.rzsavilla.onetapgame.model.Utilites.Calculation;
 import com.rzsavilla.onetapgame.model.Utilites.Vector2D;
+import com.rzsavilla.onetapgame.model.Utilites.Vector2Di;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * Created by rzsavilla on 24/04/2016.
@@ -35,6 +33,10 @@ public class Scene {
 
     private int m_iHealth = 100;
     private int m_iGold = 0;
+
+    private int m_iWave = 1;
+    private float m_fWaveDuration = 60.0f;
+
 
     //Lane Changing
     private boolean m_bChangeLane = false;
@@ -75,11 +77,20 @@ public class Scene {
      * Create and place lanes
      * @return
      */
+    Warrior baseWar = new Warrior();
     private boolean loadLanes() {
         //Add lanes into array
-        m_aLanes.add(new Lane(m_vLeft,m_iScreenWidth,m_iScreenHeight,m_Textures));
-        m_aLanes.add(new Lane(m_vCenter,m_iScreenWidth,m_iScreenHeight,m_Textures));
-        m_aLanes.add(new Lane(m_vRight,m_iScreenWidth,m_iScreenHeight,m_Textures));
+
+        baseWar.setHealth(10);
+        baseWar.setPosition(500.0f, 800.0f);
+        baseWar.setForce(50.0f);
+        baseWar.setVelocity(0.0f, 0.0f);
+        baseWar.setSpriteSheet(m_Textures.getTexture(1), new Vector2Di(250, 250), new Vector2Di(4, 1));
+        m_aLanes.add(new Lane(m_vLeft, m_iScreenWidth, m_iScreenHeight, m_Textures));
+        m_aLanes.add(new Lane(m_vCenter, m_iScreenWidth, m_iScreenHeight, m_Textures));
+        m_aLanes.add(new Lane(m_vRight, m_iScreenWidth, m_iScreenHeight, m_Textures));
+        m_aLanes.get(1).setOnLane(true);
+
         return true;
     }
 
@@ -123,7 +134,6 @@ public class Scene {
     private void changeLane(float timeStep) {
         if (!m_bChangeLane) {
             if (hud.isLeftButtonDown()) {
-                System.out.println("LEFT");
                 if (moveLaneLeft()) { m_bChangeLane = true; }
             }
             else if (hud.is_bRightButtonDown()) {
@@ -171,7 +181,7 @@ public class Scene {
         for (Lane lane: m_aLanes) { lane.update(timeStep,m_Input,m_bChangeLane);}
 
         m_Input.relativeTo(m_vScreenPos.multiply(-1.0f));
-        hud.updateText(m_iGold,m_iHealth);
+        hud.updateText(m_iGold, m_iHealth);
         hud.update(m_Input);
     }
 
@@ -189,12 +199,15 @@ public class Scene {
         c.drawRect(-m_iScreenWidth, 0, m_iScreenWidth * 2, m_iScreenHeight, pShader);
         //for (Launcher launcher: m_aLaunchers) { launcher.draw(p,c); }
 
-        for (Lane lane: m_aLanes) { lane.draw(p,c); }
-        m_Input.draw(p,c);
-        c.translate(m_vScreenPos.x, m_vScreenPos.y);
-        //m_Input.relativeTo(m_vScreenPos.multiply(-1.0f));
+        //for (Lane lane: m_aLanes) { lane.draw(p,c); }
+        m_aLanes.get(0).draw(p,c);
+        m_aLanes.get(1).draw(p,c);
+        m_aLanes.get(2).draw(p, c);
+        m_Input.draw(p, c);
+        baseWar.draw(p,c);
 
-        hud.draw(p,c);
+        c.translate(m_vScreenPos.x, m_vScreenPos.y);
+        hud.draw(p, c);
 
     }
 }

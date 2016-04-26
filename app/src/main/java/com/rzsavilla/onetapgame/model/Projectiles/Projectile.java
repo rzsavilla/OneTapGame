@@ -3,12 +3,13 @@ package com.rzsavilla.onetapgame.model.Projectiles;
 import android.graphics.Color;
 
 import com.rzsavilla.onetapgame.model.Shapes.CircleShape;
+import com.rzsavilla.onetapgame.model.Shapes.Collision.Circle;
 import com.rzsavilla.onetapgame.model.Utilites.Vector2D;
 
 /**
  * Created by rzsavilla on 14/03/2016.
  */
-public class Projectile extends CircleShape {
+public class Projectile extends Circle implements Cloneable{
     private Vector2D m_vTargetPos = new Vector2D();
     private boolean m_bHasTarget = false;
     private boolean m_bReachedTarget = false;
@@ -21,7 +22,8 @@ public class Projectile extends CircleShape {
 
     public Projectile(float xPos, float yPos, float targetX, float targetY) {
         super(xPos ,yPos,20.0f, Color.RED);
-        setForce(1000.0f);
+        setForce(100000.0f);
+        setMass(200.0f);
         setTarget(targetX,targetY);
     }
 
