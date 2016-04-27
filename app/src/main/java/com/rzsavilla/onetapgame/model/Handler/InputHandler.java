@@ -3,6 +3,7 @@ package com.rzsavilla.onetapgame.model.Handler;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 
 import com.rzsavilla.onetapgame.model.Shapes.Collision.AABB;
 import com.rzsavilla.onetapgame.model.Shapes.Collision.Circle;
@@ -18,6 +19,7 @@ public class InputHandler {
      *  Player is Pressing the screen if true
      */
     private boolean m_bTap;
+    private boolean m_bReset = true;
 
     /**
      * Press position
@@ -80,7 +82,14 @@ public class InputHandler {
      */
     public void updateTap(Vector2D position, boolean isDown) {
         m_TapPosition.setPosition(position);
-        m_bTap = isDown;
+        if (!isDown) {
+            m_bTap = isDown;
+            m_bReset = true;
+            Log.d("Tap","Up");
+        } else {
+            m_bTap = m_bReset;
+            Log.d("Tap",Boolean.toString(m_bTap));
+        }
     }
 
     /**
@@ -97,7 +106,23 @@ public class InputHandler {
      */
     public void updateTap(Vector2D position, boolean isDown, Vector2D relativeScreen) {
         m_TapPosition.setPosition(position.add(relativeScreen));
+        if (m_bReset = false) { m_bTap = false; }
         m_bTap = isDown;
+        m_bReset = false;
+    }
+
+    public void update() {
+        if (!m_bTap) {
+            m_bReset = true;
+            Log.d("Tap","Up");
+        } else {
+            m_bTap = m_bReset;
+            Log.d("Tap",Boolean.toString(m_bTap));
+        }
+    }
+
+    public void reset() {
+        m_bTap = false;
     }
 
     /**

@@ -8,107 +8,60 @@ import com.rzsavilla.onetapgame.Sprite.Enemy.Entity;
 import com.rzsavilla.onetapgame.Sprite.Sprite;
 import com.rzsavilla.onetapgame.model.Handler.ProjectileHandler;
 import com.rzsavilla.onetapgame.model.Utilites.Elapsed;
+import com.rzsavilla.onetapgame.model.Utilites.Vector2D;
 
 /**
  * Created by rzsavilla on 25/04/2016.
  */
-public class Warrior extends Entity implements Cloneable{
-    public ProjectileHandler m_Weapon = new ProjectileHandler();
-    //private Vector2D m_WeaponSpawn = new Vector2D();
-    public Sprite m_WeaponSprite = new Sprite();
-
-    Elapsed m_Timer = new Elapsed();
-    private float m_fDamage = 1.0f;
-    private float m_fHitRate = 0.5f;
-    private boolean m_bAttack = false;
-
+public class Warrior extends Enemy{
+    private Sprite m_Weapon = new Sprite();
+    private boolean m_bHasWeapon;
+    private boolean m_bShowWeapon = false;
     /**
      * Default Constructor
      */
+    private Elapsed m_Timer = new Elapsed();
+
     public Warrior() {
-
+        setForce(500.0f);
+        setMass(10.0f);
+        setHitRate(2.0f);
+        setValue(3);
     }
 
-
-    public Warrior(Warrior copy) {
-        this.setPosition(copy.getPosition());
-        this.setOrigin(copy.getOrigin());
-        this.setSize(copy.getSize());
-        this.setForce(copy.getForce());
-        this.setVelocity(copy.getVelocity());
-        this.setDamage(copy.getDamage());
-        this.setHitRate(copy.getHitRate());
-        this.setHealth(copy.getHealth());
-
-        this.m_WeaponSprite = copy.m_WeaponSprite;
-        this.m_Weapon =  copy.m_Weapon;
-
-        if (copy.m_bHasTexture) {
-            this.m_bHasTexture = copy.m_bHasTexture;
-            this.setAnimationSpeed(copy.getAnimationSpeed());
-            this.dst = copy.dst;
-            this.src = copy.src;
-            this.setAnimatedSprite(copy);
-            this.setSpriteSheet((Bitmap)copy.m_Texture,this.getFrameSize(),this.getFrameCount());
-            this.m_Texture = (Bitmap)copy.m_Texture;
-        }
-        //this.setSpriteSheet(copy.getTexture(), copy.getFrameSize(), copy.getFrameCount());
+    public void setWeapon(Bitmap texture) {
+        m_Weapon.setTexture(texture);
+        m_bHasWeapon = true;
     }
-
-    public void copy(Warrior copy) {
-        Warrior clone = new Warrior();
-        clone = copy;
-        this.setPosition(clone.getPosition());
-        this.setOrigin(clone.getOrigin());
-        this.setSize(clone.getSize());
-        this.setForce(clone.getForce());
-        this.setVelocity(clone.getVelocity());
-        this.setDamage(clone.getDamage());
-        this.setHitRate(clone.getHitRate());
-        this.setHealth(clone.getHealth());
-
-        this.m_WeaponSprite = clone.m_WeaponSprite;
-        this.m_Weapon =  clone.m_Weapon;
-
-        if (clone.m_bHasTexture) {
-            this.m_bHasTexture = clone.m_bHasTexture;
-            this.setAnimationSpeed(copy.getAnimationSpeed());
-            this.dst = clone.dst;
-            this.src = clone.src;
-            this.setAnimatedSprite(clone);
-            this.setSpriteSheet((Bitmap)clone.m_Texture,this.getFrameSize(),this.getFrameCount());
-            this.m_Texture = (Bitmap)clone.m_Texture;
-        }
-    }
-
-
-    public void setDamage(float newDamage) { m_fDamage = newDamage; }
-    public void setHitRate(float newHitRate) {m_fHitRate = newHitRate; }
-
-    public float getDamage() { return m_fDamage; }
-    public float getHitRate() { return m_fHitRate; }
 
     public void update(float timeStep) {
-        super.update(timeStep);
-        if (m_bAttack && m_Timer.getElapsed() > m_fHitRate) {
-
-            m_bAttack = false;
-            m_Timer.restart();
-        }
 
         if (bPositionChanged) {
             //m_Weapon.setPosition(this.getPosition());
         }
+        if (m_bAttacking && !m_bShowWeapon) {
+            this.m_bShowWeapon = true;
+            this.m_Weapon.setPosition(this.getPosition().x,this.getPosition().y);
+            this.m_Timer.restart();
+        }
+
+        if (m_bShowWeapon) {
+            if (m_Timer.getElapsed() < this.getHitRate()) {
+                float x = this.getPosition().x - this.getWidth() / 2.3f;
+                this.m_Weapon.setPosition(x,m_Weapon.getPosition().y + 200.0f * timeStep);
+
+            } else {
+                m_bShowWeapon = false;
+            }
+        }
+
+        super.update(timeStep);
     }
 
     public  void draw(Paint p, Canvas c) {
         super.draw(p, c);
-        m_Weapon.drawProj(p, c);
-    }
-
-    public Warrior clone() throws  CloneNotSupportedException {
-        Warrior newWarrior = (Warrior) super.clone();
-
-        return  newWarrior;
+        if (m_bShowWeapon && this.m_bHasWeapon) {
+            m_Weapon.draw(p,c);
+        }
     }
 }

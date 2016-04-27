@@ -22,9 +22,10 @@ import java.util.Queue;
  */
 public class Launcher extends Transformable implements Cloneable {
     /** Speed of Launcher Rotation */
-    private float m_fRotationSpeed = 20.0f;
+    private float m_fRotationSpeed = 50.0f;
     private boolean m_bRotateLeft = false;
     private boolean m_bRotateRight = false;
+    private int m_iMaxMarkers = 5;
 
     /** Projectile Spawner */
     public ProjectileHandler m_Bullets = new ProjectileHandler();
@@ -45,6 +46,7 @@ public class Launcher extends Transformable implements Cloneable {
      */
     public Launcher() {
         m_Timer.restart();
+        m_Bullets.setRateOfFire(0.5f);
     }
 
     /**
@@ -113,7 +115,7 @@ public class Launcher extends Transformable implements Cloneable {
      * @param target Position to be added to array of target positions
      */
     public void markTarget(Vector2D target) {
-        if ((m_Timer.getElapsed() > 0.1f) && m_Targets.size() < 3 ) {
+        if ((m_Timer.getElapsed() > 0.1f) && m_Targets.size() < m_iMaxMarkers) {
             m_Targets.add(new CircleShape(target.x, target.y, 50.0f, Color.BLUE));
             //System.out.println(m_Targets.size());
             m_Timer.restart();

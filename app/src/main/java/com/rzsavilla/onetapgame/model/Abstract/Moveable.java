@@ -12,7 +12,7 @@ import java.io.Serializable;
 public abstract class Moveable extends Transformable{
     private Vector2D m_vVelocity = new Vector2D();          //Heading
     private Vector2D m_vCurrentVel = new Vector2D();        //Heading * Acceleration
-    private float m_fForce = 1000.0f;
+    private float m_fForce = 200.0f;
     private float m_fMass = 10.0f;
     private Vector2D m_PrevPos = new Vector2D();
 
@@ -32,6 +32,10 @@ public abstract class Moveable extends Transformable{
         m_vVelocity.y = y;
         //m_vVelocity = m_vVelocity.unitVector();     //Normalize into heading
     }
+
+    public void setVelX(float x) { m_vVelocity.x = x; }
+
+    public void setVelY(float y) { m_vVelocity.y = y; }
 
     /**
      * Set force being applied onto the object

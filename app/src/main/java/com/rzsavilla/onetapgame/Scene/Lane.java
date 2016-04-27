@@ -11,6 +11,7 @@ import com.rzsavilla.onetapgame.model.Handler.InputHandler;
 import com.rzsavilla.onetapgame.model.Handler.TextureHandler;
 import com.rzsavilla.onetapgame.model.Projectiles.Projectile;
 import com.rzsavilla.onetapgame.model.Shapes.Collision.AABB;
+import com.rzsavilla.onetapgame.model.Shapes.Collision.Circle;
 import com.rzsavilla.onetapgame.model.Shapes.RectangleShape;
 import com.rzsavilla.onetapgame.model.Utilites.Elapsed;
 import com.rzsavilla.onetapgame.model.Utilites.Transformable;
@@ -28,7 +29,10 @@ import java.util.Random;
  */
 public class Lane extends Transformable{
     private boolean m_bOnLane = false;                  //Player is viewing this lane
-    private ArrayList<Entity> m_aEnemies = new ArrayList<>();       //Array of enemies
+    private ArrayList<Enemy> m_aEnemies = new ArrayList<>();       //Array of enemies
+    private ArrayList<Circle> m_Explosion = new ArrayList<>();
+    private int m_iWallDamage = 0;
+    private int m_iNewScore = 0;
     private Launcher m_Launcher;
     private AABB m_Wall;
     private AABB m_LeftWall;
@@ -37,8 +41,6 @@ public class Lane extends Transformable{
     private Elapsed m_Timer = new Elapsed();
     private EnemyWave m_EnemyWave = new EnemyWave();
     private boolean m_bFinished = false;
-
-    public Warrior m_Warrior = new Warrior();
 
     public TextureHandler m_Textures;
 
@@ -76,7 +78,7 @@ public class Lane extends Transformable{
         m_Wall.updateGlobalBounds();
         m_Wall.setColour(Color.GRAY);
 
-        float fWidth = 100.0f;
+        float fWidth = 1.0f;
         m_LeftWall = new AABB();
         m_LeftWall.setSize(fWidth, this.getHeight());
         m_LeftWall.setPosition(this.getPosition());
@@ -85,7 +87,6 @@ public class Lane extends Transformable{
 
         m_RightWall = new AABB(this.getPosition().x + this.getWidth() - fWidth,this.getPosition().y,fWidth,this.getHeight(),Color.BLUE);
 
-        m_Warrior.setSpriteSheet(m_Textures.getTexture(1), new Vector2Di(250, 250), new Vector2Di(4, 1));
         return true;
     }
 
@@ -106,14 +107,8 @@ public class Lane extends Transformable{
                 //No enemy spawned
                 break;
             case 1:
+                //Spawn a Warrior
                 Warrior warrior = new Warrior();
-                warrior.setHealth(2);
-                warrior.setHitRate(0.5f);
-                warrior.setVelocity(0.0f, 1.0f);
-                warrior.setForce(1000.0f);
-                warrior.setSpriteSheet(m_Textures.getTexture(1), new Vector2Di(250, 250), new Vector2Di(4, 1));
-                warrior.bb.setRadius(warrior.getWidth() / 2.0f);
-
                 int iMin = (int) warrior.getWidth();
                 int iMax = (int) this.getSize().x - (int) warrior.getWidth() * 2;
                 //iMin = 400;
@@ -122,20 +117,16 @@ public class Lane extends Transformable{
                 random.nextInt();
                 boolean bOverlap = false;
                 float randX;
-                do {
-                    randX = random.nextInt(iMax) + iMin;
-                    randX += this.getPosition().x;
-                    warrior.setPosition(randX, 900.0f);
-                    if (warrior.bb.collision(m_LeftWall) || warrior.bb.collision(m_RightWall)) {
-                        bOverlap = false;
-                        Log.d("Spawn","OverLap");
-                    }
-                    else { bOverlap = false; }
-                } while (bOverlap);
-                //float randX = (float) random.nextInt(iMax) + iMin;
-
+                randX = (float)random.nextInt(iMax) + iMin;
+                warrior.setPosition(randX + this.getPosition().x, this.getPosition().y + 900);
+                warrior.setHealth(2);
+                warrior.setHitRate(0.5f);
+                warrior.setVelocity(0.0f, 1.0f);
+                warrior.setForce(1000.0f);
+                warrior.setSpriteSheet(m_Textures.getTexture(1), new Vector2Di(250, 250), new Vector2Di(4, 1));
+                warrior.setWeapon(m_Textures.getTexture(4));
+                warrior.bb.setRadius(warrior.getWidth() / 2.0f);
                 m_aEnemies.add(warrior);
-                System.out.println(randX);
 
                 break;
             case 2:
@@ -146,8 +137,8 @@ public class Lane extends Transformable{
 
     private void spawnUpdate() {
         if (true ||!m_EnemyWave.getWave().isEmpty()) {
-            if (m_Timer.getElapsed() >= 5.0f && m_aEnemies.size() < 10) {
-                    Log.d("Spawning", "Spawned");
+            if (m_Timer.getElapsed() >= 5.0f && m_aEnemies.size() < 1) {
+                    //Log.d("Spawning", "Spawned");
                     spawn(1);
                     //spawn(m_EnemyWave.getWave().get(i));                    //Spawn enemy
                     //m_EnemyWave.getWave().remove(i);                            //Remove spawned enemy id from array
@@ -161,6 +152,17 @@ public class Lane extends Transformable{
 
     public boolean isWaveFinished() { return m_bFinished; }
 
+    public int getWallDamage() {
+        int i = m_iWallDamage;
+        m_iWallDamage = 0;
+        return  i;
+    }
+    public int getScore() {
+        int i = m_iNewScore;
+        m_iNewScore = 0;
+        return i;
+    }
+
     /**
      * Update Lane objects
      * @param timeStep
@@ -171,7 +173,6 @@ public class Lane extends Transformable{
         if (m_bOnLane && !changingLanes) {
             if (input.isDown() && input.getTapPos().y < 2000.0f){
                 m_Launcher.markTarget(input.getTapPos());
-                m_Warrior.setPosition(input.getTapPos());
             }
         }
         m_Launcher.update(timeStep);
@@ -179,21 +180,15 @@ public class Lane extends Transformable{
         //Spawn enemies
         spawnUpdate();
 
-
-
-        m_Warrior.update(timeStep);
-
         //Enemy hit by projectile
-        for (Entity enemy: m_aEnemies) {
+        for (Enemy enemy: m_aEnemies) {
             for (Projectile proj: m_Launcher.m_Bullets.m_aProjectiles) {
                 if (proj.impulse(enemy)) {
-                    enemy.damage(1);
+                    enemy.takeDamage(1);
                     proj.destroy();
                 }
             }
         }
-
-        //Enemy wall collision//
 
         //Enemy-Enemy Collision
         for (int i = 0; i < m_aEnemies.size(); i++) {
@@ -202,11 +197,10 @@ public class Lane extends Transformable{
             }
         }
 
-
-
         //Update All Enemies
-        for (Entity enemy: m_aEnemies) {
-            float fLimit = 5.0f;
+        for (Enemy enemy: m_aEnemies) {
+            /*
+            float fLimit = 1.0f;
             Vector2D velLimit = new Vector2D(0.0f,0.0f);
             if (enemy.getVelocity().y > fLimit) {
                 enemy.setVelocity(enemy.getVelocity().x,fLimit);
@@ -214,30 +208,33 @@ public class Lane extends Transformable{
                 enemy.setVelocity(enemy.getVelocity().x,-fLimit);
             }
             if (enemy.getVelocity().x > fLimit) {
-                enemy.setVelocity(fLimit,enemy.getVelocity().y);
+                enemy.setVelocity(fLimit, enemy.getVelocity().y);
             } else if (enemy.getVelocity().x < -fLimit) {
-                enemy.setVelocity(-fLimit,enemy.getVelocity().x);
+                enemy.setVelocity(-fLimit, enemy.getVelocity().x);
             }
-            enemy.impulseStatic(m_Wall);
-            enemy.impulseStatic(m_LeftWall);
-            enemy.impulseStatic(m_RightWall);
+            */
+            //Wall Collision
+            if (enemy.impulseStatic(m_Wall)) {
+                m_iWallDamage = enemy.Attack();
+                //Log.d("Attack","Wall");
+            }
+            if (enemy.impulseStatic(m_LeftWall)) { enemy.setVelX(1.0f); }
+            else if (enemy.impulseStatic(m_RightWall)) { enemy.setVelX(-1.0f); }
 
             enemy.update(timeStep);
             if (enemy.getVelocity().y < 1.0f) {
                 enemy.setVelocity(enemy.getVelocity().x, enemy.getVelocity().y + 0.1f);
             }
         }
-
         //Remove destroyed enemies
-        for (Entity enemy: m_aEnemies) {
-            if (enemy.getPosition().y > this.getSize().y + enemy.getSize().y) {
-                enemy.destroy();
-                Log.d("Enemy out of bounds","Destroyed");
+        ListIterator<Enemy> itr = m_aEnemies.listIterator();
+        while(itr.hasNext()) {
+            Enemy e = itr.next();
+            if (e.isDestroyed()) {
+                m_iNewScore += e.getValue();
+                itr.remove();
             }
         }
-        //Remove destroyed enemies
-        ListIterator<Entity> itr = m_aEnemies.listIterator();
-        while(itr.hasNext()) {if (itr.next().isDestroyed()) {itr.remove();} }
     }
 
     /**
@@ -250,8 +247,11 @@ public class Lane extends Transformable{
         this.m_LeftWall.draw(p,c);
         this.m_RightWall.draw(p,c);
 
-        for (Entity enemy: m_aEnemies) { enemy.draw(p,c); }
+        for (int i = m_aEnemies.size()-1; i >=  0; i--) {
+            //Draw array reverse // Shows enemies at the front first
+            m_aEnemies.get(i).draw(p,c);
+        }
+        //for (Entity enemy: m_aEnemies) { enemy.draw(p,c); }
         this.m_Launcher.draw(p,c);
-        this.m_Warrior.draw(p,c);
     }
 }

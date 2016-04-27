@@ -17,15 +17,15 @@ import java.io.Serializable;
  * Created by rzsavilla on 10/04/2016.
  */
 public class Entity extends AnimatedSprite {
-    private int m_iHealth;                  //Entity Health
+    //private int m_iHealth;                  //Entity Health
 
     public Circle bb = new Circle(0.0f,0.0f,100.0f, Color.RED);             //Bounding box for collision detection
 
-    public void setHealth(int newHealth) {
-        m_iHealth = newHealth;
-    }
-    public int getHealth() { return m_iHealth; }
-    public void damage(int damage) { m_iHealth -= damage; }
+    //public void setHealth(int newHealth) {
+    //    m_iHealth = newHealth;
+    //}
+    //public int getHealth() { return m_iHealth; }
+    //public void damage(int damage) { m_iHealth -= damage; }
 
     public boolean bColliding = false;
 
@@ -41,8 +41,8 @@ public class Entity extends AnimatedSprite {
         if (this.bOriginChanged) {bb.setOrigin(this.getOrigin());}
         if (this.bScaleChanged) {bb.setScale(this.getScale());}
 
+        //bb.draw(p, c);           //Draw bounding box
         super.draw(p, c);        //override draw sprite
-        bb.draw(p, c);           //Draw bounding box
     }
 
     /**
@@ -50,7 +50,6 @@ public class Entity extends AnimatedSprite {
      * @param timeStep
      */
     public void update(float timeStep) {
-        if (m_iHealth <= 0) { this.destroy(); }
         this.moveUpdate(timeStep);
         this.updateAnimation();
     }
@@ -65,7 +64,7 @@ public class Entity extends AnimatedSprite {
 
             float n = vNormal.dot(vDifference);
 
-            float e = -2.0f;   //Perfect collision
+            float e = -2.0f;   //Collision Response
 
             float massDivide =((1/ this.getMass()) + (1 / other.getMass()));
             float j = (e * n) / massDivide;
@@ -96,7 +95,7 @@ public class Entity extends AnimatedSprite {
             Vector2D vNormal;
             float n;
             float e;
-            e = 2.0f;
+            e = -5.0f;
             vDiff = this.getPosition().subtract(other.getPosition()); //Centre Differenc
             vNormal = vDiff.unitVector();
             n = this.getVelocity().dot(vNormal);
@@ -104,7 +103,8 @@ public class Entity extends AnimatedSprite {
             vNormal.multiply(e);
             Vector2D newVel = this.getVelocity().multiply(vNormal);
             this.setVelocity(newVel);
-            //return  true;
+
+            return  true;
         }
         return false;
     }

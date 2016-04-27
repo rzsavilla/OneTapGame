@@ -127,8 +127,9 @@ public class GameSurfaceView extends SurfaceView implements Runnable{
                 screenPos.x = screenTargetX;
             }
         }
-
+        m_Scene.updateInput(m_Input);
         m_Scene.update(m_kfTimeStep);
+        m_Input.reset();
     }
 
     boolean bShaderSet = false;
@@ -206,9 +207,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable{
     }
 
     public void tap(Vector2D position, boolean isDown) {
-        InputHandler newInput = new InputHandler();
-        newInput.updateTap(position,isDown);
-        m_Scene.updateInput(newInput);
+        m_Input.updateTap(position,isDown);
     }
 
     private boolean moveLeft() {

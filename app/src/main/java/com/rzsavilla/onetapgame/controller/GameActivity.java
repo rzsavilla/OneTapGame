@@ -1,9 +1,11 @@
 package com.rzsavilla.onetapgame.controller;
 
 import android.app.Activity;
+import android.database.sqlite.SQLiteCantOpenDatabaseException;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import com.rzsavilla.onetapgame.model.Utilites.Vector2D;
@@ -40,18 +42,11 @@ public class GameActivity extends Activity{
 
     private float xPos = 0.0f;
     private float yPos = 0.0f;
-
     public boolean onTouchEvent(MotionEvent event) {
         int eventaction = event.getAction();
         switch (eventaction) {
             case MotionEvent.ACTION_DOWN:
                 // finger touches the screen
-                xPos = event.getX();
-                yPos = event.getY();
-                gsv.tap(new Vector2D(xPos,yPos), true);
-                break;
-            case MotionEvent.ACTION_MOVE:
-                // finger moves on the screen
                 xPos = event.getX();
                 yPos = event.getY();
                 gsv.tap(new Vector2D(xPos,yPos), true);

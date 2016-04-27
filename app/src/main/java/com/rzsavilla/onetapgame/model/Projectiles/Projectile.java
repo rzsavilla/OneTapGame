@@ -16,14 +16,14 @@ public class Projectile extends Circle implements Cloneable{
 
     public Projectile() {
         super(0.0f,0.0f,20.0f, Color.RED);
-        this.setForce(0.0f);
-        this.setMass(1.0f);
+        setForce(20000.0f);
+        setMass(50.0f);
     }
 
     public Projectile(float xPos, float yPos, float targetX, float targetY) {
         super(xPos ,yPos,20.0f, Color.RED);
-        setForce(100000.0f);
-        setMass(200.0f);
+        setForce(5000.0f);
+        setMass(5.0f);
         setTarget(targetX,targetY);
     }
 

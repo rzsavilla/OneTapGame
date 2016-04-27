@@ -33,6 +33,7 @@ public class Scene {
 
     private int m_iHealth = 100;
     private int m_iGold = 0;
+    private int m_iScore = 0;
 
     private int m_iWave = 1;
     private float m_fWaveDuration = 60.0f;
@@ -67,6 +68,7 @@ public class Scene {
             m_Textures.loadBitmap(R.drawable.soldier_spritesheet);
             m_Textures.loadBitmap(R.drawable.grass);
             m_Textures.loadBitmap(R.drawable.warrior);
+            m_Textures.loadBitmap(R.drawable.spear);
             m_Textures.loadBitmap(R.drawable.lava);
             m_bTextureLoaded = true;
         }
@@ -77,19 +79,12 @@ public class Scene {
      * Create and place lanes
      * @return
      */
-    Warrior baseWar = new Warrior();
     private boolean loadLanes() {
         //Add lanes into array
-
-        baseWar.setHealth(10);
-        baseWar.setPosition(500.0f, 800.0f);
-        baseWar.setForce(50.0f);
-        baseWar.setVelocity(0.0f, 0.0f);
-        baseWar.setSpriteSheet(m_Textures.getTexture(1), new Vector2Di(250, 250), new Vector2Di(4, 1));
         m_aLanes.add(new Lane(m_vLeft, m_iScreenWidth, m_iScreenHeight, m_Textures));
         m_aLanes.add(new Lane(m_vCenter, m_iScreenWidth, m_iScreenHeight, m_Textures));
         m_aLanes.add(new Lane(m_vRight, m_iScreenWidth, m_iScreenHeight, m_Textures));
-        m_aLanes.get(1).setOnLane(true);
+        m_aLanes.get(1).setOnLane(true);    //Set Starting lane //Centre Lane
 
         return true;
     }
@@ -178,10 +173,13 @@ public class Scene {
     public void update(float timeStep) {
 
         changeLane(timeStep);
-        for (Lane lane: m_aLanes) { lane.update(timeStep,m_Input,m_bChangeLane);}
-
+        for (Lane lane: m_aLanes) {
+            lane.update(timeStep,m_Input,m_bChangeLane);
+            m_iHealth -= lane.getWallDamage();
+            m_iScore += lane.getScore();
+        }
         m_Input.relativeTo(m_vScreenPos.multiply(-1.0f));
-        hud.updateText(m_iGold, m_iHealth);
+        hud.updateText(m_iScore, m_iHealth);
         hud.update(m_Input);
     }
 
@@ -204,7 +202,6 @@ public class Scene {
         m_aLanes.get(1).draw(p,c);
         m_aLanes.get(2).draw(p, c);
         m_Input.draw(p, c);
-        baseWar.draw(p,c);
 
         c.translate(m_vScreenPos.x, m_vScreenPos.y);
         hud.draw(p, c);

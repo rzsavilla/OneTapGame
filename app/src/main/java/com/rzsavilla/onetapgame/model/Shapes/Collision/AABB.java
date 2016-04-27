@@ -47,12 +47,8 @@ public class AABB extends RectangleShape implements Collidable {
                 this.getBounds().right > other.getBounds().left &&
                 this.getBounds().top < other.getBounds().bottom &&
                 this.getBounds().bottom > other.getBounds().top) {
-            setColour(Color.RED);
-            other.setColour(Color.RED);
             return true;                    //Collision detected
         }
-        setColour(Color.WHITE);
-        other.setColour(Color.WHITE);
         return false;                       //No Collision
     }
     /**Collision check with circle */
@@ -73,12 +69,8 @@ public class AABB extends RectangleShape implements Collidable {
         float fDistance = vDist.magnitude() - other.getRadius();
         //Log.d("Distance:",Float.toString(fDistance));
         if (fDistance <= 0) {
-            this.setColour(Color.RED);
-            other.setColour(Color.BLUE);
             return true;
         } else {
-            this.setColour(Color.WHITE);
-            other.setColour(Color.WHITE);
             return false;
         }
     }
