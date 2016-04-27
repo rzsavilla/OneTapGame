@@ -23,7 +23,7 @@ public class Warrior extends Enemy{
     private Elapsed m_Timer = new Elapsed();
 
     public Warrior() {
-        setForce(500.0f);
+        setForce(300.0f);
         setMass(10.0f);
         setHitRate(2.0f);
         setValue(3);

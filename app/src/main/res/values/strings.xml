@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Rocket Hero</string>
+    <string name="app_name">Cannon Blast</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -13,4 +13,8 @@
 
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="title_activity_game">GameActivity</string>
+    <string name="title_activity_game_over">GameOver</string>
+    <string name="TimeSurvived"></string>
+    <string name="title_activity_test">testActivity</string>
+    <string name="title_activity_high_score">HighScoreActivity</string>
 </resources>

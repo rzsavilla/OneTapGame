@@ -72,14 +72,14 @@ public class Transformable extends Destroyable{
     public void setBounds(RectF newBounds) { m_GlobalBounds = newBounds; }
 
     ////////////////GET/////////////////////
-    public Vector2D getPosition() { return  m_vPosition; }
-    public Vector2D getOrigin() { return m_vOrigin; }
-    public Vector2D getScale() { return m_vScale; }
-    public Vector2D getSize() { return m_vSize; }
+    public Vector2D getPosition() { return  new Vector2D(m_vPosition); }
+    public Vector2D getOrigin() { return new Vector2D(m_vOrigin); }
+    public Vector2D getScale() { return new Vector2D(m_vScale); }
+    public Vector2D getSize() { return new Vector2D(m_vSize); }
     public float getRotation() { return m_fRotation; }
     public float getWidth() { return m_vSize.x; }
     public float getHeight() {return m_vSize.y; }
-    public RectF getBounds() { return m_GlobalBounds; }
+    public RectF getBounds() { return new RectF(m_GlobalBounds); }
 
     ////////////////TRANSFORMATION//////////////////
     public void updateGlobalBounds() {

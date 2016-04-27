@@ -108,4 +108,23 @@ public class Entity extends AnimatedSprite {
         }
         return false;
     }
+
+    public boolean impulseStatic(Circle other) {
+        if (other.collision(this.bb)) {
+            Vector2D vDiff;
+            Vector2D vNormal;
+            float n;
+            float e;
+            e = -5.0f;
+            vDiff = this.getPosition().subtract(other.getPosition()); //Centre Differenc
+            vNormal = vDiff.unitVector();
+            n = this.getVelocity().dot(vNormal);
+            vNormal.multiply(n);
+            vNormal.multiply(e);
+            Vector2D newVel = this.getVelocity().multiply(vNormal);
+            this.setVelocity(newVel);
+            return  true;
+        }
+        return false;
+    }
 }

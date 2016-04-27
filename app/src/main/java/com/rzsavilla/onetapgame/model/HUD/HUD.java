@@ -51,34 +51,37 @@ public class HUD {
     }
 
     public void initialize(int width, int height,TextureHandler textures) {
-        m_LeftButton.setRadius(100.0f);
+        float fOffset = height * 0.05f;
+        float fOffsetY = height * 0.06f;
+        m_LeftButton.setRadius(width * 0.1f);
         m_LeftButton.setColour(Color.RED);
-        m_LeftButton.setPosition(m_LeftButton.getRadius() * 2, height - m_LeftButton.getRadius() * 2);
+        m_LeftButton.setPosition(m_LeftButton.getRadius() * 2, (height - m_LeftButton.getRadius() - fOffset));
 
-        m_RightButton.setRadius(100.0f);
+        m_RightButton.setRadius(width * 0.1f);
         m_RightButton.setColour(Color.RED);
-        m_RightButton.setPosition(width - (m_RightButton.getRadius() * 2), height - m_RightButton.getRadius() * 2);
+        m_RightButton.setPosition(width - (m_RightButton.getRadius() * 2), (height - m_RightButton.getRadius() - fOffset));
 
+        //Background TOP BAR
         m_TopBar.setPosition(0.0f, 0.0f);
-        m_TopBar.setSize(width, 200.0f);
+        m_TopBar.setSize(width, fOffset * 1.5f);
         m_TopBar.setColour(Color.BLACK);
 
         m_GoldText.setString("GP: ");
         m_GoldText.setColour(Color.YELLOW);
-        m_GoldText.setTextSize(100.0f);
-        m_GoldText.setPosition(m_TopBar.getPosition().add(new Vector2D(10.0f, 100.0f)));
+        m_GoldText.setTextSize(fOffset);
+        m_GoldText.setPosition(m_TopBar.getPosition().add(new Vector2D(10.0f, m_TopBar.getPosition().y + fOffsetY)));
 
         m_HealthText.setString("HP:  ");
-        m_HealthText.setTextSize(100.0f);
+        m_HealthText.setTextSize(fOffset);
         m_HealthText.setColour(Color.RED);
-        m_HealthText.setPosition(width - (width/4),100.0f);
+        m_HealthText.setPosition(width - (width/3),m_TopBar.getPosition().y + fOffsetY);
     }
 
     public boolean isLeftButtonDown() { return m_bLeftButtonDown; }
     public boolean is_bRightButtonDown() { return  m_bRightButtonDown; }
 
-    public void updateText(int Gold, int Health) {
-        m_GoldText.setString("GP:".concat(Integer.toString(Gold)));
+    public void updateText(int Time, int Health) {
+        m_GoldText.setString("TIME:".concat(Integer.toString(Time)));
         m_HealthText.setString("HP:".concat(Integer.toString(Health)));
     }
 
@@ -86,7 +89,6 @@ public class HUD {
         if (input.isDown()) {
             if (input.tap(m_LeftButton)) { m_bLeftButtonDown = true; }
             else if (input.tap(m_RightButton)){ m_bRightButtonDown = true; }
-
         }
         else { m_bLeftButtonDown = false; m_bRightButtonDown = false; }
     }

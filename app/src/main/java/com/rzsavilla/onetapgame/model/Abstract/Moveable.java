@@ -20,7 +20,7 @@ public abstract class Moveable extends Transformable{
      * Set the objects heading
      * @param newVelocity
      */
-    public void setVelocity(Vector2D newVelocity) { setVelocity(newVelocity.x,newVelocity.y); }
+    public void setVelocity(Vector2D newVelocity) { m_vVelocity = new  Vector2D(newVelocity.x,newVelocity.y); }
 
     /**
      * Set the objects heading

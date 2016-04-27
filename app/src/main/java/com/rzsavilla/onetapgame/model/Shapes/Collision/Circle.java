@@ -128,7 +128,7 @@ public class Circle extends CircleShape implements Collidable {
 
             float n = vNormal.dot(vDifference);
 
-            float e = -2;   //Perfect collision
+            float e = -4;   //Perfect collision
 
             float massDivide =((1/ this.getMass()) + (1 / other.getMass()));
             float j = (e * n) / massDivide;

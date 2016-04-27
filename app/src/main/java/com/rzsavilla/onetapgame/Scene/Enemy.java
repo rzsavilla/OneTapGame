@@ -56,6 +56,7 @@ public class Enemy extends Entity{
         m_DamageTakenText.setTextSize(this.getWidth() / 2.0f);
         m_DamageTakenText.setString("-".concat(Integer.toString(Damage)));
         m_DamageTakenText.setColour(Color.RED);
+        m_DamageTakenText.flash(Color.WHITE,0.25f);
         m_bTakenDamage = true;
         m_TextTimer.restart();
     }
@@ -88,7 +89,7 @@ public class Enemy extends Entity{
             m_DamageTakenText.setPosition(this.getPosition().x, this.getPosition().y - this.getHeight() / 4.0f);
             m_DamageTakenText.draw(p, c);
 
-            if (m_TextTimer.getElapsed() >= 1.0f) { this.m_bTakenDamage = false;}
+            if (m_TextTimer.getElapsed() >= 0.5f) { this.m_bTakenDamage = false;}
         }
     }
 

@@ -1,23 +1,38 @@
 package com.rzsavilla.onetapgame.Scene;
 
+import android.app.Activity;
+import android.bluetooth.BluetoothHealth;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Shader;
+import android.os.Bundle;
+import android.os.Environment;
 
 import com.rzsavilla.onetapgame.R;
+import com.rzsavilla.onetapgame.controller.GameActivity;
+import com.rzsavilla.onetapgame.controller.GameOverActivity;
+import com.rzsavilla.onetapgame.controller.HighScoreActivity;
 import com.rzsavilla.onetapgame.model.HUD.HUD;
 import com.rzsavilla.onetapgame.model.Handler.InputHandler;
 import com.rzsavilla.onetapgame.model.Handler.TextureHandler;
+import com.rzsavilla.onetapgame.model.Utilites.Elapsed;
 import com.rzsavilla.onetapgame.model.Utilites.Vector2D;
 import com.rzsavilla.onetapgame.model.Utilites.Vector2Di;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
  * Created by rzsavilla on 24/04/2016.
  */
 public class Scene {
+    Context m_Context;
+
     private boolean m_bPause = false; //In game pause
     private int m_iScreenWidth;
     private int m_iScreenHeight;
@@ -34,6 +49,7 @@ public class Scene {
     private int m_iHealth = 100;
     private int m_iGold = 0;
     private int m_iScore = 0;
+    private Elapsed m_TimeSurvived = new Elapsed();
 
     private int m_iWave = 1;
     private float m_fWaveDuration = 60.0f;
@@ -41,6 +57,7 @@ public class Scene {
 
     //Lane Changing
     private boolean m_bChangeLane = false;
+    private int time_survived;
 
     /**
      * Default construtor
@@ -51,7 +68,8 @@ public class Scene {
      * Load and initialize all objects and resources
      */
     public void setTextureHandler(TextureHandler handler) { m_Textures = handler; }
-    public void initialize(int width, int height) {
+    public void initialize(int width, int height,Context context) {
+        m_Context = context;
         m_iScreenWidth = width;
         m_iScreenHeight = height;
         m_vCenter = new Vector2D(0.0f,0.0f);
@@ -59,7 +77,8 @@ public class Scene {
         m_vRight = new Vector2D(m_iScreenWidth,0.0f);
         loadTextures();
         loadLanes();
-        hud.initialize(m_iScreenWidth,m_iScreenHeight, m_Textures);
+        hud.initialize(m_iScreenWidth, m_iScreenHeight, m_Textures);
+        m_TimeSurvived.restart();
     }
 
     private boolean loadTextures() {
@@ -166,12 +185,22 @@ public class Scene {
         m_Input.relativeTo(m_vScreenPos); //Update tap position relative to canvas
     }
 
+    public void gameOver() {
+        if (m_iHealth <= 0) {
+            Intent intent = new Intent(m_Context, HighScoreActivity.class);
+            Bundle b = new Bundle();
+            b.putFloat("score", m_TimeSurvived.getElapsed());
+            intent.putExtras(b);
+            m_Context.startActivity(intent);
+            System.out.println(R.string.TimeSurvived);
+        }
+    }
+
     /**
      * Update all objects
      * @param timeStep
      */
     public void update(float timeStep) {
-
         changeLane(timeStep);
         for (Lane lane: m_aLanes) {
             lane.update(timeStep,m_Input,m_bChangeLane);
@@ -179,8 +208,10 @@ public class Scene {
             m_iScore += lane.getScore();
         }
         m_Input.relativeTo(m_vScreenPos.multiply(-1.0f));
-        hud.updateText(m_iScore, m_iHealth);
+        hud.updateText((int) m_TimeSurvived.getElapsed(), m_iHealth);
         hud.update(m_Input);
+
+        gameOver();
     }
 
     private boolean bShaderSet = false;
@@ -205,6 +236,5 @@ public class Scene {
 
         c.translate(m_vScreenPos.x, m_vScreenPos.y);
         hud.draw(p, c);
-
     }
 }

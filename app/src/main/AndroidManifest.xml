@@ -2,17 +2,21 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.rzsavilla.onetapgame" >
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/warrior_icon"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme" >
         <activity
             android:name=".controller.MainActivity"
             android:label="@string/app_name"
-            android:noHistory="true">
+            android:noHistory="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -20,22 +24,31 @@
             android:name=".controller.SplashActivity"
             android:label="@string/title_activity_splash"
             android:noHistory="true"
-            android:screenOrientation="portrait"> <!--Prevents back button from return to this activity -->
+            android:screenOrientation="portrait" > <!-- Prevents back button from return to this activity -->
         </activity>
         <activity
             android:name=".controller.GameActivity"
             android:label="@string/title_activity_game"
-            android:screenOrientation="portrait">
+            android:noHistory="true"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".controller.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".controller.StartActivity"
             android:label="@string/title_activity_start"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".controller.GameOverActivity"
+            android:label="@string/title_activity_game_over" >
+        </activity>
+        <activity
+            android:name=".controller.HighScoreActivity"
+            android:label="@string/title_activity_high_score" >
         </activity>
     </application>
 

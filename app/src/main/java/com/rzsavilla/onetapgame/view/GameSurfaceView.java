@@ -86,23 +86,13 @@ public class GameSurfaceView extends SurfaceView implements Runnable{
     private  boolean bRight = true;
     Elapsed elapsed = new Elapsed();
     public void init() {
-
-
-
         System.out.println("Init");
         textures = new TextureHandler();
         textures.setContext(getContext());
         textures.setScreenSize(screenSize);
         textures.setScale(m_vScreenScale);
-
-        //textures.loadBitmap(R.drawable.cannon);
-        //textures.loadBitmap(R.drawable.soldier_spritesheet);
-        //textures.loadBitmap(R.drawable.grass);
-        //textures.loadBitmap(R.drawable.warrior);
-        //textures.loadBitmap(R.drawable.lava);
         m_Scene.setTextureHandler(textures);
-        m_Scene.initialize(screenSize.x,screenSize.y);
-
+        m_Scene.initialize(screenSize.x,screenSize.y,this.getContext());
     }
 
     //Update

@@ -22,10 +22,10 @@ import java.util.Queue;
  */
 public class Launcher extends Transformable implements Cloneable {
     /** Speed of Launcher Rotation */
-    private float m_fRotationSpeed = 50.0f;
+    private float m_fRotationSpeed = 100.0f;
     private boolean m_bRotateLeft = false;
     private boolean m_bRotateRight = false;
-    private int m_iMaxMarkers = 5;
+    private int m_iMaxMarkers = 10;
 
     /** Projectile Spawner */
     public ProjectileHandler m_Bullets = new ProjectileHandler();

@@ -22,7 +22,7 @@ public class Projectile extends Circle implements Cloneable{
 
     public Projectile(float xPos, float yPos, float targetX, float targetY) {
         super(xPos ,yPos,20.0f, Color.RED);
-        setForce(5000.0f);
+        setForce(10000.0f);
         setMass(5.0f);
         setTarget(targetX,targetY);
     }
