@@ -1,6 +1,7 @@
 package com.rzsavilla.onetapgame.controller;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.sqlite.SQLiteCantOpenDatabaseException;
 import android.graphics.Point;
 import android.media.MediaPlayer;
@@ -29,6 +30,12 @@ public class GameActivity extends Activity{
         gsv = new GameSurfaceView(this,screenSize);
         setContentView(gsv);        //Set screen
         gsv.run();                  //Start Game Loop immediately
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, StartActivity.class);
+        startActivity(intent);
     }
 
     @Override
