@@ -12,7 +12,7 @@ import java.io.Serializable;
 /**
  * Created by rzsavilla on 16/03/2016.
  */
-public class AnimatedSprite extends Sprite implements Cloneable{
+public class AnimatedSprite extends Sprite{
 
     //Animation
     private Elapsed timer = new Elapsed();
@@ -37,23 +37,6 @@ public class AnimatedSprite extends Sprite implements Cloneable{
         setOrigin(getWidth() / 2, getHeight() / 2);
         src = new Rect(0,0,FrameSize.x,FrameSize.y);
         m_bHasTexture = true;
-    }
-
-    public void setAnimatedSprite(AnimatedSprite copy) {
-        if (copy.m_bHasTexture) {
-            this.m_Texture = copy.m_Texture;
-            this.m_bHasTexture = true;
-            this.m_vFrameCount= copy.m_vFrameCount;
-            this.m_vFrameSize = copy.m_vFrameSize;
-            this.m_bLoopAnimation = copy.m_bLoopAnimation;
-            this.m_iCurrFrame = copy.m_iCurrFrame;
-            this.m_iFrameX = copy.m_iFrameX;
-            this.m_iFrameY = copy.m_iFrameY;
-            this.src = copy.src;
-            this.dst = copy.dst;
-        }
-        this.setLoop(copy.m_bLoopAnimation);
-        this.setAnimationSpeed(copy.m_fAnimatationSpeed);
     }
 
     public void setAnimationSpeed(float speed) {
@@ -125,11 +108,5 @@ public class AnimatedSprite extends Sprite implements Cloneable{
                 timer.restart();
             }
         }
-    }
-
-    public AnimatedSprite clone() throws CloneNotSupportedException {
-        AnimatedSprite newASprite = (AnimatedSprite) super.clone();
-
-        return newASprite;
     }
 }

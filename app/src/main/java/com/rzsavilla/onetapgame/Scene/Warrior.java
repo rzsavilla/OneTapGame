@@ -19,6 +19,9 @@ public class Warrior extends Enemy{
      */
     private Elapsed m_Timer = new Elapsed();
 
+    /**
+     * Default Constructor
+     */
     public Warrior() {
         setForce(300.0f);
         setMass(10.0f);
@@ -26,11 +29,19 @@ public class Warrior extends Enemy{
         setValue(3);
     }
 
+    /**
+     * Set warriors weapon texture
+     * @param texture
+     */
     public void setWeapon(Bitmap texture) {
         m_Weapon.setTexture(texture);
         m_bHasWeapon = true;
     }
 
+    /**
+     * Update warrior attack and overrides Enemy update
+     * @param timeStep
+     */
     public void update(float timeStep) {
 
         if (bPositionChanged) {
@@ -55,6 +66,11 @@ public class Warrior extends Enemy{
         super.update(timeStep);
     }
 
+    /**
+     * Draw warrior and weapon
+     * @param p
+     * @param c
+     */
     public  void draw(Paint p, Canvas c) {
         super.draw(p, c);
         if (m_bShowWeapon && this.m_bHasWeapon) {

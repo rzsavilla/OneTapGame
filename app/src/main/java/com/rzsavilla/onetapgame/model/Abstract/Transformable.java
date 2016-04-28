@@ -11,7 +11,7 @@ import java.io.Serializable;
 /**
  * Created by rzsavilla on 14/03/2016.
  */
-public class Transformable extends Destroyable{
+public abstract class Transformable extends Destroyable{
     private Vector2D m_vPosition = new Vector2D(0.0f,0.0f);           //x and y position
     private Vector2D m_vOrigin = new Vector2D(0.0f,0.0f);             //Point of rotation scale and centre
     private Vector2D m_vScale = new Vector2D(1.0f,1.0f);              //Default/Original size is 1.f;

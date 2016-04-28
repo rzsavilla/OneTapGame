@@ -14,7 +14,7 @@ import java.io.Serializable;
 /**
  * Created by rzsavilla on 15/03/2016.
  */
-public class Sprite extends Moveable implements Cloneable {
+public class Sprite extends Moveable {
     protected Bitmap m_Texture;
     protected boolean m_bHasTexture = false;
     private float e = 1;
@@ -30,9 +30,12 @@ public class Sprite extends Moveable implements Cloneable {
 
     }
 
+    /**
+     * Set sprite texture
+     * @param bitmapIn
+     */
     public void setTexture(Bitmap bitmapIn) {
         m_Texture = m_Texture.createScaledBitmap(bitmapIn,bitmapIn.getWidth(),bitmapIn.getHeight(),false);
-
         setWidth(m_Texture.getWidth());
         setHeight(m_Texture.getHeight());
         setOrigin(getWidth() / 2, getHeight() / 2);
@@ -42,8 +45,17 @@ public class Sprite extends Moveable implements Cloneable {
         m_bHasTexture = true;
     }
 
+    /**
+     * Returns sprite texture
+     * @return
+     */
     public Bitmap getTexture() { return m_Texture; }
 
+    /**
+     * Draw sprite
+     * @param p
+     * @param c
+     */
     public void draw (Paint p,Canvas c) {
         if (m_bHasTexture) {
             if (bPositionChanged || bSizeChanged || bScaleChanged || bOriginChanged) {
@@ -53,11 +65,5 @@ public class Sprite extends Moveable implements Cloneable {
             c.drawBitmap(m_Texture, src, getBounds(), p);
             c.rotate(-getRotation(), this.getPosition().x, this.getPosition().y);
         }
-    }
-
-    public Sprite clone() throws CloneNotSupportedException {
-        Sprite newSprite = (Sprite) super.clone();
-
-        return newSprite;
     }
 }

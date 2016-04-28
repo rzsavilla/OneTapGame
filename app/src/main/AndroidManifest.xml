@@ -44,11 +44,13 @@
         </activity>
         <activity
             android:name=".controller.GameOverActivity"
-            android:label="@string/title_activity_game_over" >
+            android:label="@string/title_activity_game_over"
+            android:noHistory="true" >
         </activity>
         <activity
             android:name=".controller.HighScoreActivity"
-            android:label="@string/title_activity_high_score" >
+            android:label="@string/title_activity_high_score"
+            android:noHistory="true" >
         </activity>
     </application>
 

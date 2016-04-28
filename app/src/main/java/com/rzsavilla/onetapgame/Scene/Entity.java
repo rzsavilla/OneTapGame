@@ -23,8 +23,6 @@ public class Entity extends AnimatedSprite {
     //public int getHealth() { return m_iHealth; }
     //public void damage(int damage) { m_iHealth -= damage; }
 
-    public boolean bColliding = false;
-
     /**
      * Draw bounding box, sprite and update bb transformations
      * @param p
