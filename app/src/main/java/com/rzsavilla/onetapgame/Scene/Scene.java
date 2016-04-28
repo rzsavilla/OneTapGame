@@ -193,7 +193,7 @@ public class Scene {
             m_Sound.release();
             Intent intent = new Intent(m_Context, GameOverActivity.class);
             Bundle b = new Bundle();
-            b.putFloat("score", m_fScore);
+            b.putFloat("score", m_fTotalScore);
             intent.putExtras(b);
             m_Context.startActivity(intent);
         }
@@ -204,9 +204,10 @@ public class Scene {
      * @param timeStep
      */
     public void update(float timeStep) {
+        gameOver();
         changeLane(timeStep);
-        for (Lane lane: m_aLanes) {
-            lane.update(timeStep,m_Input,m_bChangeLane);
+        for (Lane lane : m_aLanes) {
+            lane.update(timeStep, m_Input, m_bChangeLane);
             m_iHealth -= lane.getWallDamage();
             m_fScore += lane.getScore();                    //Add score from destroyed enemies
         }
@@ -214,11 +215,7 @@ public class Scene {
         m_Input.relativeTo(m_vScreenPos.multiply(-1.0f));
         hud.updateText((int) m_fTotalScore, m_iHealth);
         hud.update(m_Input);
-
-        gameOver();
     }
-
-    private boolean bShaderSet = false;
     private Paint pShader = new Paint();
     /**
      * Draw all objects

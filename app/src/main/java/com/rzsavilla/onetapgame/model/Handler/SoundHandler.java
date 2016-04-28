@@ -8,6 +8,7 @@ import com.rzsavilla.onetapgame.model.Projectiles.Projectile;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.ListIterator;
 
 /**
@@ -17,7 +18,6 @@ public class SoundHandler {
     private Context m_Context;
     private float m_fEffectsVolume = 50.0f;         //0-50
     private float m_fMusicVolume = 25.0f;
-    private boolean m_bStop = true;
 
     private ArrayList<MediaPlayer> m_aSound = new ArrayList<>();
 
@@ -45,7 +45,6 @@ public class SoundHandler {
      * @param index Sound to play
      */
     public void playSound(int index) {
-        m_bStop = false;
         if (m_aSound.size() < 20) {
             switch (index) {
                 case 0:
@@ -76,17 +75,20 @@ public class SoundHandler {
      * Release all sounds
      */
     public void release() {
-        for (MediaPlayer sound: m_aSound) {
-            sound.stop();
-            sound.release();
-            m_bStop = true;
+        ListIterator<MediaPlayer> itr = m_aSound.listIterator();
+        while (itr.hasNext()) {
+            MediaPlayer element = itr.next();
+            element.release();
+            itr.remove();
         }
     }
 
     /**
      * Pause all sounds
      */
-    public void pause() { for(MediaPlayer sound: m_aSound) { sound.pause(); } }
+    public void pause() {
+        for(MediaPlayer sound: m_aSound) { sound.pause(); }
+    }
 
     /**
      * Resume all sounds
@@ -97,14 +99,12 @@ public class SoundHandler {
      * Remove sounds that have finished and are not looping
      */
     public void update() {
-        if (!m_bStop) {
-            ListIterator<MediaPlayer> itr = m_aSound.listIterator();
-            while (itr.hasNext()) {                      //Iterate through bullets
-                MediaPlayer e = itr.next();
-                if (!e.isPlaying()&& !e.isLooping()) {
-                    e.release();
-                    itr.remove();
-                }
+        ListIterator<MediaPlayer> itr = m_aSound.listIterator();
+        while (itr.hasNext()) {                      //Iterate through bullets
+            MediaPlayer e = itr.next();
+            if (!e.isPlaying()&& !e.isLooping()) {
+                e.release();
+                itr.remove();
             }
         }
     }

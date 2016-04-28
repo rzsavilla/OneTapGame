@@ -200,9 +200,9 @@ public class GameSurfaceView extends SurfaceView implements Runnable{
      * Pause Game loop
      */
     public void pause() {
-        m_Sound.pause();
         ok = false;
         try {
+            m_Sound.pause();
             t.join();
         } catch (InterruptedException e) {
             Log.e("Error:","Joining thread");
@@ -217,7 +217,6 @@ public class GameSurfaceView extends SurfaceView implements Runnable{
         ok = true;
         t = new Thread(this);
         t.start();
-
     }
 
     /**

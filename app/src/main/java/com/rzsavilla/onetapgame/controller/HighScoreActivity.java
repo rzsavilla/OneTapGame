@@ -105,6 +105,7 @@ public class HighScoreActivity extends Activity {
      * Start game activity
      */
     public void playAgain() {
+
         Intent intentPlay = new Intent(this, GameActivity.class);
         startActivity(intentPlay);
     }

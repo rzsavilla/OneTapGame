@@ -29,7 +29,6 @@
         <activity
             android:name=".controller.GameActivity"
             android:label="@string/title_activity_game"
-            android:noHistory="true"
             android:screenOrientation="portrait" >
         </activity>
         <activity
