@@ -49,7 +49,7 @@ public class Scene {
 
     private int m_iHealth = 100;
     private int m_iGold = 0;
-    private float m_fScore = 10000;                         //Points accumulated from killing enemies
+    private float m_fScore = 0;                         //Points accumulated from killing enemies
     private float m_fTotalScore = 0;                    //Points from killing enemies + duration survived
     private Elapsed m_TimeSurvived = new Elapsed();
 
@@ -82,7 +82,6 @@ public class Scene {
         loadLanes();
         hud.initialize(m_iScreenWidth, m_iScreenHeight, m_Textures);
         m_TimeSurvived.restart();
-        m_Sound.playSound(2);
     }
 
     private boolean loadTextures() {
@@ -191,7 +190,7 @@ public class Scene {
 
     public void gameOver() {
         if (m_iHealth <= 0) {
-            //m_Sound.release();
+            m_Sound.release();
             Intent intent = new Intent(m_Context, GameOverActivity.class);
             Bundle b = new Bundle();
             b.putFloat("score", m_fScore);

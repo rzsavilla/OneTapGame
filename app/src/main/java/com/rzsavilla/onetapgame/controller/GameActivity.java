@@ -15,7 +15,6 @@ import com.rzsavilla.onetapgame.view.GameSurfaceView;
 
 public class GameActivity extends Activity{
     private GameSurfaceView gsv;
-    MediaPlayer music;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,13 +28,7 @@ public class GameActivity extends Activity{
 
         gsv = new GameSurfaceView(this,screenSize);
         setContentView(gsv);        //Set screen
-        //playMusic();
         gsv.run();                  //Start Game Loop immediately
-    }
-
-    public void playMusic() {
-        music.setLooping(true);
-        music.start();
     }
 
     @Override

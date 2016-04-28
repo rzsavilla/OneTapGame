@@ -84,6 +84,16 @@ public class SoundHandler {
     }
 
     /**
+     * Pause all sounds
+     */
+    public void pause() { for(MediaPlayer sound: m_aSound) { sound.pause(); } }
+
+    /**
+     * Resume all sounds
+     */
+    public void resume() { for(MediaPlayer sound: m_aSound) { sound.start(); } }
+
+    /**
      * Remove sounds that have finished and are not looping
      */
     public void update() {

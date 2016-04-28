@@ -29,11 +29,11 @@ import com.rzsavilla.onetapgame.model.Handler.TextureHandler;
 import com.rzsavilla.onetapgame.model.Utilites.Vector2D;
 import com.rzsavilla.onetapgame.model.Utilites.Vector2Di;
 
-/**
- * Holds and runs the game loop
- * @author rzsavilla
- */
 
+/**
+ * The Game
+ * Checks user input, update logic and renders the game
+ */
 public class GameSurfaceView extends SurfaceView implements Runnable{
     private final static int    MAX_FPS = 30;                   // desired fps
     private final static int    MAX_FRAME_SKIPS = 3;            // maximum number of frames to be skipped
@@ -70,14 +70,23 @@ public class GameSurfaceView extends SurfaceView implements Runnable{
     ////////////SOUND///////////////////
     private SoundHandler m_Sound;
 
-    //Constructor
+    private Context m_Context;
+
+    /**
+     * Construct sets context
+     * @param context
+     */
     public GameSurfaceView(Context context) {
         super(context);
         holder = getHolder();
         init();
     }
 
-    private Context m_Context;
+    /**
+     * Constructor sets context and screen size
+     * @param context
+     * @param ScreenS
+     */
     public GameSurfaceView(Context context ,Point ScreenS) {
         super(context);
         m_Context = context;
@@ -86,28 +95,31 @@ public class GameSurfaceView extends SurfaceView implements Runnable{
         init();
     }
 
-    private Vector2D center = new Vector2D();
-    private Vector2D left = new Vector2D();
-    private Vector2D right = new Vector2D();
-
     private  boolean bRight = true;
     Elapsed elapsed = new Elapsed();
+
+    /**
+     * Initialize the game
+     */
     public void init() {
         m_Sound = new SoundHandler(m_Context);
-
-        System.out.println("Init");
         textures = new TextureHandler();
         textures.setContext(getContext());
         textures.setScreenSize(screenSize);
         textures.setScale(m_vScreenScale);
         m_Scene.setTextureHandler(textures);
         m_Scene.initialize(screenSize.x, screenSize.y, this.getContext(), m_Sound);
+        m_Sound.playSound(2);   //Start Music
     }
 
     //Update
     private Calculation calc;
     Vector2D screenPos = new Vector2D(0.0f,0.0f);
     float screenTargetX = 0;
+
+    /**
+     * Update Game Logic
+     */
     private void updateCanvas() {
         if (m_bLaneChanging) {
             float fSpeed = 2000.f;
@@ -135,6 +147,9 @@ public class GameSurfaceView extends SurfaceView implements Runnable{
     boolean bShaderSet = false;
     Paint pShader = new Paint();
 
+    /**
+     * Render the game
+     */
     public void drawCanvas() {
         if (holder.getSurface().isValid()) {
             c = holder.lockCanvas();        //Canvas ready to draw
@@ -154,7 +169,9 @@ public class GameSurfaceView extends SurfaceView implements Runnable{
         }
     }
 
-    private boolean m_bInputUpdated = false;
+    /**
+     * Runs the game loop
+     */
     public  void run() {
         android.os.Process.setThreadPriority(Process.THREAD_PRIORITY_DEFAULT);
         while(ok) {
@@ -191,7 +208,11 @@ public class GameSurfaceView extends SurfaceView implements Runnable{
         }
     }
 
+    /**
+     * Pause Game loop
+     */
     public void pause() {
+        m_Sound.pause();
         ok = false;
         try {
             t.join();
@@ -200,48 +221,23 @@ public class GameSurfaceView extends SurfaceView implements Runnable{
         }
     }
 
+    /**
+     * Resume Game loop
+     */
     public void resume() {
+        m_Sound.resume();
         ok = true;
         t = new Thread(this);
         t.start();
+
     }
 
+    /**
+     * Update Input Handler
+     * @param position
+     * @param isDown
+     */
     public void tap(Vector2D position, boolean isDown) {
         m_Input.updateTap(position,isDown);
-    }
-
-    private boolean moveLeft() {
-        if (!m_bLaneChanging) {
-            if (screenPos.x > left.x) {             //Check if on left lane
-                Log.d("X:", Float.toString(screenPos.x));
-                if (screenPos.x <= center.x) {                //Check if on center lane
-                    screenTargetX = left.x;         //Can move to the left lane
-                } else {                                //On Right Lane
-                    screenTargetX = center.x;       //Can move to center lane
-                }
-                bRight = false;
-                Log.d("target Left:", Float.toString(screenTargetX));
-                m_bLaneChanging = true;
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean moveRight() {
-        if (!m_bLaneChanging) {
-            if (screenPos.x < right.x) {                                          //Check if on right lane, therefore cannot move right
-                if (screenPos.x >= center.x) {                                    //Check if on center lane, therefore can move to right lane
-                    screenTargetX = right.x;
-                } else {                                                            //On Left Lane can move to center lane
-                    screenTargetX = center.x;
-                }
-                Log.d("target Right:", Float.toString(screenTargetX));
-                bRight = true;
-                m_bLaneChanging = true;
-                return true;
-            }
-        }
-        return false;
     }
 }
