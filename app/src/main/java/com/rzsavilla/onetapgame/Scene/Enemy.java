@@ -4,10 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-import com.rzsavilla.onetapgame.Sprite.Enemy.Entity;
-import com.rzsavilla.onetapgame.Sprite.Sprite;
-import com.rzsavilla.onetapgame.model.Handler.ProjectileHandler;
-import com.rzsavilla.onetapgame.model.MyText;
+import com.rzsavilla.onetapgame.model.Utilites.MyText;
 import com.rzsavilla.onetapgame.model.Utilites.Elapsed;
 
 /**

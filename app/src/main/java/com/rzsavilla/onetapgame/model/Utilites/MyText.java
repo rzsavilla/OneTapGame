@@ -1,11 +1,10 @@
-package com.rzsavilla.onetapgame.model;
+package com.rzsavilla.onetapgame.model.Utilites;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-import com.rzsavilla.onetapgame.model.Utilites.Elapsed;
-import com.rzsavilla.onetapgame.model.Utilites.Transformable;
+import com.rzsavilla.onetapgame.model.Abstract.Transformable;
 
 /**
  * Created by rzsavilla on 25/04/2016.

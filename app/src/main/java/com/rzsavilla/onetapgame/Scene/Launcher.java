@@ -9,7 +9,7 @@ import com.rzsavilla.onetapgame.Sprite.Sprite;
 import com.rzsavilla.onetapgame.model.Utilites.Elapsed;
 import com.rzsavilla.onetapgame.model.Handler.ProjectileHandler;
 import com.rzsavilla.onetapgame.model.Shapes.CircleShape;
-import com.rzsavilla.onetapgame.model.Utilites.Transformable;
+import com.rzsavilla.onetapgame.model.Abstract.Transformable;
 import com.rzsavilla.onetapgame.model.Utilites.Vector2D;
 
 import java.util.LinkedList;

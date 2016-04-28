@@ -5,7 +5,7 @@ import android.graphics.Paint;
 
 import com.rzsavilla.onetapgame.model.Utilites.Elapsed;
 import com.rzsavilla.onetapgame.model.Projectiles.Projectile;
-import com.rzsavilla.onetapgame.model.Utilites.Transformable;
+import com.rzsavilla.onetapgame.model.Abstract.Transformable;
 import com.rzsavilla.onetapgame.model.Utilites.Vector2D;
 
 import java.util.ArrayList;

@@ -1,10 +1,6 @@
 package com.rzsavilla.onetapgame.model.Abstract;
 
-import com.rzsavilla.onetapgame.Sprite.Sprite;
-import com.rzsavilla.onetapgame.model.Utilites.Transformable;
 import com.rzsavilla.onetapgame.model.Utilites.Vector2D;
-
-import java.io.Serializable;
 
 /**
  * Created by rzsavilla on 14/03/2016.

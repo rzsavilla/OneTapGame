@@ -1,9 +1,10 @@
-package com.rzsavilla.onetapgame.model.Utilites;
+package com.rzsavilla.onetapgame.model.Abstract;
 
 import android.graphics.RectF;
 
 import com.rzsavilla.onetapgame.Scene.Warrior;
 import com.rzsavilla.onetapgame.model.Abstract.Destroyable;
+import com.rzsavilla.onetapgame.model.Utilites.Vector2D;
 
 import java.io.Serializable;
 
@@ -26,10 +27,9 @@ public class Transformable extends Destroyable{
     protected boolean bSizeChanged = false;
 
     /////////////////SET///////////////////////////
-    public Warrior setPosition(Vector2D newPosition) {
+    public void setPosition(Vector2D newPosition) {
         m_vPosition = newPosition;
         bPositionChanged = true;            //Indicate/Notify change has occured
-        return null;
     }
     public void setPosition(float x, float y) {
         m_vPosition.x = x;

@@ -4,11 +4,8 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
-import com.rzsavilla.onetapgame.Sprite.Enemy.Entity;
 import com.rzsavilla.onetapgame.Sprite.Sprite;
-import com.rzsavilla.onetapgame.model.Handler.ProjectileHandler;
 import com.rzsavilla.onetapgame.model.Utilites.Elapsed;
-import com.rzsavilla.onetapgame.model.Utilites.Vector2D;
 
 /**
  * Created by rzsavilla on 25/04/2016.

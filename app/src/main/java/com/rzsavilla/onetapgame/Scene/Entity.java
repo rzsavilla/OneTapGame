@@ -1,4 +1,4 @@
-package com.rzsavilla.onetapgame.Sprite.Enemy;
+package com.rzsavilla.onetapgame.Scene;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -7,11 +7,7 @@ import android.graphics.Paint;
 import com.rzsavilla.onetapgame.Sprite.AnimatedSprite;
 import com.rzsavilla.onetapgame.model.Shapes.Collision.AABB;
 import com.rzsavilla.onetapgame.model.Shapes.Collision.Circle;
-import com.rzsavilla.onetapgame.model.Shapes.RectangleShape;
-import com.rzsavilla.onetapgame.model.Utilites.Calculation;
 import com.rzsavilla.onetapgame.model.Utilites.Vector2D;
-
-import java.io.Serializable;
 
 /**
  * Created by rzsavilla on 10/04/2016.

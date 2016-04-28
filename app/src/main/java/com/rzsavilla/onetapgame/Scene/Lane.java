@@ -1,27 +1,23 @@
 package com.rzsavilla.onetapgame.Scene;
 
-import android.app.WallpaperInfo;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.Log;
 
-import com.rzsavilla.onetapgame.Sprite.Enemy.Entity;
 import com.rzsavilla.onetapgame.model.Handler.InputHandler;
 import com.rzsavilla.onetapgame.model.Handler.SoundHandler;
 import com.rzsavilla.onetapgame.model.Handler.TextureHandler;
 import com.rzsavilla.onetapgame.model.Projectiles.Projectile;
 import com.rzsavilla.onetapgame.model.Shapes.Collision.AABB;
 import com.rzsavilla.onetapgame.model.Shapes.Collision.Circle;
-import com.rzsavilla.onetapgame.model.Shapes.RectangleShape;
 import com.rzsavilla.onetapgame.model.Utilites.Elapsed;
-import com.rzsavilla.onetapgame.model.Utilites.Transformable;
+import com.rzsavilla.onetapgame.model.Abstract.Transformable;
 import com.rzsavilla.onetapgame.model.Utilites.Vector2D;
 import com.rzsavilla.onetapgame.model.Utilites.Vector2Di;
 
 import java.util.ArrayList;
 import java.util.ListIterator;
-import java.util.Random;
 
 /**
  * Lanes will spawn enemies, three lanes in total

@@ -1,9 +1,7 @@
 package com.rzsavilla.onetapgame.model.Shapes.Collision;
 
-import android.graphics.Color;
-
 import com.rzsavilla.onetapgame.model.Interface.Collidable;
-import com.rzsavilla.onetapgame.Sprite.Enemy.Entity;
+import com.rzsavilla.onetapgame.Scene.Entity;
 import com.rzsavilla.onetapgame.model.Shapes.CircleShape;
 import com.rzsavilla.onetapgame.model.Utilites.Vector2D;
 

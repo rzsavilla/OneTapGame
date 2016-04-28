@@ -3,20 +3,14 @@ package com.rzsavilla.onetapgame.model.HUD;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.renderscript.ScriptGroup;
-import android.util.Log;
 
 import com.rzsavilla.onetapgame.model.Handler.InputHandler;
 import com.rzsavilla.onetapgame.model.Handler.TextureHandler;
-import com.rzsavilla.onetapgame.model.MyText;
+import com.rzsavilla.onetapgame.model.Utilites.MyText;
 import com.rzsavilla.onetapgame.model.Shapes.CircleShape;
-import com.rzsavilla.onetapgame.model.Shapes.Collision.Circle;
 import com.rzsavilla.onetapgame.model.Shapes.RectangleShape;
-import com.rzsavilla.onetapgame.model.Utilites.Transformable;
 import com.rzsavilla.onetapgame.model.Utilites.Vector2D;
 import com.rzsavilla.onetapgame.model.Utilites.Vector2Di;
-
-import org.w3c.dom.Text;
 
 /**
  * Head up display draws in game user interface and shows information
