@@ -17,6 +17,7 @@ import com.rzsavilla.onetapgame.controller.GameOverActivity;
 import com.rzsavilla.onetapgame.controller.HighScoreActivity;
 import com.rzsavilla.onetapgame.model.HUD.HUD;
 import com.rzsavilla.onetapgame.model.Handler.InputHandler;
+import com.rzsavilla.onetapgame.model.Handler.SoundHandler;
 import com.rzsavilla.onetapgame.model.Handler.TextureHandler;
 import com.rzsavilla.onetapgame.model.Utilites.Elapsed;
 import com.rzsavilla.onetapgame.model.Utilites.Vector2D;
@@ -32,7 +33,6 @@ import java.util.ArrayList;
  */
 public class Scene {
     Context m_Context;
-
     private boolean m_bPause = false; //In game pause
     private int m_iScreenWidth;
     private int m_iScreenHeight;
@@ -44,11 +44,13 @@ public class Scene {
     private boolean m_bTextureLoaded = false;
     private TextureHandler m_Textures = new TextureHandler();
     private InputHandler m_Input = new InputHandler();
+    private SoundHandler m_Sound;
     private HUD hud = new HUD();
 
     private int m_iHealth = 100;
     private int m_iGold = 0;
-    private int m_iScore = 0;
+    private float m_fScore = 10000;                         //Points accumulated from killing enemies
+    private float m_fTotalScore = 0;                    //Points from killing enemies + duration survived
     private Elapsed m_TimeSurvived = new Elapsed();
 
     private int m_iWave = 1;
@@ -68,8 +70,9 @@ public class Scene {
      * Load and initialize all objects and resources
      */
     public void setTextureHandler(TextureHandler handler) { m_Textures = handler; }
-    public void initialize(int width, int height,Context context) {
+    public void initialize(int width, int height,Context context, SoundHandler sound) {
         m_Context = context;
+        m_Sound = sound;
         m_iScreenWidth = width;
         m_iScreenHeight = height;
         m_vCenter = new Vector2D(0.0f,0.0f);
@@ -79,6 +82,7 @@ public class Scene {
         loadLanes();
         hud.initialize(m_iScreenWidth, m_iScreenHeight, m_Textures);
         m_TimeSurvived.restart();
+        m_Sound.playSound(2);
     }
 
     private boolean loadTextures() {
@@ -100,9 +104,9 @@ public class Scene {
      */
     private boolean loadLanes() {
         //Add lanes into array
-        m_aLanes.add(new Lane(m_vLeft, m_iScreenWidth, m_iScreenHeight, m_Textures));
-        m_aLanes.add(new Lane(m_vCenter, m_iScreenWidth, m_iScreenHeight, m_Textures));
-        m_aLanes.add(new Lane(m_vRight, m_iScreenWidth, m_iScreenHeight, m_Textures));
+        m_aLanes.add(new Lane(m_vLeft, m_iScreenWidth, m_iScreenHeight, m_Textures,m_Sound));
+        m_aLanes.add(new Lane(m_vCenter, m_iScreenWidth, m_iScreenHeight, m_Textures,m_Sound));
+        m_aLanes.add(new Lane(m_vRight, m_iScreenWidth, m_iScreenHeight, m_Textures,m_Sound));
         m_aLanes.get(1).setOnLane(true);    //Set Starting lane //Centre Lane
 
         return true;
@@ -187,12 +191,12 @@ public class Scene {
 
     public void gameOver() {
         if (m_iHealth <= 0) {
-            Intent intent = new Intent(m_Context, HighScoreActivity.class);
+            //m_Sound.release();
+            Intent intent = new Intent(m_Context, GameOverActivity.class);
             Bundle b = new Bundle();
-            b.putFloat("score", m_TimeSurvived.getElapsed());
+            b.putFloat("score", m_fScore);
             intent.putExtras(b);
             m_Context.startActivity(intent);
-            System.out.println(R.string.TimeSurvived);
         }
     }
 
@@ -205,10 +209,11 @@ public class Scene {
         for (Lane lane: m_aLanes) {
             lane.update(timeStep,m_Input,m_bChangeLane);
             m_iHealth -= lane.getWallDamage();
-            m_iScore += lane.getScore();
+            m_fScore += lane.getScore();                    //Add score from destroyed enemies
         }
+        m_fTotalScore = m_TimeSurvived.getElapsed() + m_fScore;
         m_Input.relativeTo(m_vScreenPos.multiply(-1.0f));
-        hud.updateText((int) m_TimeSurvived.getElapsed(), m_iHealth);
+        hud.updateText((int) m_fTotalScore, m_iHealth);
         hud.update(m_Input);
 
         gameOver();
@@ -232,7 +237,7 @@ public class Scene {
         m_aLanes.get(0).draw(p,c);
         m_aLanes.get(1).draw(p,c);
         m_aLanes.get(2).draw(p, c);
-        m_Input.draw(p, c);
+        //m_Input.draw(p, c);       //Tap press position
 
         c.translate(m_vScreenPos.x, m_vScreenPos.y);
         hud.draw(p, c);

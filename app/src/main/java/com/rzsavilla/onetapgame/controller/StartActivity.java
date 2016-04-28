@@ -20,6 +20,11 @@ public class StartActivity extends Activity {
         startActivity(intentStart);
     }
 
+    public void openHighScore(View view) {
+        Intent intentStart = new Intent(this, HighScoreActivity.class);
+        startActivity(intentStart);
+    }
+
     public void openSettings(View view) {
         Intent intentStart = new Intent(this, SettingsActivity.class);
         startActivity(intentStart);

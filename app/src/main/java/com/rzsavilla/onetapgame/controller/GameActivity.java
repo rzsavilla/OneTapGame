@@ -3,6 +3,7 @@ package com.rzsavilla.onetapgame.controller;
 import android.app.Activity;
 import android.database.sqlite.SQLiteCantOpenDatabaseException;
 import android.graphics.Point;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -14,19 +15,27 @@ import com.rzsavilla.onetapgame.view.GameSurfaceView;
 
 public class GameActivity extends Activity{
     private GameSurfaceView gsv;
+    MediaPlayer music;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         //Get Screen Size
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         Point screenSize = new Point(metrics.widthPixels,metrics.heightPixels);
         Vector2D scale = new Vector2D(metrics.scaledDensity,metrics.scaledDensity);
 
+        //music = new MediaPlayer().create(this,R.raw.music);
+
         gsv = new GameSurfaceView(this,screenSize);
         setContentView(gsv);        //Set screen
+        //playMusic();
         gsv.run();                  //Start Game Loop immediately
+    }
+
+    public void playMusic() {
+        music.setLooping(true);
+        music.start();
     }
 
     @Override

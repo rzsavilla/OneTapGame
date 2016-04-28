@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Shader;
+import android.media.MediaPlayer;
 import android.os.Process;
 import android.renderscript.ScriptGroup;
 import android.util.Log;
@@ -16,6 +17,7 @@ import android.view.SurfaceView;
 
 import com.rzsavilla.onetapgame.R;
 import com.rzsavilla.onetapgame.Scene.Scene;
+import com.rzsavilla.onetapgame.model.Handler.SoundHandler;
 import com.rzsavilla.onetapgame.model.Shapes.Collision.AABB;
 import com.rzsavilla.onetapgame.model.Shapes.Collision.Circle;
 import com.rzsavilla.onetapgame.model.Utilites.Calculation;
@@ -65,6 +67,9 @@ public class GameSurfaceView extends SurfaceView implements Runnable{
     ////////////BMP///////////////////
     private TextureHandler textures;
 
+    ////////////SOUND///////////////////
+    private SoundHandler m_Sound;
+
     //Constructor
     public GameSurfaceView(Context context) {
         super(context);
@@ -72,8 +77,10 @@ public class GameSurfaceView extends SurfaceView implements Runnable{
         init();
     }
 
+    private Context m_Context;
     public GameSurfaceView(Context context ,Point ScreenS) {
         super(context);
+        m_Context = context;
         holder = getHolder();
         screenSize = ScreenS;
         init();
@@ -86,13 +93,15 @@ public class GameSurfaceView extends SurfaceView implements Runnable{
     private  boolean bRight = true;
     Elapsed elapsed = new Elapsed();
     public void init() {
+        m_Sound = new SoundHandler(m_Context);
+
         System.out.println("Init");
         textures = new TextureHandler();
         textures.setContext(getContext());
         textures.setScreenSize(screenSize);
         textures.setScale(m_vScreenScale);
         m_Scene.setTextureHandler(textures);
-        m_Scene.initialize(screenSize.x,screenSize.y,this.getContext());
+        m_Scene.initialize(screenSize.x, screenSize.y, this.getContext(), m_Sound);
     }
 
     //Update
@@ -119,6 +128,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable{
         }
         m_Scene.updateInput(m_Input);
         m_Scene.update(m_kfTimeStep);
+        m_Sound.update();
         m_Input.reset();
     }
 

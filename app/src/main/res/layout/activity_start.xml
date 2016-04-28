@@ -4,46 +4,87 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.rzsavilla.onetapgame.controller.StartActivity">
+    tools:context="com.rzsavilla.onetapgame.controller.StartActivity"
+    android:background="@android:color/black">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:text="@string/app_name"
-        android:textSize="60sp"
-        android:padding="5sp"
-        android:layout_marginTop="20sp"
-        android:layout_marginBottom="20sp"
-        />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/relativeLayout3">
 
-    <TextView
-        android:id="@+id/button_play"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/button_play"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:textSize="50sp"
-        android:onClick="playGame"
-        android:padding="20sp"
-        android:layout_margin="10sp"
-        android:background="@android:color/holo_green_dark"
-        />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/startLayout1"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true">
 
-    <TextView
-        android:id="@+id/button_settings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/button_settings"
-        android:layout_below="@+id/button_play"
-        android:layout_centerHorizontal="true"
-        android:textSize="50sp"
-        android:onClick="openSettings"
-        android:padding="20sp"
-        android:layout_margin="10sp"
-        android:background="@android:color/holo_green_dark"
-        />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                android:textSize="50dp"
+                android:padding="5sp"
+                android:id="@+id/start_title"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:textAlignment="center"
+                android:textStyle="bold"
+                android:typeface="sans"
+                android:textColor="#ffc438"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/button_settings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_settings"
+            android:textSize="50sp"
+            android:onClick="openSettings"
+            android:padding="10sp"
+            android:background="#ffc438"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:autoText="false"
+            android:layout_below="@+id/button_HighScore"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="10dp" />
+
+        <TextView
+            android:id="@+id/button_play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_play"
+            android:textSize="50sp"
+            android:onClick="playGame"
+            android:padding="10sp"
+            android:background="#ffc438"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_above="@+id/button_HighScore"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="10dp" />
+
+        <TextView
+            android:id="@+id/button_HighScore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="High Score"
+            android:textSize="50sp"
+            android:onClick="openHighScore"
+            android:padding="10sp"
+            android:background="#ffc438"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:autoText="false"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="10dp" />
+
+    </RelativeLayout>
 
 
 </RelativeLayout>

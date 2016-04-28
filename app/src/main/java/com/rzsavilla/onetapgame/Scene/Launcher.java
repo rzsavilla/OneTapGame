@@ -21,11 +21,12 @@ import java.util.Queue;
  * @author rzsavilla
  */
 public class Launcher extends Transformable implements Cloneable {
-    /** Speed of Launcher Rotation */
-    private float m_fRotationSpeed = 100.0f;
+    /** Speed of Launcher Ro
+     * tation */
+    private float m_fRotationSpeed = 50.0f;
     private boolean m_bRotateLeft = false;
     private boolean m_bRotateRight = false;
-    private int m_iMaxMarkers = 10;
+    private int m_iMaxMarkers = 9;
 
     /** Projectile Spawner */
     public ProjectileHandler m_Bullets = new ProjectileHandler();
@@ -147,8 +148,9 @@ public class Launcher extends Transformable implements Cloneable {
      * Update Launcher movement and projectiles.
      * @param timeStep
      */
-    public void update(float timeStep) {
+    public boolean update(float timeStep) {
         //Set Target
+        boolean bHasShot = false;
         if (!m_Targets.isEmpty() && !m_bHasTarget) {
                 m_vCurretTarget = m_Targets.element().getPosition();      //Get element and set current target as element
                 m_bHasTarget = true; //flag Launcher will rotate towards target
@@ -160,6 +162,7 @@ public class Launcher extends Transformable implements Cloneable {
             if (rotateTowards(m_vCurretTarget)) {
                 //Desired rotation has been achieved
                 if (m_Bullets.canShoot()) {
+                    bHasShot = true;
                     m_Bullets.shoot(m_vCurretTarget);   //Shoot
                     m_Targets.remove();                 //Remove front element
                     m_bHasTarget = false; //flag target reached, can set new target
@@ -177,5 +180,6 @@ public class Launcher extends Transformable implements Cloneable {
         }
         //System.out.println(m_bHasTarget);
         m_Bullets.update(timeStep);
+        return bHasShot;
     }
 }

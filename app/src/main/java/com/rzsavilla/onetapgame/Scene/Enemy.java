@@ -74,6 +74,8 @@ public class Enemy extends Entity{
         return 0;
     }
 
+    public boolean canAttack() { return (m_AttackTimer.getElapsed() > m_fHitRate); }
+
     public void update(float timeStep) {
         //Override entity update
         super.update(timeStep);

@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.rzsavilla.onetapgame.Sprite.Enemy.Entity;
 import com.rzsavilla.onetapgame.model.Handler.InputHandler;
+import com.rzsavilla.onetapgame.model.Handler.SoundHandler;
 import com.rzsavilla.onetapgame.model.Handler.TextureHandler;
 import com.rzsavilla.onetapgame.model.Projectiles.Projectile;
 import com.rzsavilla.onetapgame.model.Shapes.Collision.AABB;
@@ -43,11 +44,14 @@ public class Lane extends Transformable{
     private EnemyWave m_EnemyWave = new EnemyWave();
     private boolean m_bFinished = false;
 
-    public TextureHandler m_Textures;
+    private TextureHandler m_Textures;
+    private SoundHandler m_Sound;
 
+    private int m_iEnemyHealth = 3;
     private int m_iMaxSpawn = 2;
     private float m_fSpawnDelay = 5.0f;
 
+    private int m_iLauncherDamage = 1;
     /**
      * Constructor
      * @param position
@@ -55,9 +59,10 @@ public class Lane extends Transformable{
      * @param height
      * @param textures
      */
-    public Lane(Vector2D position, int width, int height,TextureHandler textures) {
+    public Lane(Vector2D position, int width, int height,TextureHandler textures, SoundHandler sound) {
         setPosition(position);
         setSize(width, height);
+        m_Sound = sound;
         initialize(textures);
     }
 
@@ -100,12 +105,16 @@ public class Lane extends Transformable{
 
     private void setEnemyWave(EnemyWave wave) { m_EnemyWave = wave; }
 
-    Random random = new Random();
+    /**
+     * Spawn a specific enemy
+     * @param i
+     * @return
+     */
     private boolean spawn(int i) {
         boolean bSuccess = false; //Spawn Successful
         switch (i) {
             case 0:
-                //No enemy spawned
+                //No enemy spawned/Delay
                 break;
             case 1:
                 //Spawn a Warrior
@@ -116,7 +125,6 @@ public class Lane extends Transformable{
                 //iMin = 400;
                 //iMax = 1000;
 
-                random.nextInt();
                 boolean bOverlap = false;
                 float fX = 0.0f;
                 float fY = 0.0f;
@@ -149,9 +157,9 @@ public class Lane extends Transformable{
                 }
 
                 Log.d("Spawn pos:", Float.toString(fX + this.getPosition().x));
-                warrior.setHealth(2);
+                warrior.setHealth(m_iEnemyHealth);
                 warrior.setHitRate(1.0f);
-
+                warrior.setValue(3 * m_iEnemyHealth);
                 warrior.setForce(500.0f);
                 warrior.setSpriteSheet(m_Textures.getTexture(1), new Vector2Di(250, 250), new Vector2Di(4, 1));
                 warrior.setWeapon(m_Textures.getTexture(4));
@@ -161,12 +169,20 @@ public class Lane extends Transformable{
                 bSuccess = true;
                 break;
             case 2:
+                //Archer
                 break;
             case 3:
+                //Healer
+                break;
+            default:
+                break;
         }
         return bSuccess;
     }
 
+    /**
+     * Spawn enemies
+     */
     private void spawnUpdate() {
         if (true || !m_EnemyWave.getWave().isEmpty()) {
             if (m_Timer.getElapsed() >= m_fSpawnDelay && m_aEnemies.size() < m_iMaxSpawn) {
@@ -184,22 +200,35 @@ public class Lane extends Transformable{
 
     public boolean isWaveFinished() { return m_bFinished; }
 
+    /**
+     * Returns amount of damage on wall produced this tick
+     * @return
+     */
     public int getWallDamage() {
         int i = m_iWallDamage;
         m_iWallDamage = 0;          //Reset
         return  i;
     }
+    /**
+     * Returns amount of points earned this tick
+     * @return
+     */
     public int getScore() {
         int i = m_iNewScore;
         m_iNewScore = 0;            //Reset
         return i;
     }
 
+    /**
+     * Changes variables over time in order to increase game difficulty
+     */
     public void increaseDifficulty() {
         //Increase difficulty over time
-        if (m_DifficultyTimer.getElapsed() > 30.0f) {
-            if (m_iMaxSpawn < 20) {m_iMaxSpawn += 1;}
-            if (m_fSpawnDelay > 2.0f) {m_fSpawnDelay -= 0.05f;}
+        if (m_DifficultyTimer.getElapsed() > 10.0f) {
+            if (m_iMaxSpawn < 20) {m_iMaxSpawn += 1; }
+            if (m_fSpawnDelay > 0.5f) { m_fSpawnDelay -= 0.1f;}
+            //if (m_iEnemyHealth < 5) { m_iEnemyHealth += 1; }
+            //if (m_iEnemyHealth >= 5 && m_iLauncherDamage < 3) { m_iLauncherDamage += 1; }
             m_DifficultyTimer.restart();
         }
     }
@@ -218,7 +247,9 @@ public class Lane extends Transformable{
                 m_Launcher.markTarget(input.getTapPos());
             }
         }
-        m_Launcher.update(timeStep);
+        if (m_Launcher.update(timeStep)) {
+            m_Sound.playSound(0);
+        }
 
         //Spawn enemies
         spawnUpdate();
@@ -227,7 +258,7 @@ public class Lane extends Transformable{
         for (Enemy enemy: m_aEnemies) {
             for (Projectile proj: m_Launcher.m_Bullets.m_aProjectiles) {
                 if (proj.impulse(enemy)) {
-                    enemy.takeDamage(1);
+                    enemy.takeDamage(m_iLauncherDamage);
                     proj.destroy();
                 }
             }
@@ -242,22 +273,9 @@ public class Lane extends Transformable{
 
         //Update All Enemies
         for (Enemy enemy: m_aEnemies) {
-            /*
-            float fLimit = 1.0f;
-            Vector2D velLimit = new Vector2D(0.0f,0.0f);
-            if (enemy.getVelocity().y > fLimit) {
-                enemy.setVelocity(enemy.getVelocity().x,fLimit);
-            } else if (enemy.getVelocity().y < -fLimit) {
-                enemy.setVelocity(enemy.getVelocity().x,-fLimit);
-            }
-            if (enemy.getVelocity().x > fLimit) {
-                enemy.setVelocity(fLimit, enemy.getVelocity().y);
-            } else if (enemy.getVelocity().x < -fLimit) {
-                enemy.setVelocity(-fLimit, enemy.getVelocity().x);
-            }
-            */
             //Wall Collision
             if (enemy.impulseStatic(m_Wall)) {
+                if (enemy.canAttack()) { m_Sound.playSound(1); }
                 m_iWallDamage += enemy.Attack();
                 //Log.d("Attack","Wall");
             }
@@ -287,8 +305,8 @@ public class Lane extends Transformable{
      */
     public void draw(Paint p, Canvas c) {
         this.m_Wall.draw(p,c);
-        this.m_LeftWall.draw(p,c);
-        this.m_RightWall.draw(p,c);
+        //this.m_LeftWall.draw(p,c);
+        //this.m_RightWall.draw(p,c);
 
         for (int i = m_aEnemies.size()-1; i >=  0; i--) {
             //Draw array reverse // Shows enemies at the front first

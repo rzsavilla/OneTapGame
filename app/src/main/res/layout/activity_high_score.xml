@@ -13,7 +13,9 @@
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="169dp">
+        android:layout_marginTop="169dp"
+        android:layout_gravity="center"
+        android:id="@+id/relativeLayout">
 
         <TextView
             android:layout_width="wrap_content"
@@ -21,10 +23,11 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Player"
             android:id="@+id/name1"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true"
             android:textStyle="bold|italic"
-            android:layout_margin="10dp" />
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_alignTop="@+id/score1"
+            android:layout_centerHorizontal="true" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -32,10 +35,11 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Player"
             android:id="@+id/name2"
-            android:layout_below="@+id/name1"
-            android:layout_alignParentStart="true"
             android:textStyle="bold|italic"
-            android:layout_margin="10dp" />
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_alignTop="@+id/score2"
+            android:layout_centerHorizontal="true" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -43,10 +47,11 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Player"
             android:id="@+id/name3"
-            android:layout_below="@+id/name2"
-            android:layout_alignParentStart="true"
             android:textStyle="bold|italic"
-            android:layout_margin="10dp" />
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_alignTop="@+id/score3"
+            android:layout_centerHorizontal="true" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -85,37 +90,38 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Name:"
-            android:id="@+id/TitleName"
-            android:layout_marginBottom="73dp"
-            android:layout_alignParentBottom="true"
+            android:text="1 ."
+            android:id="@+id/number1"
+            android:textStyle="bold|italic"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_alignTop="@+id/name1"
             android:layout_alignParentStart="true" />
 
-        <EditText
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:text="Name"
-            android:ems="10"
-            android:id="@+id/inputName"
-            android:layout_alignTop="@+id/TitleName"
-            android:layout_toEndOf="@+id/TitleName" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Submit"
-            android:id="@+id/buttonSubmit"
-            android:layout_alignParentBottom="true"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="2 ."
+            android:id="@+id/number2"
+            android:textStyle="bold|italic"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_alignTop="@+id/name2"
             android:layout_alignParentStart="true" />
 
-        <Button
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Menu"
-            android:id="@+id/buttonMenu"
-            android:layout_alignTop="@+id/buttonSubmit"
-            android:layout_alignParentEnd="true" />
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="3  ."
+            android:id="@+id/number3"
+            android:textStyle="bold|italic"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_alignTop="@+id/name3"
+            android:layout_alignParentStart="true" />
+
     </RelativeLayout>
 
     <TextView
@@ -123,20 +129,36 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="High Scores"
-        android:id="@+id/titleScores"
+        android:id="@+id/titleGameOver"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="53dp"
         android:textStyle="bold|italic"
-        android:layout_margin="10dp" />
+        android:layout_margin="10dp"
+        android:textSize="35dp" />
 
-    <TextView
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="1000.0"
-        android:id="@+id/playerScore"
-        android:layout_below="@+id/titleScores"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="58dp" />
+        android:text="Back"
+        android:id="@+id/buttonMenu"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:src="@drawable/warrior_icon"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="PlayAgain"
+        android:id="@+id/buttonPlayAgain"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true" />
+
 </RelativeLayout>

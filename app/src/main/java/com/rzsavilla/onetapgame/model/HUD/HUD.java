@@ -66,23 +66,23 @@ public class HUD {
         m_TopBar.setSize(width, fOffset * 1.5f);
         m_TopBar.setColour(Color.BLACK);
 
-        m_GoldText.setString("GP: ");
+        m_GoldText.setString("Score:");
         m_GoldText.setColour(Color.YELLOW);
         m_GoldText.setTextSize(fOffset);
         m_GoldText.setPosition(m_TopBar.getPosition().add(new Vector2D(10.0f, m_TopBar.getPosition().y + fOffsetY)));
 
-        m_HealthText.setString("HP:  ");
+        m_HealthText.setString("Health:  ");
         m_HealthText.setTextSize(fOffset);
         m_HealthText.setColour(Color.RED);
-        m_HealthText.setPosition(width - (width/3),m_TopBar.getPosition().y + fOffsetY);
+        m_HealthText.setPosition(width - (width/2),m_TopBar.getPosition().y + fOffsetY);
     }
 
     public boolean isLeftButtonDown() { return m_bLeftButtonDown; }
     public boolean is_bRightButtonDown() { return  m_bRightButtonDown; }
 
     public void updateText(int Time, int Health) {
-        m_GoldText.setString("TIME:".concat(Integer.toString(Time)));
-        m_HealthText.setString("HP:".concat(Integer.toString(Health)));
+        m_GoldText.setString("Score:".concat(Integer.toString(Time)));
+        m_HealthText.setString("Health:".concat(Integer.toString(Health)));
     }
 
     public void update(InputHandler input) {

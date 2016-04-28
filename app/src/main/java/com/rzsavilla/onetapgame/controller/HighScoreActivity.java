@@ -28,11 +28,8 @@ import java.util.Arrays;
  *
  */
 public class HighScoreActivity extends Activity {
-    float fScore;
-
     //Code from file I/O lecture
     private Player[] scores = new Player[4];
-    TextView playerScore;
     TextView name1;
     TextView name2;
     TextView name3;
@@ -43,24 +40,15 @@ public class HighScoreActivity extends Activity {
     EditText inputName;
     Button buttonSubmit;
     Button buttonMenu;
+    Button buttonPlayAgain;
 
     private boolean m_bSubmitted;
 
     private View.OnClickListener listener;
     protected void onCreate(Bundle savedInstanceState) {
-        Bundle b = getIntent().getExtras();
-        if (!b.isEmpty() && b.containsKey("score")) {
-            fScore = b.getFloat("score");
-        } else {
-            fScore = 0;
-        }
-        m_bSubmitted = false;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_high_score);
-
-        playerScore = (TextView) this.findViewById(R.id.playerScore);
-        playerScore.setText(Float.toString(fScore));
-
+        //Get Value of fields
         name1 = (TextView) this.findViewById(R.id.name1);
         name2 = (TextView) this.findViewById(R.id.name2);
         name3 = (TextView) this.findViewById(R.id.name3);
@@ -69,22 +57,34 @@ public class HighScoreActivity extends Activity {
         score2 = (TextView) this.findViewById(R.id.score2);
         score3 = (TextView) this.findViewById(R.id.score3);
 
-        inputName = (EditText) this.findViewById(R.id.inputName);
-
-        buttonSubmit = (Button) this.findViewById(R.id.buttonSubmit);
         buttonMenu = (Button) this.findViewById(R.id.buttonMenu);
+        buttonPlayAgain = (Button) this.findViewById(R.id.buttonPlayAgain);
 
-        buttonSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateScores();
+        loadFromFile();
+
+        //Get any values passed to this activity
+        Bundle b = getIntent().getExtras();
+        if (b != null) {
+            if (b.containsKey("score") && b.containsKey("name")) {
+                //Update Score
+                float fScore = 0.0f;
+                String sName = "-";
+                fScore = b.getFloat("score");
+                sName = b.getString("name");
+                updateScores(sName, fScore);
             }
-        });
-
+        }
+        //Buttons pressed
         buttonMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                backToMenu(v);
+                backToMenu();
+            }
+        });
+        buttonPlayAgain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                playAgain();
             }
         });
 
@@ -93,13 +93,26 @@ public class HighScoreActivity extends Activity {
         displayTable();
     }
 
-    public void backToMenu(View view) {
+    /**
+     * Return to start activity
+     */
+    public void backToMenu() {
         Intent intentStart = new Intent(this, StartActivity.class);
         startActivity(intentStart);
     }
 
-    private void displayTable()
-    {
+    /**
+     * Start game activity
+     */
+    public void playAgain() {
+        Intent intentPlay = new Intent(this, GameActivity.class);
+        startActivity(intentPlay);
+    }
+
+    /**
+     * Update values of Text view
+     */
+    private void displayTable() {
         name1.setText(scores[0].getName());
         name2.setText(scores[1].getName());
         name3.setText(scores[2].getName());
@@ -109,10 +122,12 @@ public class HighScoreActivity extends Activity {
         score3.setText(Float.toString(scores[2].getScore()));
     }
 
-    private void updateScores()
-    {
-        String name = inputName.getText().toString();
-        float score = Float.parseFloat(playerScore.getText().toString());
+    /**
+     * Update Score and sort into top three
+     * @param name
+     * @param score
+     */
+    private void updateScores(String name, float score) {
         scores[3] = new Player(name, score);
         Arrays.sort(scores);
         //Arrays.sort(scores);
@@ -120,8 +135,11 @@ public class HighScoreActivity extends Activity {
         displayTable();
     }
 
-    private boolean loadFromFile()
-    {
+    /**
+     * Read High Scores  txt file
+     * @return Read successful
+     */
+    private boolean loadFromFile() {
         File root = new File(getFilesDir(), "highScores");
         if (!root.exists()) {
             root.mkdirs();
@@ -156,6 +174,10 @@ public class HighScoreActivity extends Activity {
         return true;
     }
 
+    /**
+     * Write to High Scores txt file, saving top three high scores into storage
+     * @return
+     */
     private boolean saveToFile()
     {
         //scores[0] = new Player("Player1",0.0f);
@@ -208,7 +230,6 @@ public class HighScoreActivity extends Activity {
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }
